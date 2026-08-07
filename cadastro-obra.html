@@ -6,6 +6,7 @@
     <title>FleurFlow - Nova Obra</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="manifest" href="manifest.json">
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
@@ -23,27 +24,27 @@
         
         <div class="mb-6">
             <h2 class="text-2xl font-black text-gray-900">Cadastrar Nova Obra</h2>
-            <p class="text-gray-600 mt-1">Preencha os detalhes, escolha o Responsável e vincule a equipe.</p>
+            <p class="text-gray-600 mt-1">Preencha os detalhes, adicione os arquivos e vincule a equipe.</p>
         </div>
 
         <form id="form-cadastro-obra" onsubmit="salvarNovaObra(event)" class="space-y-6">
             
-            <!-- INFORMAÇÕES BÁSICAS -->
+            <!-- 1. INFORMAÇÕES BÁSICAS -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">📖 Informações Básicas</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Nome da Obra</label>
-                        <input type="text" id="obra-nome" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        <input type="text" id="obra-nome" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Ex: Projeto Gardênia">
                     </div>
                     
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Sinopse</label>
-                        <textarea id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none"></textarea>
+                        <textarea id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Digite a sinopse da obra..."></textarea>
                     </div>
 
-                    <!-- NOVO: RESPONSÁVEL (ADM/MOD) -->
+                    <!-- RESPONSÁVEL -->
                     <div class="md:col-span-2 bg-red-50 p-4 rounded-lg border border-red-100">
                         <label class="block text-xs font-black text-red-800 mb-1">👑 ADM / Moderador Responsável (Dono da Obra)</label>
                         <select id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
@@ -51,15 +52,16 @@
                         </select>
                     </div>
 
-                    <!-- CAPA -->
-                    <div>
+                    <!-- CAPA (UPLOAD DE ARQUIVO RESTAURADO) -->
+                    <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Capa Oficial (Upload)</label>
-                        <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:bg-red-50 file:text-red-700">
+                        <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
                     </div>
 
-                    <div>
+                    <!-- LINK DO DRIVE RESTAURADO -->
+                    <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Link da Pasta (Google Drive)</label>
-                        <input type="url" id="obra-drive" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <input type="url" id="obra-drive" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="https://drive.google.com/drive/folders/...">
                     </div>
 
                     <div>
@@ -82,11 +84,51 @@
                 </div>
             </div>
 
-            <!-- Demais seções continuam iguais: Plataforma, Layouts e Equipe -->
-            <!-- ... Cole aqui as divs de "Publicação", "Layouts" e "Staff Vinculada" que já tínhamos ... -->
+            <!-- 2. PLATAFORMA -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🌐 Plataforma & Publicação</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Status de Publicação</label>
+                        <select id="obra-status-pub" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <option value="Ativo">🟢 Ativo (Lançando)</option>
+                            <option value="Hiato">🟡 Em Hiato</option>
+                            <option value="Concluido">🔴 Concluído</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Plataforma Principal</label>
+                        <input type="text" id="obra-plataforma" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: MangaDex, Site Próprio, etc.">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. LAYOUTS -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
+                        <input type="checkbox" id="layout-creditos" class="rounded text-red-700 focus:ring-red-700">
+                        <span class="font-semibold text-gray-800">Página de Créditos Pronta?</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
+                        <input type="checkbox" id="layout-recrutamento" class="rounded text-red-700 focus:ring-red-700">
+                        <span class="font-semibold text-gray-800">Página de Recrutamento Pronta?</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 4. EQUIPE / STAFF VINCULADA -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">👥 Staff Vinculada</h3>
+                <div id="lista-membros-staff" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    <p class="text-xs text-gray-500">Carregando membros da equipe...</p>
+                </div>
+            </div>
             
-            <div class="flex justify-end">
-                <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-black py-3 px-8 rounded-xl transition text-lg shadow-xl shadow-red-700/30">
+            <!-- BOTÃO SALVAR -->
+            <div class="flex justify-end gap-4">
+                <button type="submit" id="btn-salvar" class="bg-red-700 hover:bg-red-800 text-white font-black py-3 px-8 rounded-xl transition text-lg shadow-xl shadow-red-700/30">
                     💾 Salvar Obra Completa
                 </button>
             </div>
@@ -99,29 +141,106 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         window.onload = async () => {
-            // Carrega quem é ADM ou MOD para o select
-            const selectResp = document.getElementById('obra-responsavel');
-            const { data: lideres } = await _supabase.from('equipe').select('nick, cargo_sistema').in('cargo_sistema', ['Administrador', 'Moderador']);
-            
-            selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
-            if(lideres) lideres.forEach(l => selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema})</option>`);
-            
-            // ... Mantenha aqui a sua função de carregarEquipe() que lista os checkboxes ...
+            try {
+                // 1. Carrega os líderes (ADM/MOD) para o campo de Dono da Obra
+                const selectResp = document.getElementById('obra-responsavel');
+                const { data: lideres } = await _supabase.from('equipe').select('nick, cargo_sistema').in('cargo_sistema', ['Administrador', 'Moderador']);
+                
+                selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
+                if (lideres) {
+                    lideres.forEach(l => {
+                        selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema})</option>`;
+                    });
+                }
+
+                // 2. Carrega checkboxes da equipe (Staff)
+                const containerStaff = document.getElementById('lista-membros-staff');
+                const { data: equipe } = await _supabase.from('equipe').select('id, nick, cargo_sistema');
+                
+                if (!equipe || equipe.length === 0) {
+                    containerStaff.innerHTML = '<p class="text-xs text-gray-400">Nenhum membro encontrado na equipe.</p>';
+                } else {
+                    containerStaff.innerHTML = equipe.map(m => `
+                        <label class="flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
+                            <input type="checkbox" name="staff_membros" value="${m.id}" class="rounded text-red-700 focus:ring-red-700">
+                            <span class="font-semibold text-gray-800">${m.nick}</span>
+                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema})</span>
+                        </label>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error("Erro ao carregar dados:", err);
+            }
         };
 
         function voltar() {
             const cargo = localStorage.getItem('usuario_cargo');
             if(cargo === 'Administrador') window.location.href = 'dashboard-adm.html';
             else if(cargo === 'Moderador') window.location.href = 'dashboard-moderador.html';
-            else window.location.href = 'login.html';
+            else window.location.href = 'index.html';
         }
 
         async function salvarNovaObra(event) {
-            event.preventDefault();
-            const responsavelNick = document.getElementById('obra-responsavel').value;
-            // ... (resto do seu código de salvar, garantindo que envia responsavel_nick para a tabela) ...
-            alert("Obra salva!");
-            voltar();
+            event.preventDefault(); // Previne o reload (e o travamento)
+            
+            const btn = document.getElementById('btn-salvar');
+            btn.disabled = true;
+            btn.textContent = 'Salvando obra...';
+
+            try {
+                // Pega os dados básicos
+                const nome = document.getElementById('obra-nome').value;
+                const sinopse = document.getElementById('obra-sinopse').value;
+                const responsavel_nick = document.getElementById('obra-responsavel').value;
+                const drive = document.getElementById('obra-drive').value;
+                const tipo = document.getElementById('obra-tipo').value;
+                const prioridade = document.getElementById('obra-prioridade').value;
+                
+                // Pega arquivos (Upload de Capa)
+                const capaInput = document.getElementById('obra-capa');
+                let nomeArquivoCapa = null;
+                if (capaInput.files.length > 0) {
+                    nomeArquivoCapa = capaInput.files[0].name;
+                    // Lógica futura: Fazer o upload desse arquivo para o Storage do Supabase aqui
+                }
+
+                // Pega Plataforma e Layouts
+                const status_pub = document.getElementById('obra-status-pub').value;
+                const plataforma = document.getElementById('obra-plataforma').value;
+                const layout_creditos = document.getElementById('layout-creditos').checked;
+                const layout_recrutamento = document.getElementById('layout-recrutamento').checked;
+
+                // Pega os Staffs selecionados
+                const checkboxes = document.querySelectorAll('input[name="staff_membros"]:checked');
+                const staff_ids = Array.from(checkboxes).map(cb => cb.value);
+
+                // Insere no banco
+                const { error } = await _supabase.from('obras').insert([{ 
+                    nome, 
+                    sinopse, 
+                    responsavel_nick, 
+                    drive,
+                    tipo, 
+                    prioridade,
+                    capa_arquivo: nomeArquivoCapa,
+                    status_pub,
+                    plataforma,
+                    layout_creditos,
+                    layout_recrutamento,
+                    staff_ids
+                }]);
+
+                if (error) throw error;
+
+                alert("Obra salva com sucesso!");
+                voltar();
+
+            } catch (error) {
+                console.error('Erro ao salvar:', error.message);
+                alert('Erro ao salvar: ' + error.message);
+                btn.disabled = false;
+                btn.textContent = '💾 Salvar Obra Completa';
+            }
         }
     </script>
 </body>
