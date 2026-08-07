@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moderador - FleurFlow</title>
+    <title>FleurFlow - Painel do Moderador</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="manifest" href="manifest.json">
@@ -23,7 +23,7 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <!-- ATALHOS RÁPIDOS (Lista Diária & Listão) -->
+        <!-- ATALHOS RÁPIDOS -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div onclick="window.location.href='central-atualizacoes.html'" class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:border-red-500 transition flex items-center justify-between">
                 <div>
@@ -69,55 +69,66 @@
     </main>
 
     <script>
-        // SUAS CHAVES REAIS DO SUPABASE
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         function sair() {
+            localStorage.clear();
             window.location.href = 'index.html';
         }
 
         window.onload = async () => {
             try {
-                // Busca as obras no banco de dados
                 const { data, error } = await supabaseClient.from('obras').select('*');
                 if (error) throw error;
 
                 const meuNick = localStorage.getItem('usuario_nick') || '';
                 const meuId = localStorage.getItem('usuario_id') || '';
                 
+                // Filtra as obras que ela gerencia
                 const minhasGerenciadas = data ? data.filter(o => o.responsavel_nick === meuNick) : [];
-                const minhasStaff = data ? data.filter(o => o.staff_ids && o.staff_ids.includes(meuId) && o.responsavel_nick !== meuNick) : [];
                 
-                // Renderiza as obras que o moderador gerencia
+                // Filtra as obras onde ela é staff (verifica se o ID está dentro do array staff_ids)
+                const minhasStaff = data ? data.filter(o => {
+                    if (!o.staff_ids) return false;
+                    // Suporta tanto array quanto string caso venha formatado de outra forma
+                    if (Array.isArray(o.staff_ids)) {
+                        return o.staff_ids.includes(meuId) && o.responsavel_nick !== meuNick;
+                    }
+                    return String(o.staff_ids).includes(meuId) && o.responsavel_nick !== meuNick;
+                }) : [];
+                
+                // Renderiza Gerenciadas
                 const divGerenciadas = document.getElementById('grid-minhas-gerenciadas');
                 if (minhasGerenciadas.length === 0) {
-                    divGerenciadas.innerHTML = '<p class="text-gray-400">Você não gerencia nenhuma obra.</p>';
+                    divGerenciadas.innerHTML = '<p class="text-gray-400">Você não gerencia nenhuma obra no momento.</p>';
                 } else {
                     divGerenciadas.innerHTML = minhasGerenciadas.map(o => `
-                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 font-semibold text-gray-800">
-                            ${o.nome}
+                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
+                            <span class="font-bold text-gray-800">${o.nome}</span>
+                            <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded font-semibold">${o.status || 'Ativo'}</span>
                         </div>
                     `).join('');
                 }
 
-                // Renderiza as obras onde o moderador é staff
+                // Renderiza Staff
                 const divStaff = document.getElementById('grid-minhas-staff');
                 if (minhasStaff.length === 0) {
-                    divStaff.innerHTML = '<p class="text-gray-400">Você não está vinculado como staff em outras obras.</p>';
+                    divStaff.innerHTML = '<p class="text-gray-400">Você não está vinculada como staff em outras obras.</p>';
                 } else {
                     divStaff.innerHTML = minhasStaff.map(o => `
-                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 font-semibold text-gray-800">
-                            ${o.nome}
+                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
+                            <span class="font-bold text-gray-800">${o.nome}</span>
+                            <span class="text-xs text-gray-500">Resp: ${o.responsavel_nick || 'N/D'}</span>
                         </div>
                     `).join('');
                 }
 
             } catch (err) {
-                console.error("Erro ao carregar painel do moderador:", err.message);
-                document.getElementById('grid-minhas-gerenciadas').innerHTML = '<p class="text-red-500">Erro ao carregar os dados.</p>';
-                document.getElementById('grid-minhas-staff').innerHTML = '<p class="text-red-500">Erro ao carregar os dados.</p>';
+                console.error("Erro ao carregar painel:", err.message);
+                document.getElementById('grid-minhas-gerenciadas').innerHTML = '<p class="text-red-500">Erro ao carregar dados.</p>';
+                document.getElementById('grid-minhas-staff').innerHTML = '<p class="text-red-500">Erro ao carregar dados.</p>';
             }
         };
     </script>
