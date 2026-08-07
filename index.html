@@ -1,3 +1,4 @@
+html_content = """
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -32,12 +33,14 @@
         <form onsubmit="fazerLogin(event)" class="space-y-4">
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1">Nick ou E-mail</label>
-                <input type="text" id="login-identificador" required placeholder="Ex: Camis" class="w-full bg-blue-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <!-- Removido o placeholder="Ex: Camis" -->
+                <input type="text" id="login-identificador" required class="w-full bg-blue-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
             </div>
             
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1">Senha</label>
-                <input type="password" id="login-senha" required placeholder="••••••••" class="w-full bg-white border border-red-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700">
+                <!-- Removido o placeholder="••••••••" -->
+                <input type="password" id="login-senha" required class="w-full bg-white border border-red-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700">
             </div>
 
             <div class="pt-2">
@@ -48,7 +51,7 @@
         </form>
     </div>
 
-   <script>
+    <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -73,7 +76,7 @@
 
                 // TESTE B: Ver se a tabela veio vazia (Significa que o RLS está bloqueando)
                 if (!equipe || equipe.length === 0) {
-                    alert('Nenhum usuário retornou! O Supabase está bloqueando a leitura.\n\nVá no Supabase > Table Editor > equipe > Desative o RLS (Disable RLS).');
+                    alert('Nenhum usuário retornou! O Supabase está bloqueando a leitura.\\n\\nVá no Supabase > Table Editor > equipe > Desative o RLS (Disable RLS).');
                     return;
                 }
 
@@ -91,7 +94,7 @@
 
                 // TESTE D: Compara a senha e mostra exatamente o que tem lá!
                 if (usuario.senha !== senha) {
-                    alert(`SENHA INCORRETA!\n\nVocê digitou: [${senha}]\nNo banco de dados está salvo: [${usuario.senha}]\n\nVeja se tem algum espaço a mais sobrando no banco!`);
+                    alert(`SENHA INCORRETA!\\n\\nVocê digitou: [${senha}]\\nNo banco de dados está salvo: [${usuario.senha}]\\n\\nVeja se tem algum espaço a mais sobrando no banco!`);
                     return;
                 }
 
@@ -120,3 +123,9 @@
     </script>
 </body>
 </html>
+"""
+
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("index.html generated")
