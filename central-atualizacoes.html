@@ -6,66 +6,159 @@
     <title>FleurFlow - Lista de Atualização Diária</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="manifest" href="manifest.json">
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <div class="flex items-center gap-4">
-            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Atualização Diária</h1>
-        </div>
-        <div>
-            <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar</button>
-        </div>
+        <h1 class="text-xl font-bold text-gray-800">📅 Lista de Atualização Diária</h1>
+        <button onclick="window.history.back()" class="text-sm font-bold text-gray-600 hover:text-red-700">&larr; Voltar</button>
     </nav>
 
-    <main class="max-w-5xl mx-auto p-6 mt-4 space-y-6">
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">📅 Diário de Obras e Atualizações</h2>
+    <main class="max-w-4xl mx-auto p-6 mt-4 space-y-6">
+        
+        <!-- FORMULÁRIO DE INSERÇÃO PARA MODERADORES E ADMS -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
+            <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização Diária</h2>
+            <p class="text-xs text-gray-500 mb-4">Lance aqui a atualização realizada para constar no diário de hoje.</p>
             
-            <div id="lista-atualizacoes" class="space-y-4">
-                <p class="text-gray-500 text-sm">Carregando atualizações diárias...</p>
+            <form id="form-atualizacao" onsubmit="salvarAtualizacao(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
+                    <select id="atu-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Carregando obras...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos / Detalhes</label>
+                    <input type="text" id="atu-caps" placeholder="Ex: Cap. 10 e 11" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm shadow">
+                        Salvar Atualização
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- LANÇAMENTOS DE HOJE (LIMPA DIARIAMENTE) -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
+                <h3 class="text-lg font-black text-gray-800">📌 Atualizações de Hoje</h3>
+                <button onclick="toggleHistorico()" class="text-sm font-bold text-blue-600 underline cursor-pointer">Ver Arquivo Histórico</button>
+            </div>
+            <div id="lista-hoje" class="space-y-3 text-sm text-gray-600">
+                Carregando atualizações de hoje...
             </div>
         </div>
+
+        <!-- HISTÓRICO ARQUIVADO (ACESSO DAS ADMS) -->
+        <div id="secao-historico" class="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📁 Arquivo de Atualizações Passadas</h3>
+            <div id="lista-historico" class="space-y-6 text-sm text-gray-600">
+                Nenhum histórico anterior encontrado.
+            </div>
+        </div>
+
     </main>
 
     <script>
-        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
-        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function voltar() {
-            window.history.back();
+        window.onload = async () => {
+            carregarObrasSelect();
+            carregarAtualizacoes();
+        };
+
+        async function carregarObrasSelect() {
+            const { data } = await _supabase.from('obras').select('nome').order('nome');
+            const select = document.getElementById('atu-obra');
+            select.innerHTML = '<option value="">Selecione a Obra</option>';
+            if(data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            try {
-                // Supondo que sua tabela de atualizações diárias se chame 'atualizacoes' ou 'diario'
-                const { data, error } = await supabaseClient.from('atualizacoes').select('*').order('created_at', { ascending: false });
-                const container = document.getElementById('lista-atualizacoes');
+        async function salvarAtualizacao(event) {
+            event.preventDefault();
+            const obra = document.getElementById('atu-obra').value;
+            const caps = document.getElementById('atu-caps').value;
+            const responsavel = localStorage.getItem('usuario_nick') || 'Staff';
 
-                if (error) throw error;
+            const { error } = await _supabase.from('atualizacoes').insert([{ 
+                obra_nome: obra, 
+                capitulos: caps, 
+                responsavel: responsavel 
+            }]);
 
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500 text-sm">Nenhuma atualização registrada hoje.</p>';
-                    return;
-                }
-
-                container.innerHTML = data.map(item => `
-                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-gray-800">${item.obra_nome || 'Obra'}</span>
-                            <span class="text-xs text-gray-400">${new Date(item.created_at).toLocaleDateString('pt-BR')}</span>
-                        </div>
-                        <p class="text-sm text-gray-600">${item.descricao || item.texto || ''}</p>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.error("Erro ao carregar atualizações:", err.message);
-                document.getElementById('lista-atualizacoes').innerHTML = '<p class="text-red-500 text-sm">Erro ao carregar as atualizações diárias.</p>';
+            if (error) {
+                alert('Erro ao registrar: ' + error.message);
+            } else {
+                alert('Atualização lançada com sucesso!');
+                document.getElementById('form-atualizacao').reset();
+                carregarAtualizacoes();
             }
-        });
+        }
+
+        async function carregarAtualizacoes() {
+            const { data, error } = await _supabase.from('atualizacoes').select('*').order('created_at', { ascending: false });
+            const listaHoje = document.getElementById('lista-hoje');
+            const listaHistorico = document.getElementById('lista-historico');
+            
+            if (error) {
+                listaHoje.innerHTML = '<p class="text-red-500">Erro ao carregar (verifique se a tabela "atualizacoes" existe no Supabase).</p>';
+                return;
+            }
+
+            listaHoje.innerHTML = ''; 
+            listaHistorico.innerHTML = '';
+            
+            const hojeDataStr = new Date().toLocaleDateString('pt-BR');
+            let historicoPorData = {};
+
+            if(data && data.length > 0) {
+                data.forEach(item => {
+                    const dataItem = new Date(item.created_at).toLocaleDateString('pt-BR');
+                    const card = `
+                        <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center">
+                            <div>
+                                <strong class="text-gray-800">${item.obra_nome}</strong> 
+                                <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
+                            </div>
+                            <span class="text-xs text-gray-500">Lançado por: ${item.responsavel}</span>
+                        </div>
+                    `;
+
+                    if(dataItem === hojeDataStr) {
+                        listaHoje.innerHTML += card;
+                    } else {
+                        if(!historicoPorData[dataItem]) historicoPorData[dataItem] = [];
+                        historicoPorData[dataItem].push(card);
+                    }
+                });
+            }
+
+            if(listaHoje.innerHTML === '') {
+                listaHoje.innerHTML = '<p class="text-gray-400">Nenhum lançamento registrado hoje ainda.</p>';
+            }
+            
+            if(Object.keys(historicoPorData).length === 0) {
+                listaHistorico.innerHTML = '<p class="text-gray-400">Nenhum arquivo anterior encontrado.</p>';
+            } else {
+                for (const [dataChave, cards] of Object.entries(historicoPorData)) {
+                    listaHistorico.innerHTML += `
+                        <div class="mb-4">
+                            <h4 class="font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded-md inline-block mb-2">Atualização ${dataChave}</h4>
+                            <div class="space-y-2">${cards.join('')}</div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function toggleHistorico() {
+            const div = document.getElementById('secao-historico');
+            div.classList.toggle('hidden');
+        }
     </script>
 </body>
 </html>
