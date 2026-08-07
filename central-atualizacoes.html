@@ -307,34 +307,34 @@
                             urlImg = obraEncontrada.layout_atualizacao;
                         }
 
-                        se(urlImg) {
+                        if(urlImg) {
                             htmlImagens += `
-                                <div class="relativo arredondado-lg transbordamento-oculto borda borda-cinza-200 sombra-sm">
+                                <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                                     <img src="${urlImg}" class="w-full h-auto object-cover">
-                                    <div class="absoluto inferior-0 esquerda-0 direita-0 bg-preto bg-opacidade-60 texto-branco texto-[10px] p-1 texto-centro truncado">
+                                    <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-[10px] p-1 text-center truncate">
                                         ${postagem.obra_nome}
-                                    </dividir>
-                                </dividir>
+                                    </div>
+                                </div>
                             `;
                         }
                     }
                 });
 
-                se(htmlImagens === "") {
-                    documento.obterElementoPorId('imagens-telegrama').HTML interno = "<p class='text-xs text-red-500'>Nenhum layout cadastrado para essas obras.</p>";
-                } outro {
-                    documento.obterElementoPorId('imagens-telegrama').HTML interno = htmlImagens;
+                if(htmlImagens === "") {
+                    document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Nenhum layout cadastrado para essas obras.</p>";
+                } else {
+                    document.getElementById('imagens-telegram').innerHTML = htmlImagens;
                 }
 
-            } Pégar (errar) {
-                console.erro(errar);
-                documento.obterElementoPorId('imagens-telegrama').HTML interno = "<p class='text-xs text-red-500'>Erro ao carregar imagens.</p>";
+            } catch (err) {
+                console.error(err);
+                document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Erro ao carregar imagens.</p>";
             }
         }
 
-        função alternarHistórico() {
-            documento.obterElementoPorId('secao-histórico').lista de classes.alternar('escondido');
+        function toggleHistorico() {
+            document.getElementById('secao-historico').classList.toggle('hidden');
         }
-    </roteiro>
-</corpo>
-</HTML>
+    </script>
+</body>
+</html>
