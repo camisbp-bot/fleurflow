@@ -18,8 +18,8 @@
         
         <!-- FORMULÁRIO DE INSERÇÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
-            <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização Diária</h2>
-            <p class="text-xs text-gray-500 mb-4">Lance aqui a atualização realizada para constar no diário de hoje.</p>
+            <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização para Conferência</h2>
+            <p class="text-xs text-gray-500 mb-4">Adicione a obra que será postada. Ela entrará na lista oficial somente após você confirmar com o "OK".</p>
             
             <form id="form-atualizacao" onsubmit="salvarAtualizacao(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                 <div>
@@ -33,21 +33,30 @@
                     <input type="text" id="atu-caps" placeholder="Ex: Cap. 10 e 11" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
                 <div>
-                    <button type="submit" id="btn-lancar" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm shadow cursor-pointer">
-                        Salvar Atualização
+                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm shadow cursor-pointer">
+                        Adicionar à Fila
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- LANÇAMENTOS DE HOJE -->
+        <!-- FILA DE ESPERA (AGUARDANDO OK) -->
+        <div class="bg-amber-50 rounded-xl p-6 shadow-sm border border-amber-200">
+            <h3 class="text-md font-black text-amber-900 mb-2">⏳ Aguardando Confirmação de Postagem</h3>
+            <p class="text-xs text-amber-700 mb-4">Clique em "OK" somente após a obra estar efetivamente postada.</p>
+            <div id="lista-pendentes" class="space-y-3 text-sm">
+                Carregando itens pendentes...
+            </div>
+        </div>
+
+        <!-- LANÇAMENTOS DE HOJE (LISTA FINAL CONFIRMADA) -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
-                <h3 class="text-lg font-black text-gray-800">📌 Atualizações de Hoje</h3>
+                <h3 class="text-lg font-black text-gray-800">📌 Atualizações Oficiais de Hoje (Confirmadas)</h3>
                 <button onclick="toggleHistorico()" class="text-sm font-bold text-blue-600 underline cursor-pointer">Ver Arquivo Histórico</button>
             </div>
             <div id="lista-hoje" class="space-y-3 text-sm text-gray-600">
-                Carregando atualizações de hoje...
+                Nenhum lançamento confirmado hoje ainda.
             </div>
         </div>
 
@@ -72,64 +81,90 @@
         };
 
         async function carregarObrasSelect() {
-            try {
-                const { data } = await _supabase.from('obras').select('nome').order('nome');
-                const select = document.getElementById('atu-obra');
-                select.innerHTML = '<option value="">Selecione a Obra</option>';
-                if(data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
-            } catch (err) {
-                console.error("Erro ao carregar obras:", err);
-            }
+            const { data } = await _supabase.from('obras').select('nome').order('nome');
+            const select = document.getElementById('atu-obra');
+            select.innerHTML = '<option value="">Selecione a Obra</option>';
+            if(data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
         }
 
         async function salvarAtualizacao(event) {
             event.preventDefault();
             const obra = document.getElementById('atu-obra').value;
             const caps = document.getElementById('atu-caps').value;
-            const responsavel = localStorage.getItem('usuario_nick') || 'Moderadora';
+            const responsavel = localStorage.getItem('usuario_nick') || 'Staff';
 
             const { error } = await _supabase.from('atualizacoes').insert([{ 
                 obra_nome: obra, 
                 capitulos: caps, 
-                responsavel: responsavel 
+                responsavel: responsavel,
+                confirmado: false // Começa como falso, aguardando o OK
             }]);
 
             if (error) {
                 alert('Erro ao registrar: ' + error.message);
             } else {
-                alert('Atualização lançada com sucesso!');
                 document.getElementById('form-atualizacao').reset();
                 carregarAtualizacoes();
             }
         }
 
+        // Função executada quando o usuário clica em OK
+        async function confirmarPostagem(id) {
+            const { error } = await _supabase.from('atualizacoes').update({ confirmado: true }).eq('id', id);
+            if (error) {
+                alert('Erro ao confirmar: ' + error.message);
+            } else {
+                carregarAtualizacoes();
+            }
+        }
+
         async function carregarAtualizacoes() {
-            try {
-                const { data, error } = await _supabase.from('atualizacoes').select('*').order('created_at', { ascending: false });
-                const listaHoje = document.getElementById('lista-hoje');
-                const listaHistorico = document.getElementById('lista-historico');
-                
-                if (error) {
-                    listaHoje.innerHTML = '<p class="text-red-500">Erro ao carregar (verifique se a tabela "atualizacoes" existe no Supabase).</p>';
-                    return;
-                }
+            const { data, error } = await _supabase.from('atualizacoes').select('*').order('created_at', { ascending: false });
+            const listaPendentes = document.getElementById('lista-pendentes');
+            const listaHoje = document.getElementById('lista-hoje');
+            const listaHistorico = document.getElementById('lista-historico');
+            
+            if (error) {
+                listaPendentes.innerHTML = '<p class="text-red-500">Erro ao carregar dados.</p>';
+                return;
+            }
 
-                listaHoje.innerHTML = ''; 
-                listaHistorico.innerHTML = '';
-                
-                const hojeDataStr = new Date().toLocaleDateString('pt-BR');
-                let historicoPorData = {};
+            listaPendentes.innerHTML = '';
+            listaHoje.innerHTML = ''; 
+            listaHistorico.innerHTML = '';
+            
+            const hojeDataStr = new Date().toLocaleDateString('pt-BR');
+            let historicoPorData = {};
+            let temPendentes = false;
 
-                if(data && data.length > 0) {
-                    data.forEach(item => {
-                        const dataItem = new Date(item.created_at).toLocaleDateString('pt-BR');
+            if(data && data.length > 0) {
+                data.forEach(item => {
+                    const dataItem = new Date(item.created_at).toLocaleDateString('pt-BR');
+
+                    // Se NÃO estiver confirmado, vai para a fila de pendentes
+                    if (!item.confirmado) {
+                        temPendentes = true;
+                        listaPendentes.innerHTML += `
+                            <div class="p-3 bg-white border border-amber-200 rounded-lg flex justify-between items-center shadow-xs">
+                                <div>
+                                    <strong class="text-gray-800">${item.obra_nome}</strong> 
+                                    <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
+                                    <span class="text-xs text-gray-500 block">Staff: ${item.responsavel}</span>
+                                </div>
+                                <button onclick="confirmarPostagem('${item.id}')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow cursor-pointer flex items-center gap-1">
+                                    ✅ OK (Confirmar Postado)
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        // Se JÁ estiver confirmado, vai para o diário de hoje ou histórico
                         const card = `
                             <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center">
                                 <div>
                                     <strong class="text-gray-800">${item.obra_nome}</strong> 
                                     <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
                                 </div>
-                                <span class="text-xs text-gray-500">Por: ${item.responsavel}</span>
+                                <span class="text-xs text-gray-500">Postado por: ${item.responsavel}</span>
                             </div>
                         `;
 
@@ -139,27 +174,29 @@
                             if(!historicoPorData[dataItem]) historicoPorData[dataItem] = [];
                             historicoPorData[dataItem].push(card);
                         }
-                    });
-                }
-
-                if(listaHoje.innerHTML === '') {
-                    listaHoje.innerHTML = '<p class="text-gray-400">Nenhum lançamento registrado hoje ainda.</p>';
-                }
-                
-                if(Object.keys(historicoPorData).length === 0) {
-                    listaHistorico.innerHTML = '<p class="text-gray-400">Nenhum arquivo anterior encontrado.</p>';
-                } else {
-                    for (const [dataChave, cards] of Object.entries(historicoPorData)) {
-                        listaHistorico.innerHTML += `
-                            <div class="mb-4">
-                                <h4 class="font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded-md inline-block mb-2">Atualização ${dataChave}</h4>
-                                <div class="space-y-2">${cards.join('')}</div>
-                            </div>
-                        `;
                     }
+                });
+            }
+
+            if(!temPendentes) {
+                listaPendentes.innerHTML = '<p class="text-xs text-amber-800">Nenhuma obra aguardando confirmação no momento.</p>';
+            }
+
+            if(listaHoje.innerHTML === '') {
+                listaHoje.innerHTML = '<p class="text-gray-400">Nenhum lançamento confirmado hoje ainda.</p>';
+            }
+            
+            if(Object.keys(historicoPorData).length === 0) {
+                listaHistorico.innerHTML = '<p class="text-gray-400">Nenhum arquivo anterior encontrado.</p>';
+            } else {
+                for (const [dataChave, cards] of Object.entries(historicoPorData)) {
+                    listaHistorico.innerHTML += `
+                        <div class="mb-4">
+                            <h4 class="font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded-md inline-block mb-2">Atualização ${dataChave}</h4>
+                            <div class="space-y-2">${cards.join('')}</div>
+                        </div>
+                    `;
                 }
-            } catch (err) {
-                console.error("Erro:", err);
             }
         }
 
