@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleurFlow - Andamento da Obra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+
+    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
+        <div class="flex items-center gap-4">
+            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
+            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Andamento do Capítulo</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="window.history.back()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar ao Painel</button>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-6 mt-4">
+        
+        <!-- Cabeçalho da Obra -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8 flex justify-between items-center border-l-4 border-l-red-700">
+            <div>
+                <h2 id="titulo-obra" class="text-3xl font-black text-gray-900">Carregando...</h2>
+                <div class="flex items-center gap-3 mt-2">
+                    <span id="badge-capitulo" class="bg-red-100 text-red-800 font-black px-3 py-1 rounded-md text-sm">Capítulo --</span>
+                </div>
+            </div>
+            <div class="text-right">
+                <button onclick="window.location.href='divisao.html'" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition border border-gray-300 text-sm shadow-sm">
+                    + Dividir Novas Tarefas
+                </button>
+            </div>
+        </div>
+
+        <div id="loading" class="text-center py-8">
+            <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-red-700 mx-auto mb-4"></div>
+            <p class="text-gray-500 font-bold">Buscando andamento da equipe...</p>
+        </div>
+
+        <!-- Lista de Tarefas / Processos -->
+        <div class="space-y-4" id="lista-tarefas">
+            <!-- Cards injetados via JS -->
+        </div>
+
+    </main>
+
+    <script>
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        window.onload = async () => {
+            // Em um sistema real, pegaríamos o nome da obra e capítulo pela URL.
+            // Para o nosso teste, vamos puxar todas as tarefas cadastradas para ver funcionando!
+            await carregarTarefas();
+        };
+
+        async function carregarTarefas() {
+            const { data: tarefas, error } = await _supabase.from('tarefas').select('*').order('prazo', { ascending: true });
+            
+            document.getElementById('loading').classList.add('hidden');
+            const container = document.getElementById('lista-tarefas');
+
+            if (error) {
+                container.innerHTML = '<p class="text-red-500 text-center font-bold">Erro ao buscar tarefas.</p>';
+                return;
+            }
+
+            if (tarefas.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-10 bg-white rounded-xl border border-gray-200">Nenhuma tarefa distribuída ainda.</p>';
+                document.getElementById('titulo-obra').innerText = "Nenhuma Obra Ativa";
+                return;
+            }
+
+            // Atualiza o cabeçalho com a primeira tarefa encontrada (só pra teste visual)
+            document.getElementById('titulo-obra').innerText = tarefas[0].obra_nome;
+            document.getElementById('badge-capitulo').innerText = `Capítulo ${tarefas[0].capitulo}`;
+
+            container.innerHTML = '<h3 class="text-lg font-black text-gray-800 border-b border-gray-200 pb-2 mb-4">Processos Ativos</h3>';
+
+            const agora = new Date(); // Pega o relógio exato do computador agora
+
+            tarefas.forEach(tarefa => {
+                const prazoData = new Date(tarefa.prazo);
+                let statusExibicao = tarefa.status; // Pendente ou Concluído
+                
+                // INTELIGÊNCIA: Se não está concluído e a data/hora já passou, é ATRASADO!
+                if (statusExibicao !== 'Concluído' && agora > prazoData) {
+                    statusExibicao = 'Atrasado';
+                }
+
+                // Formatar Data e Hora para ficar bonito na tela (Ex: 10/08 às 18:00)
+                const dataFormatada = prazoData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                const horaFormatada = prazoData.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+                // Variações de cor com base no Status
+                let corBorda = '', corFundoIcone = '', icone = '', corTextoStatus = '', corBgStatus = '';
+
+                if (statusExibicao === 'Concluído') {
+                    corBorda = 'border-green-200 bg-white opacity-80';
+                    corFundoIcone = 'bg-green-100 text-green-700';
+                    icone = '✅';
+                    corTextoStatus = 'text-green-700';
+                    corBgStatus = 'bg-green-50 border-green-200';
+                } else if (statusExibicao === 'Atrasado') {
+                    corBorda = 'border-red-400 bg-red-50 shadow-md ring-1 ring-red-400';
+                    corFundoIcone = 'bg-red-200 text-red-800';
+                    icone = '🚨';
+                    corTextoStatus = 'text-white';
+                    corBgStatus = 'bg-red-600 border-red-700';
+                } else {
+                    // Pendente
+                    corBorda = 'border-gray-200 bg-white';
+                    corFundoIcone = 'bg-yellow-100 text-yellow-700';
+                    icone = '⏳';
+                    corTextoStatus = 'text-gray-800';
+                    corBgStatus = 'bg-gray-100 border-gray-300';
+                }
+
+                const card = `
+                    <div class="border rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all ${corBorda}">
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <div class="${corFundoIcone} p-3 rounded-full text-xl flex-shrink-0">${icone}</div>
+                            <div>
+                                <h4 class="font-black text-gray-900 text-lg">${tarefa.funcao} <span class="text-sm font-bold text-gray-500 ml-2">(${tarefa.paginas})</span></h4>
+                                <p class="text-sm text-gray-700 mt-1">Responsável: <span class="font-black text-gray-900">${tarefa.responsavel_nick}</span></p>
+                                
+                                ${statusExibicao !== 'Concluído' ? 
+                                    `<p class="text-xs font-bold mt-2 ${statusExibicao === 'Atrasado' ? 'text-red-600' : 'text-gray-500'}">
+                                        Prazo: ${dataFormatada} às ${horaFormatada}
+                                    </p>` : 
+                                    ''
+                                }
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-2 w-full md:w-auto mt-2 md:mt-0 justify-end items-center">
+                            
+                            <span class="${corTextoStatus} font-bold text-xs uppercase tracking-wide ${corBgStatus} px-3 py-1.5 rounded-lg border mr-2">
+                                ${statusExibicao}
+                            </span>
+
+                            ${statusExibicao !== 'Concluído' ? `
+                                <button onclick="cobrarWhatsApp('${tarefa.responsavel_nick}', '${tarefa.obra_nome}', '${tarefa.funcao}')" class="bg-green-500 hover:bg-green-600 text-white font-bold py-1.5 px-3 rounded-lg transition shadow flex items-center gap-2 text-sm">
+                                    💬 Cobrar
+                                </button>
+                                <button onclick="marcarConcluido('${tarefa.id}')" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-1.5 px-3 rounded-lg transition border border-gray-300 text-sm">
+                                    ✓ Concluir
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function cobrarWhatsApp(nome, obra, funcao) {
+            const texto = `Oie ${nome}! Passando pra dar um up maroto! 👀 Como está o andamento de ${funcao} em ${obra}? Precisa de alguma ajuda? 🌸`;
+            const link = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+            window.open(link, '_blank');
+        }
+
+        async function marcarConcluido(idTarefa) {
+            if(!confirm('Tem certeza que deseja marcar esta tarefa como concluída?')) return;
+            
+            const { error } = await _supabase
+                .from('tarefas')
+                .update({ status: 'Concluído' })
+                .eq('id', idTarefa);
+
+            if(error) {
+                alert("Erro ao atualizar: " + error.message);
+            } else {
+                location.reload(); // Recarrega a página para mostrar verde
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleurFlow - Gestão do Listão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+
+    <!-- Barra de Navegação -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
+        <div class="flex items-center gap-4">
+            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
+            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Painel de Controle - Listão</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="window.location.href='dashboard-adm.html'" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar ao Painel ADM</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-6 mt-6 space-y-6">
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+            <h2 class="text-2xl font-black text-gray-900 mb-2">⚙️ Configurações do Listão Mensal</h2>
+            <p class="text-gray-600 text-sm mb-6">Defina a data do próximo Listão e altere o status de preenchimento para a equipe.</p>
+
+            <form id="form-config-listao" onsubmit="salvarConfiguracao(event)" class="space-y-4">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Data Oficial do Listão</label>
+                        <input type="date" id="config-data" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Status do Preenchimento</label>
+                        <select id="config-status" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                            <option value="Aberto">🟢 Aberto (Permitir preenchimento antecipado)</option>
+                            <option value="Fechado">🔴 Fechado (Listão finalizado/apurado)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-4">
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-black py-2.5 px-6 rounded-xl transition text-sm shadow-md">
+                        💾 Salvar Parâmetros do Listão
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Atalhos Úteis -->
+        <div class="bg-red-50 border border-red-200 rounded-2xl p-6 flex justify-between items-center">
+            <div>
+                <h3 class="font-black text-red-900 text-lg">Visualizar Tela da Equipe</h3>
+                <p class="text-xs text-red-700 mt-1">Acesse a tela onde os moderadores preenchem as obras recorrentes e curtas.</p>
+            </div>
+            <button onclick="window.location.href='listao.html'" class="bg-red-700 hover:bg-red-800 text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow transition">
+                Abrir Listão 🚀
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        window.onload = async () => {
+            // Busca as configurações atuais salvas no Supabase
+            const { data, error } = await _supabase.from('listao_config').select('*').limit(1).single();
+            if (data) {
+                document.getElementById('config-data').value = data.data_listao || '';
+                document.getElementById('config-status').value = data.status || 'Aberto';
+            }
+        };
+
+        async function salvarConfiguracao(event) {
+            event.preventDefault();
+            const dataListao = document.getElementById('config-data').value;
+            const statusListao = document.getElementById('config-status').value;
+
+            // Como usaremos uma tabela de configuração única, limpamos e inserimos ou atualizamos
+            // Vamos usar upsert simulando um ID fixo ou deletando o anterior para manter sempre a regra ativa atual
+            await _supabase.from('listao_config').delete().neq('id', 0); // Limpa configurações antigas
+            
+            const { error } = await _supabase.from('listao_config').insert([{
+                data_listao: dataListao,
+                status: statusListao
+            }]);
+
+            if (error) {
+                alert("Erro ao salvar configuração: " + error.message);
+            } else {
+                alert("Configurações do Listão atualizadas com sucesso!");
+            }
+        }
+    </script>
+</body>
+</html>

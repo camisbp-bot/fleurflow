@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderador - FleurFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<!-- A estrutura é quase idêntica ao ADM, mas sem a "Visão Geral da Scan" -->
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+    <!-- Navbar similar (pode copiar a do ADM alterando o título) -->
+    
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-10">
+        
+        <!-- MINHAS TAREFAS -->
+        <section class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
+            <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">⏱️ Minhas Entregas Pendentes (Como Staff)</h2>
+            <!-- Cards de Tarefas aqui -->
+        </section>
+
+        <!-- DUAS COLUNAS: GERENCIA x STAFF -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section>
+                <h2 class="text-xl font-black text-gray-900 mb-4">👑 Minhas Obras (Gerenciamento)</h2>
+                <div id="grid-minhas-gerenciadas" class="space-y-4"></div>
+            </section>
+            
+            <section>
+                <h2 class="text-xl font-black text-gray-900 mb-4">👥 Obras que sou Staff</h2>
+                <div id="grid-minhas-staff" class="space-y-4"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Mesmo script lógico, porém filtra DIRETAMENTE pelas obras dele logo de cara
+        window.onload = async () => {
+            const { data } = await _supabase.from('obras').select('*');
+            const meuNick = localStorage.getItem('usuario_nick');
+            const meuId = localStorage.getItem('usuario_id');
+            
+            const minhasGerenciadas = data.filter(o => o.responsavel_nick === meuNick);
+            const minhasStaff = data.filter(o => o.staff_ids && o.staff_ids.includes(meuId) && o.responsavel_nick !== meuNick);
+            
+            // Renderiza nas divs...
+        };
+    </script>
+</body>
+</html>

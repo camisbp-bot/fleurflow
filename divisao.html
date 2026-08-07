@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleurFlow - Divisão de Capítulos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+
+    <!-- Barra de Navegação -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
+        <div class="flex items-center gap-4">
+            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
+            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Distribuição de Tarefas</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="window.location.href='dashboard-adm.html'" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar ao Painel</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-6 mt-4">
+        
+        <!-- Cabeçalho do Capítulo -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6 flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-black text-gray-900">Roses Never Die</h2>
+                <p class="text-red-700 font-bold mt-1">Capítulo 36</p>
+            </div>
+            <div class="text-right">
+                <span class="bg-gray-100 text-gray-600 border border-gray-200 font-bold px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                    ⏳ Aguardando Distribuição
+                </span>
+                <p class="text-xs text-gray-500 mt-2">Defina os responsáveis abaixo</p>
+            </div>
+        </div>
+
+        <form id="form-divisao" onsubmit="finalizarDistribuicao(event)">
+            
+            <!-- ORGANIZAÇÃO -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6 border-l-4 border-l-pink-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-gray-800 uppercase tracking-wide">📂 Organização</h3>
+                </div>
+                
+                <div id="container-organizacao" class="space-y-3">
+                    <div class="flex gap-3 items-end bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Páginas (Ex: 1-10 ou Total)</label>
+                            <input type="text" placeholder="Total" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        </div>
+                        <div class="flex-[2]">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Organizer Responsável</label>
+                            <select class="select-organizer w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                                <option value="">Carregando Organizers...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="adicionarLinha('organizacao', 'Organizer')" class="mt-3 text-sm font-bold text-pink-600 hover:underline">+ Adicionar divisão de Organização</button>
+            </div>
+
+            <!-- LIMPEZA -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6 border-l-4 border-l-blue-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-gray-800 uppercase tracking-wide">🧹 Limpeza</h3>
+                    <label class="flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                        <input type="checkbox" id="qc-limpeza" class="rounded text-red-700 focus:ring-red-700"> Adicionar QC na Limpeza
+                    </label>
+                </div>
+                
+                <div id="container-limpeza" class="space-y-3">
+                    <div class="flex gap-3 items-end bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Páginas (Ex: 1-10)</label>
+                            <input type="text" placeholder="1-15" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        </div>
+                        <div class="flex-[2]">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Cleaner Responsável</label>
+                            <select class="select-cleaner w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                                <option value="">Carregando Cleaners...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="adicionarLinha('limpeza', 'Cleaner')" class="mt-3 text-sm font-bold text-blue-600 hover:underline">+ Adicionar divisão de Limpeza</button>
+            </div>
+
+            <!-- TRADUÇÃO -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6 border-l-4 border-l-green-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-gray-800 uppercase tracking-wide">📝 Tradução</h3>
+                </div>
+                
+                <div id="container-traducao" class="space-y-3">
+                    <div class="flex gap-3 items-end bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Páginas (Ex: 1-10)</label>
+                            <input type="text" placeholder="1-15" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        </div>
+                        <div class="flex-[2]">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Tradutor Responsável</label>
+                            <select class="select-tradutor w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                                <option value="">Carregando Tradutores...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="adicionarLinha('traducao', 'Tradutor')" class="mt-3 text-sm font-bold text-green-600 hover:underline">+ Adicionar divisão de Tradução</button>
+            </div>
+
+            <!-- REVISÃO -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6 border-l-4 border-l-yellow-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-gray-800 uppercase tracking-wide">📖 Revisão</h3>
+                </div>
+                
+                <div id="container-revisao" class="space-y-3">
+                    <div class="flex gap-3 items-end bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Páginas (Ex: 1-10)</label>
+                            <input type="text" placeholder="1-15" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        </div>
+                        <div class="flex-[2]">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Revisor Responsável</label>
+                            <select class="select-revisor w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                                <option value="">Carregando Revisores...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="adicionarLinha('revisao', 'Revisor')" class="mt-3 text-sm font-bold text-yellow-600 hover:underline">+ Adicionar divisão de Revisão</button>
+            </div>
+
+            <!-- EDIÇÃO -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8 border-l-4 border-l-purple-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-gray-800 uppercase tracking-wide">🎨 Edição (Typeset)</h3>
+                    <label class="flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                        <input type="checkbox" id="qc-edicao" class="rounded text-red-700 focus:ring-red-700"> Adicionar QC na Edição
+                    </label>
+                </div>
+                
+                <div id="container-edicao" class="space-y-3">
+                    <div class="flex gap-3 items-end bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Páginas (Ex: 1-10 ou Total)</label>
+                            <input type="text" placeholder="1-15" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        </div>
+                        <div class="flex-[2]">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Editor Responsável</label>
+                            <select class="select-editor w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                                <option value="">Carregando Editores...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="adicionarLinha('edicao', 'Editor')" class="mt-3 text-sm font-bold text-purple-600 hover:underline">+ Adicionar divisão de Edição</button>
+            </div>
+
+            <!-- BOTÃO FINALIZAR E WHATSAPP -->
+            <div class="flex gap-4">
+                <button type="button" class="flex-1 bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-800 font-bold py-4 rounded-xl transition text-lg shadow-sm">
+                    Salvar Rascunho
+                </button>
+                <button type="submit" class="flex-[2] bg-red-700 hover:bg-red-800 text-white font-black py-4 rounded-xl transition text-lg shadow-xl shadow-red-700/30 flex justify-center items-center gap-2">
+                    Distribuir e Enviar para WhatsApp 💬
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <script>
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let equipeFleur = [];
+
+        window.onload = async () => {
+            await carregarEquipe();
+            popularSelects();
+        };
+
+        async function carregarEquipe() {
+            const { data, error } = await _supabase.from('equipe').select('*');
+            if (!error && data) {
+                equipeFleur = data;
+            } else {
+                console.error("Erro ao carregar equipe:", error);
+            }
+        }
+
+        function popularSelects() {
+            // Filtra os membros por todas as funções
+            const organizers = equipeFleur.filter(m => m.funcoes && m.funcoes.includes('Organizer'));
+            const cleaners = equipeFleur.filter(m => m.funcoes && m.funcoes.includes('Cleaner'));
+            const tradutores = equipeFleur.filter(m => m.funcoes && m.funcoes.includes('Tradutor'));
+            const revisores = equipeFleur.filter(m => m.funcoes && m.funcoes.includes('Revisor'));
+            const editores = equipeFleur.filter(m => m.funcoes && m.funcoes.includes('Editor'));
+
+            // Preenche as caixinhas na tela
+            preencherCaixa('select-organizer', organizers, 'Selecione o Organizer');
+            preencherCaixa('select-cleaner', cleaners, 'Selecione o Cleaner');
+            preencherCaixa('select-tradutor', tradutores, 'Selecione o Tradutor');
+            preencherCaixa('select-revisor', revisores, 'Selecione o Revisor');
+            preencherCaixa('select-editor', editores, 'Selecione o Editor');
+        }
+
+        function preencherCaixa(classeCSS, listaMembros, textoPadrao) {
+            const caixas = document.querySelectorAll(`.${classeCSS}`);
+            caixas.forEach(caixa => {
+                const valorAtual = caixa.value; 
+                caixa.innerHTML = `<option value="">${textoPadrao}</option>`;
+                listaMembros.forEach(membro => {
+                    caixa.innerHTML += `<option value="${membro.nick}">${membro.nick}</option>`;
+                });
+                caixa.value = valorAtual;
+            });
+        }
+
+        function adicionarLinha(sessao, funcaoNome) {
+            const container = document.getElementById(`container-${sessao}`);
+            const novaLinha = document.createElement('div');
+            novaLinha.className = "flex gap-3 items-end bg-gray-50 p-3 rounded-lg border border-gray-100 mt-2";
+            
+            novaLinha.innerHTML = `
+                <div class="flex-1">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Páginas</label>
+                    <input type="text" placeholder="Ex: 16-30" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                </div>
+                <div class="flex-[2]">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">${funcaoNome} Responsável</label>
+                    <select class="select-${funcaoNome.toLowerCase()} w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="bg-red-100 text-red-700 hover:bg-red-200 px-3 py-2 rounded-lg font-bold text-sm transition">X</button>
+                </div>
+            `;
+            
+            container.appendChild(novaLinha);
+            popularSelects(); 
+        }
+
+        function finalizarDistribuicao(event) {
+            event.preventDefault();
+            alert("Sucesso! O FleurFlow salvou a divisão e gerou a mensagem do WhatsApp. O fluxo foi iniciado!");
+            window.location.href = 'dashboard-adm.html';
+        }
+    </script>
+</body>
+</html>

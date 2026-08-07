@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleurFlow - Central de Produção</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+
+    <!-- Barra de Navegação -->
+    <!-- Substitua o trecho do nav no dashboard-adm.html por este -->
+	<nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
+  	  <div class="flex items-center gap-4">
+        <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
+        <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Central de Produção</h1>
+    </div>
+    <div class="flex items-center gap-2">
+        <!-- Botão para a Central de Layouts -->
+        <a href="central-layouts.html" class="text-sm font-bold text-gray-700 bg-gray-50 hover:bg-gray-100 py-2 px-4 rounded-lg transition border border-gray-200 shadow-sm flex items-center gap-2">
+            🖼️ Layouts
+        </a>
+        <!-- Botão para Nova Obra -->
+        <a href="cadastro-obra.html" class="bg-red-700 hover:bg-red-800 text-white text-sm font-bold py-2 px-4 rounded-lg shadow transition">
+            + Nova Obra
+        </a>
+        <button onclick="sair()" class="text-sm font-bold text-red-700 hover:underline ml-2">Sair</button>
+    </div>
+</nav>
+
+    <main class="max-w-7xl mx-auto p-6 mt-4">
+        
+        <!-- Saudação e Resumo Rápido -->
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h2 id="saudacao" class="text-2xl font-black text-gray-900">Olá!</h2>
+                <p class="text-gray-600 mt-1">Acompanhe o andamento dos lançamentos em relação às plataformas originais.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-bold text-gray-500 uppercase">Suas Obras Ativas</p>
+                    <p id="total-obras" class="text-3xl font-black text-gray-900 mt-1">0</p>
+                </div>
+                <div class="text-red-700 text-4xl">📚</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-bold text-gray-500 uppercase">Atraso Crítico</p>
+                    <p id="obras-atrasadas" class="text-3xl font-black text-red-600 mt-1">0</p>
+                </div>
+                <div class="text-red-600 text-4xl">🚨</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-bold text-gray-500 uppercase">Obras em Dia</p>
+                    <p id="obras-em-dia" class="text-3xl font-black text-green-600 mt-1">0</p>
+                </div>
+                <div class="text-green-600 text-4xl">✅</div>
+            </div>
+        </div>
+
+        <!-- Lista de Obras (Cards) -->
+        <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
+            <h2 class="text-lg font-black text-gray-800">Status dos Manhwas</h2>
+        </div>
+        
+        <div id="grid-obras" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p class="text-gray-500 text-sm col-span-full">Buscando informações no banco de dados...</p>
+        </div>
+
+    </main>
+
+    <script>
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        window.onload = () => {
+            const nick = localStorage.getItem('usuario_nick');
+            const cargo = localStorage.getItem('usuario_cargo');
+            const id = localStorage.getItem('usuario_id');
+
+            if (!nick) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('saudacao').innerText = `Olá, ${nick}! 🌸`;
+            document.getElementById('badge-cargo').innerText = `Visão: ${cargo}`;
+
+            carregarObras(cargo, id);
+        };
+
+        async function carregarObras(cargo, usuarioId) {
+            const { data, error } = await _supabase.from('obras').select('*').order('nome');
+            
+            const grid = document.getElementById('grid-obras');
+            
+            if (error) {
+                grid.innerHTML = '<p class="text-red-500">Erro ao carregar obras.</p>';
+                return;
+            }
+
+            // Lógica de Hierarquia: ADM vê tudo, Moderador vê só as dele
+            let obrasParaExibir = data;
+            if (cargo === 'Moderador') {
+                obrasParaExibir = data.filter(obra => obra.staff_ids && obra.staff_ids.includes(usuarioId));
+            }
+
+            renderizarObras(obrasParaExibir);
+        }
+
+        function renderizarObras(obras) {
+            const grid = document.getElementById('grid-obras');
+            grid.innerHTML = ''; 
+
+            let totalAtrasadas = 0;
+            let totalEmDia = 0;
+
+            if (obras.length === 0) {
+                grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-10 bg-white rounded-xl border border-gray-200">Nenhuma obra sob sua supervisão no momento.</p>';
+            }
+
+            obras.forEach(obra => {
+                const capPlataforma = obra.capitulo_plataforma || 0;
+                const capFleur = obra.capitulo_fleur || 0;
+                const atraso = capPlataforma - capFleur;
+                
+                // Lógica de Cores (Índice Fleur)
+                let corStatus = 'bg-green-100 text-green-800 border-green-200';
+                let iconeStatus = '🟢 Em Dia';
+                
+                if (obra.status === 'Hiatus') {
+                    corStatus = 'bg-gray-200 text-gray-700 border-gray-300';
+                    iconeStatus = '💤 Hiatus';
+                } else if (atraso > 5) {
+                    corStatus = 'bg-red-100 text-red-800 border-red-200';
+                    iconeStatus = '🔴 Crítico';
+                    totalAtrasadas++;
+                } else if (atraso > 2) {
+                    corStatus = 'bg-yellow-100 text-yellow-800 border-yellow-200';
+                    iconeStatus = '🟡 Atenção';
+                    totalAtrasadas++;
+                } else {
+                    totalEmDia++;
+                }
+
+                const capaImg = obra.capa_url ? obra.capa_url : 'https://via.placeholder.com/400x200?text=Sem+Capa';
+
+                const card = `
+                    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
+                        
+                        <!-- Capa e Status -->
+                        <div class="h-28 bg-gray-200 relative overflow-hidden border-b border-gray-200">
+                            <img src="${capaImg}" alt="Capa" class="w-full h-full object-cover opacity-90 hover:opacity-100 transition">
+                            <div class="absolute top-2 right-2">
+                                <span class="text-[10px] font-black px-2 py-1 rounded-md border ${corStatus} backdrop-blur-md shadow-sm">${iconeStatus}</span>
+                            </div>
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-3 pt-8">
+                                <h3 class="text-lg font-black text-white line-clamp-1 drop-shadow-md">${obra.nome}</h3>
+                            </div>
+                        </div>
+
+                        <!-- Info de Capítulos -->
+                        <div class="p-4 flex-1">
+                            <div class="flex justify-between items-center bg-gray-50 rounded-lg p-3 border border-gray-100 mb-4">
+                                <div class="text-center flex-1 border-r border-gray-200">
+                                    <p class="text-[10px] uppercase font-black text-gray-500 mb-1 line-clamp-1">${obra.plataforma_oficial || 'Original'}</p>
+                                    <p class="text-xl font-black text-gray-800">Cap. ${capPlataforma}</p>
+                                </div>
+                                <div class="text-center flex-1">
+                                    <p class="text-[10px] uppercase font-black text-gray-500 mb-1">Fleur Scan</p>
+                                    <p class="text-xl font-black text-red-700">Cap. ${capFleur}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-sm mb-4">
+                                <span class="font-bold text-gray-600">Diferença: <span class="text-gray-900">${atraso} cap(s)</span></span>
+                                <span class="font-bold text-xs bg-gray-100 px-2 py-1 rounded border border-gray-200 text-gray-600">${obra.prioridade || 'Média'}</span>
+                            </div>
+
+                            <!-- Botões de Ação -->
+                            <div class="grid grid-cols-2 gap-2 mt-auto">
+                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 rounded-lg text-xs transition border border-gray-200">Ver Andamento</button>
+                                <button onclick="window.location.href='divisao.html'" class="bg-red-50 hover:bg-red-100 text-red-700 font-bold py-2 rounded-lg text-xs transition border border-red-200">Dividir Tarefas</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+
+            // Atualiza os contadores no topo
+            document.getElementById('total-obras').innerText = obras.length;
+            document.getElementById('obras-atrasadas').innerText = totalAtrasadas;
+            document.getElementById('obras-em-dia').innerText = totalEmDia;
+        }
+
+        function sair() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
