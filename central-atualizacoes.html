@@ -3,205 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FleurFlow - Central de Atualizações</title>
+    <title>FleurFlow - Lista de Atualização Diária</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="manifest" href="manifest.json">
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
-    <!-- Barra de Navegação -->
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
         <div class="flex items-center gap-4">
             <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Central de Atualizações de Capítulos</h1>
+            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Atualização Diária</h1>
         </div>
-        <div class="flex items-center gap-4">
-            <button onclick="window.location.href='dashboard-adm.html'" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar ao Painel</button>
+        <div>
+            <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar</button>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
-        
-        <!-- PAINEL DE CONTAGEM MENSAL (RANKING AUTOMÁTICO) -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-black text-gray-900">📊 Produtividade da Moderação (Este Mês)</h3>
-                <span id="mes-atual" class="text-xs font-bold bg-red-50 text-red-700 px-3 py-1 rounded-full border border-red-200">Carregando...</span>
-            </div>
+    <main class="max-w-5xl mx-auto p-6 mt-4 space-y-6">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">📅 Diário de Obras e Atualizações</h2>
             
-            <!-- Cards de contagem por moderador gerados via JS -->
-            <div id="ranking-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <p class="text-sm text-gray-500">Calculando postagens...</p>
+            <div id="lista-atualizacoes" class="space-y-4">
+                <p class="text-gray-500 text-sm">Carregando atualizações diárias...</p>
             </div>
         </div>
-
-        <!-- TABELA ESTILO PLANILHA -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="bg-red-900 text-white px-6 py-4 flex justify-between items-center">
-                <h2 class="font-black text-lg tracking-wide">👑 CONTROLE DIÁRIO DE POSTAGENS</h2>
-                <button onclick="adicionarLinhaTabela()" class="bg-red-800 hover:bg-red-700 text-white font-bold text-xs px-3 py-2 rounded-lg transition border border-red-700">
-                    + Adicionar Obra na Lista
-                </button>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200 text-xs font-black text-gray-600 uppercase">
-                            <th class="p-4 w-2/5">Obra</th>
-                            <th class="p-4 w-1/5">Capítulo(s)</th>
-                            <th class="p-4 w-1/5">Tag</th>
-                            <th class="p-4 w-1/5">Moderador Responsável</th>
-                            <th class="p-4 text-center w-12">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-corpo" class="divide-y divide-gray-200 text-sm">
-                        <!-- Linhas da tabela entram aqui -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="flex justify-end">
-            <button onclick="salvarAtualizacoes()" class="bg-red-700 hover:bg-red-800 text-white font-black py-3 px-8 rounded-xl transition text-lg shadow-xl shadow-red-700/30">
-                💾 Salvar Alterações do Dia
-            </button>
-        </div>
-
     </main>
 
     <script>
-        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
+        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let listaModeradores = ['Sotoren', 'Mochi', 'Winie', 'Lika', 'Camis']; // Exemplo, pode puxar da tabela equipe
-
-        window.onload = async () => {
-            const dataHoje = new Date();
-            document.getElementById('mes-atual').innerText = dataHoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-            
-            await carregarModeradoresDoSistema();
-            await carregarDadosTabela();
-            calcularRankingMensal();
-        };
-
-        async function carregarModeradoresDoSistema() {
-            const { data } = await _supabase.from('equipe').select('nick').in('cargo_sistema', ['Administrador', 'Moderador']);
-            if (data && data.length > 0) {
-                listaModeradores = data.map(m => m.nick);
-            }
+        function voltar() {
+            window.history.back();
         }
 
-        async function carregarDadosTabela() {
-            // Puxa as obras cadastradas para montar a planilha diária automaticamente
-            const { data: obras } = await _supabase.from('obras').select('nome');
-            const tbody = document.getElementById('tabela-corpo');
-            tbody.innerHTML = '';
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                // Supondo que sua tabela de atualizações diárias se chame 'atualizacoes' ou 'diario'
+                const { data, error } = await supabaseClient.from('atualizacoes').select('*').order('created_at', { ascending: false });
+                const container = document.getElementById('lista-atualizacoes');
 
-            if(!obras || obras.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">Nenhuma obra cadastrada no sistema. Cadastre obras primeiro.</td></tr>`;
-                return;
-            }
+                if (error) throw error;
 
-            obras.forEach((obra, index) => {
-                let optionsMod = '<option value="">Selecione...</option>';
-                listaModeradores.forEach(mod => {
-                    optionsMod += `<option value="${mod}">${mod}</option>`;
-                });
-
-                const linha = `
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="p-4 font-bold text-gray-900 obra-nome">${obra.nome}</td>
-                        <td class="p-4">
-                            <input type="text" placeholder="Ex: 9 e 10" class="input-capitulo w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
-                        </td>
-                        <td class="p-4">
-                            <select class="input-tag w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-bold text-gray-700">
-                                <option value="">Nenhuma</option>
-                                <option value="DESC/OFC">DESC/OFC</option>
-                            </select>
-                        </td>
-                        <td class="p-4">
-                            <select class="input-responsavel w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-bold text-gray-700">
-                                ${optionsMod}
-                            </select>
-                        </td>
-                        <td class="p-4 text-center">
-                            <input type="checkbox" class="input-check w-5 h-5 rounded text-red-700 focus:ring-red-700 cursor-pointer">
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += linha;
-            });
-        }
-
-        async function calcularRankingMensal() {
-            const container = document.getElementById('ranking-container');
-            const { data, error } = await _supabase.from('historico_postagens').select('*');
-
-            if (error || !data) {
-                container.innerHTML = '<p class="text-xs text-gray-500">Sem registros de postagens este mês ainda.</p>';
-                return;
-            }
-
-            // Conta quantos capítulos cada moderador postou
-            let contagem = {};
-            data.forEach(item => {
-                if(item.status === 'Concluído' || item.status === true) {
-                    contagem[item.responsavel_postagem] = (contagem[item.responsavel_postagem] || 0) + 1;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-sm">Nenhuma atualização registrada hoje.</p>';
+                    return;
                 }
-            });
 
-            container.innerHTML = '';
-            if(Object.keys(contagem).length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-500 col-span-full">Nenhuma postagem marcada como concluída neste mês.</p>';
-                return;
-            }
-
-            for (const [moderador, total] of Object.entries(contagem)) {
-                container.innerHTML += `
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-bold text-gray-500 uppercase">Moderador(a)</p>
-                            <p class="text-md font-black text-gray-900">${moderador}</p>
+                container.innerHTML = data.map(item => `
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-gray-800">${item.obra_nome || 'Obra'}</span>
+                            <span class="text-xs text-gray-400">${new Date(item.created_at).toLocaleDateString('pt-BR')}</span>
                         </div>
-                        <span class="bg-red-100 text-red-800 font-black text-lg px-3 py-1 rounded-xl">${total}</span>
+                        <p class="text-sm text-gray-600">${item.descricao || item.texto || ''}</p>
                     </div>
-                `;
+                `).join('');
+            } catch (err) {
+                console.error("Erro ao carregar atualizações:", err.message);
+                document.getElementById('lista-atualizacoes').innerHTML = '<p class="text-red-500 text-sm">Erro ao carregar as atualizações diárias.</p>';
             }
-        }
-
-        async function salvarAtualizacoes() {
-            const linhas = document.querySelectorAll('#tabela-corpo tr');
-            let salvosCount = 0;
-
-            for (const linha of linhas) {
-                const obraNome = linha.querySelector('.obra-nome')?.innerText;
-                const capitulo = linha.querySelector('.input-capitulo')?.value;
-                const tag = linha.querySelector('.input-tag')?.value;
-                const responsavel = linha.querySelector('.input-responsavel')?.value;
-                const marcado = linha.querySelector('.input-check')?.checked;
-
-                if (capitulo && responsavel && marcado) {
-                    const dadosPostagem = {
-                        obra_nome: obraNome,
-                        capitulo: capitulo,
-                        tag: tag,
-                        responsavel_postagem: responsavel,
-                        status: 'Concluído',
-                        data_postagem: new Date().toISOString()
-                    };
-
-                    await _supabase.from('historico_postagens').insert([dadosPostagem]);
-                    salvosCount++;
-                }
-            }
-
-            alert(`Sucesso! ${salvosCount} postagens foram registradas e contabilizadas no ranking mensal.`);
-            location.reload();
-        }
+        });
     </script>
 </body>
 </html>
