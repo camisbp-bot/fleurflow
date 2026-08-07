@@ -6,76 +6,211 @@
     <title>FleurFlow - O Listão Geral</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="manifest" href="manifest.json">
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <div class="flex items-center gap-4">
-            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">O Listão Geral</h1>
-        </div>
-        <div>
-            <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar</button>
-        </div>
+        <h1 class="text-xl font-bold text-gray-800">📊 O Listão Geral de Lançamentos</h1>
+        <button onclick="window.history.back()" class="text-sm font-bold text-gray-600 hover:text-red-700">&larr; Voltar</button>
     </nav>
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">📊 Listagem Completa de Obras</h2>
+        
+        <!-- SEÇÃO EXCLUSIVA PARA ADM: LIBERAR DATAS -->
+        <div id="secao-adm-liberacao" class="hidden bg-red-50 rounded-xl p-6 shadow-sm border border-red-200">
+            <h2 class="text-lg font-black text-red-900 mb-2">👑 Área da ADM: Liberar Data para o Listão</h2>
+            <p class="text-xs text-red-700 mb-4">Defina qual data estará aberta para os moderadores lançarem suas programações.</p>
             
-            <div id="tabela-listao" class="overflow-x-auto">
-                <p class="text-gray-500 text-sm">Carregando dados do listão...</p>
-            </div>
+            <form onsubmit="liberarData(event)" class="flex flex-col sm:flex-row gap-4 items-end">
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Escolher Data</label>
+                    <input type="date" id="data-liberada" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                </div>
+                <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2.5 px-6 rounded-lg text-sm shadow">
+                    🔓 Liberar Data
+                </button>
+            </form>
         </div>
+
+        <!-- SEÇÃO PARA MODERADORES E ADMS: LANÇAR O QUE VAI POSTAR NA DATA LIBERADA -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h2 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">✍️ Lançar no Listão (Programação de Postagem)</h2>
+            
+            <form id="form-preenchimento-listao" onsubmit="lancarNoListao(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Data Liberada pela ADM</label>
+                    <select id="select-data-liberada" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Aguardando ADM liberar datas...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
+                    <select id="select-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Carregando obras...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos a Postar</label>
+                    <input type="text" id="input-caps" placeholder="Ex: Cap. 10 ao 12" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div class="sm:col-span-3 flex justify-end">
+                    <button type="submit" class="bg-gray-900 hover:bg-black text-white font-bold py-2 px-6 rounded-lg text-sm">
+                        + Adicionar à Programação
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TABELA / QUADRO DO LISTÃO GERAL -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 overflow-x-auto">
+            <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📋 Programação Atual do Listão</h3>
+            <table class="w-full text-left border-collapse min-w-max">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-700 text-xs uppercase tracking-wider border-b border-gray-300">
+                        <th class="p-3">Data</th>
+                        <th class="p-3">Obra</th>
+                        <th class="p-3">Capítulos</th>
+                        <th class="p-3">Moderador / Staff</th>
+                        <th class="p-3 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-listao" class="divide-y divide-gray-100 text-sm">
+                    <tr><td colspan="5" class="p-4 text-center text-gray-500">Carregando listão...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
     </main>
 
     <script>
-        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
-        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function voltar() {
-            window.history.back();
+        window.onload = async () => {
+            verificarPermissaoAdm();
+            carregarDatasLiberadas();
+            carregarObras();
+            carregarListaoPreenchido();
+        };
+
+        // Verifica se o usuário logado é Administrador para mostrar o painel de liberação
+        function verificarPermissaoAdm() {
+            const cargo = localStorage.getItem('usuario_cargo');
+            if (cargo === 'Administrador') {
+                document.getElementById('secao-adm-liberacao').classList.remove('hidden');
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            try {
-                const { data, error } = await supabaseClient.from('obras').select('*');
-                const container = document.getElementById('tabela-listao');
+        // ADM libera uma data (Salva na tabela listao_config)
+        async function liberarData(event) {
+            event.preventDefault();
+            const dataEscolhida = document.getElementById('data-liberada').value;
 
-                if (error) throw error;
-
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum registro encontrado no listão.</p>';
-                    return;
-                }
-
-                container.innerHTML = `
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-gray-200 text-gray-600 text-sm">
-                                <th class="p-3">Obra</th>
-                                <th class="p-3">Responsável</th>
-                                <th class="p-3">Descrição</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 text-sm">
-                            ${data.map(item => `
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 font-semibold text-gray-800">${item.nome}</td>
-                                    <td class="p-3 text-gray-600">${item.responsavel || '-'}</td>
-                                    <td class="p-3 text-gray-500">${item.descricao || '-'}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
-            } catch (err) {
-                console.error("Erro ao carregar listão:", err.message);
-                document.getElementById('tabela-listao').innerHTML = '<p class="text-red-500 text-sm">Erro ao carregar o listão de obras.</p>';
+            const { error } = await _supabase.from('listao_config').insert([{ data_liberada: dataEscolhida }]);
+            if (error) {
+                alert('Erro ao liberar data: ' + error.message);
+            } else {
+                alert('Data liberada com sucesso para os moderadores!');
+                document.getElementById('data-liberada').value = '';
+                carregarDatasLiberadas();
             }
-        });
+        }
+
+        // Carrega as datas liberadas pelas ADMs no select
+        async function carregarDatasLiberadas() {
+            const { data } = await _supabase.from('listao_config').select('*').order('data_liberada', { ascending: true });
+            const select = document.getElementById('select-data-liberada');
+            
+            select.innerHTML = '<option value="">Selecione uma data liberada</option>';
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    const dataFormatada = new Date(item.data_liberada + 'T00:00:00').toLocaleDateString('pt-BR');
+                    select.innerHTML += `<option value="${item.data_liberada}">${dataFormatada}</option>`;
+                });
+            } else {
+                select.innerHTML = '<option value="">Nenhuma data liberada pela ADM ainda</option>';
+            }
+        }
+
+        // Carrega as obras no select de lançamento
+        async function carregarObras() {
+            const { data } = await _supabase.from('obras').select('id, nome').order('nome');
+            const select = document.getElementById('select-obra');
+            select.innerHTML = '<option value="">Selecione a Obra</option>';
+            if (data) {
+                data.forEach(o => {
+                    select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
+                });
+            }
+        }
+
+        // Moderador lança o que vai postar na data (Salva na tabela listao_preenchimento)
+        async function lancarNoListao(event) {
+            event.preventDefault();
+            const dataPostagem = document.getElementById('select-data-liberada').value;
+            const obraNome = document.getElementById('select-obra').value;
+            const capitulos = document.getElementById('input-caps').value;
+            const responsavel = localStorage.getItem('usuario_nick') || 'Staff';
+
+            if (!dataPostagem) {
+                alert('Por favor, selecione uma data liberada pela ADM.');
+                return;
+            }
+
+            const { error } = await _supabase.from('listao_preenchimento').insert([{
+                data_postagem: dataPostagem,
+                obra_nome: obraNome,
+                capitulos: capitulos,
+                responsavel: responsavel
+            }]);
+
+            if (error) {
+                alert('Erro ao lançar no listão: ' + error.message);
+            } else {
+                alert('Lançado no listão com sucesso!');
+                document.getElementById('form-preenchimento-listao').reset();
+                carregarListaoPreenchido();
+            }
+        }
+
+        // Carrega a tabela geral do listão preenchido
+        async function carregarListaoPreenchido() {
+            const { data, error } = await _supabase.from('listao_preenchimento').select('*').order('data_postagem', { ascending: true });
+            const tbody = document.getElementById('tabela-listao');
+
+            if (error || !data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Nenhuma programação no listão no momento.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(item => {
+                const dataFormatada = new Date(item.data_postagem + 'T00:00:00').toLocaleDateString('pt-BR');
+                return `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="p-3 font-semibold text-gray-700">${dataFormatada}</td>
+                        <td class="p-3 font-bold text-gray-900">${item.obra_nome}</td>
+                        <td class="p-3 text-red-700 font-semibold">${item.capitulos}</td>
+                        <td class="p-3 text-gray-600">${item.responsavel}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="deletarItemListao('${item.id}')" class="text-red-600 hover:text-red-800 text-xs font-bold bg-red-50 hover:bg-red-100 px-2 py-1 rounded">Remover</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Remove um item do listão
+        async function deletarItemListao(id) {
+            if (confirm('Deseja realmente remover este item do listão?')) {
+                const { error } = await _supabase.from('listao_preenchimento').delete().eq('id', id);
+                if (!error) {
+                    carregarListaoPreenchido();
+                } else {
+                    alert('Erro ao excluir: ' + error.message);
+                }
+            }
+        }
     </script>
 </body>
 </html>
