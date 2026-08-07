@@ -23,10 +23,11 @@
     <main class="max-w-5xl mx-auto p-6 mt-4">
         <div class="mb-6">
             <h2 class="text-2xl font-black text-gray-900">Cadastrar Nova Obra</h2>
-            <p class="text-gray-600 mt-1">Preencha os detalhes e salve no sistema.</p>
+            <p class="text-gray-600 mt-1">Preencha os detalhes, escolha o responsável e vincule a equipe.</p>
         </div>
 
         <form id="form-cadastro-obra" onsubmit="salvarNovaObra(event)" class="space-y-6">
+            <!-- INFORMAÇÕES BÁSICAS -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 space-y-4">
                 <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2">📋 Informações Básicas</h3>
                 
@@ -40,12 +41,43 @@
                     <textarea id="descricao-obra" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Descreva brevemente a obra..."></textarea>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Responsável Principal</label>
-                    <input type="text" id="responsavel-obra" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Nome do responsável">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Responsável Principal</label>
+                        <input type="text" id="responsavel-obra" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Nome do responsável">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Status Inicial</label>
+                        <select id="status-obra" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none bg-white">
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
+            <!-- VINCULAR EQUIPE / STAFF -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2">👥 Vincular Equipe (Staff)</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Tradutor(es)</label>
+                        <input type="text" id="staff-tradutor" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Nomes dos tradutores">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Revisor(es)</label>
+                        <input type="text" id="staff-revisor" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Nomes dos revisores">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Typesetter / Cleaner</label>
+                        <input type="text" id="staff-ts" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Nomes da edição">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTÕES DE AÇÃO -->
             <div class="flex justify-end gap-4">
                 <button type="button" onclick="voltar()" class="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition">Cancelar</button>
                 <button type="submit" id="btn-salvar" class="px-6 py-2.5 bg-red-900 text-white rounded-lg font-semibold hover:bg-red-800 transition shadow-md">Salvar e Cadastrar</button>
@@ -63,7 +95,7 @@
         }
 
         async function salvarNovaObra(event) {
-            event.preventDefault(); // Impede o recarregamento padrão e o travamento
+            event.preventDefault();
 
             const btn = document.getElementById('btn-salvar');
             btn.disabled = true;
@@ -72,11 +104,23 @@
             const nome = document.getElementById('nome-obra').value;
             const descricao = document.getElementById('descricao-obra').value;
             const responsavel = document.getElementById('responsavel-obra').value;
+            const status = document.getElementById('status-obra').value;
+            const tradutor = document.getElementById('staff-tradutor').value;
+            const revisor = document.getElementById('staff-revisor').value;
+            const ts = document.getElementById('staff-ts').value;
 
             try {
                 const { error } = await supabaseClient
                     .from('obras')
-                    .insert([{ nome, descricao, responsavel }]);
+                    .insert([{ 
+                        nome, 
+                        descricao, 
+                        responsavel, 
+                        status,
+                        tradutor,
+                        revisor,
+                        ts
+                    }]);
 
                 if (error) throw error;
 
