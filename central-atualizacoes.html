@@ -63,7 +63,6 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b border-gray-100 pb-4 gap-4">
                 <h3 class="text-lg font-black text-gray-800">📌 Atualizações de Hoje (Confirmadas)</h3>
                 <div class="flex gap-3">
-                    <!-- BOTÃO DO TELEGRAM: Começa oculto (hidden) e só aparece para ADM -->
                     <button id="btn-gerar-telegram" onclick="gerarTelegram()" class="hidden bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md cursor-pointer flex items-center gap-2">
                         📲 Gerar Post do Telegram
                     </button>
@@ -102,10 +101,10 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let obrasConfirmadasHoje = []; // Variável global para guardar o que foi confirmado hoje
+        let obrasConfirmadasHoje = []; 
 
         window.onload = async () => {
-            // VERIFICA SE É ADM PARA MOSTRAR O BOTÃO DO TELEGRAM
+            // VERIFICA SE É ADM
             const cargo = localStorage.getItem('usuario_cargo');
             if (cargo === 'Administrador') {
                 document.getElementById('btn-gerar-telegram').classList.remove('hidden');
@@ -141,7 +140,7 @@
                 alert('Erro ao registrar: ' + error.message);
             } else {
                 document.getElementById('form-atualizacao').reset();
-                document.getElementById('atu-tipo').value = 'ATUALIZAÇÃO'; // Reseta pro padrão
+                document.getElementById('atu-tipo').value = 'ATUALIZAÇÃO'; 
                 carregarAtualizacoes();
             }
         }
@@ -280,7 +279,7 @@
             textoFinal += `.\n.\n.\n🔗• Link: fbsquadx.com\n\n‼️ Copiem o link e colem no navegador do celular de vocês ‼️`;
             document.getElementById('texto-telegram').value = textoFinal;
 
-            // 3. Buscar os layouts no banco de dados (Tabela Obras) puxando a coluna nova também!
+            // 3. Buscar os layouts no banco de dados
             try {
                 const { data: obrasDB, error } = await _supabase
                     .from('obras')
