@@ -69,8 +69,9 @@
     </main>
 
     <script>
-        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
-        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
+        // SUAS CHAVES REAIS DO SUPABASE
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         function sair() {
@@ -79,6 +80,7 @@
 
         window.onload = async () => {
             try {
+                // Busca as obras no banco de dados
                 const { data, error } = await supabaseClient.from('obras').select('*');
                 if (error) throw error;
 
@@ -88,7 +90,7 @@
                 const minhasGerenciadas = data ? data.filter(o => o.responsavel_nick === meuNick) : [];
                 const minhasStaff = data ? data.filter(o => o.staff_ids && o.staff_ids.includes(meuId) && o.responsavel_nick !== meuNick) : [];
                 
-                // Renderiza Gerenciadas
+                // Renderiza as obras que o moderador gerencia
                 const divGerenciadas = document.getElementById('grid-minhas-gerenciadas');
                 if (minhasGerenciadas.length === 0) {
                     divGerenciadas.innerHTML = '<p class="text-gray-400">Você não gerencia nenhuma obra.</p>';
@@ -100,7 +102,7 @@
                     `).join('');
                 }
 
-                // Renderiza Staff
+                // Renderiza as obras onde o moderador é staff
                 const divStaff = document.getElementById('grid-minhas-staff');
                 if (minhasStaff.length === 0) {
                     divStaff.innerHTML = '<p class="text-gray-400">Você não está vinculado como staff em outras obras.</p>';
@@ -114,6 +116,8 @@
 
             } catch (err) {
                 console.error("Erro ao carregar painel do moderador:", err.message);
+                document.getElementById('grid-minhas-gerenciadas').innerHTML = '<p class="text-red-500">Erro ao carregar os dados.</p>';
+                document.getElementById('grid-minhas-staff').innerHTML = '<p class="text-red-500">Erro ao carregar os dados.</p>';
             }
         };
     </script>
