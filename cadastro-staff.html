@@ -9,16 +9,33 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center p-4">
 
-    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 border border-gray-200">
+    <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 border border-gray-200">
         <div class="text-center mb-6">
             <h1 class="text-2xl font-black text-gray-800">✨ Novo Membro da Staff</h1>
-            <p class="text-xs text-gray-500 mt-1">Cadastre seus dados para acessar o sistema da scan.</p>
+            <p class="text-xs text-gray-500 mt-1">Preencha todos os dados para registrar o membro no sistema.</p>
         </div>
 
         <form onsubmit="cadastrarStaff(event)" class="space-y-4">
-            <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">Nick (Nome na Scan)</label>
-                <input type="text" id="staff-nick" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Ex: Kamiz">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Nome Completo</label>
+                    <input type="text" id="staff-nome" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Nome completo">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Nick (Nome na Scan)</label>
+                    <input type="text" id="staff-nick" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Ex: Kamiz">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Data de Nascimento</label>
+                    <input type="date" id="staff-nascimento" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Telefone / WhatsApp</label>
+                    <input type="text" id="staff-telefone" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="(00) 00000-0000">
+                </div>
             </div>
 
             <div>
@@ -32,15 +49,11 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">Cargo no Sistema</label>
-                <select id="staff-cargo" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                    <option value="Moderador">Moderador</option>
-                    <option value="Administrador">Administrador</option>
-                    <option value="Staff">Staff</option>
-                </select>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Funções na Scan</label>
+                <input type="text" id="staff-funcoes" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Ex: Tradutor, Revisor, Typesetter">
             </div>
 
-            <button type="submit" id="btn-cadastrar" class="w-full bg-red-700 hover:bg-red-800 text-white font-black py-3 rounded-xl transition text-sm shadow-lg shadow-red-700/30 cursor-pointer mt-2">
+            <button type="submit" id="btn-cadastrar" class="w-full bg-red-700 hover:bg-red-800 text-white font-black py-3 rounded-xl transition text-sm shadow-lg shadow-red-700/30 cursor-pointer mt-4">
                 Cadastrar Membro
             </button>
         </form>
@@ -61,18 +74,19 @@
             btn.disabled = true;
             btn.textContent = 'Cadastrando...';
 
-            const nick = document.getElementById('staff-nick').value;
-            const email = document.getElementById('staff-email').value;
-            const senha = document.getElementById('staff-senha').value;
-            const cargo = document.getElementById('staff-cargo').value;
-
             try {
-                const { error } = await _supabase.from('equipe').insert([{
-                    nick: nick,
-                    email: email,
-                    senha: senha,
-                    cargo_sistema: cargo
-                }]);
+                const dadosMembro = {
+                    nome: document.getElementById('staff-nome').value,
+                    nick: document.getElementById('staff-nick').value,
+                    data_nascimento: document.getElementById('staff-nascimento').value || null,
+                    telefone: document.getElementById('staff-telefone').value,
+                    email: document.getElementById('staff-email').value,
+                    senha: document.getElementById('staff-senha').value,
+                    cargo_sistema: 'Staff', // Automático como Staff
+                    funcoes: document.getElementById('staff-funcoes').value
+                };
+
+                const { error } = await _supabase.from('equipe').insert([dadosMembro]);
 
                 if (error) throw error;
 
