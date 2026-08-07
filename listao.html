@@ -16,70 +16,73 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
         
-        <!-- SEÇÃO EXCLUSIVA PARA ADM: LIBERAR DATAS -->
+        <!-- SEÇÃO EXCLUSIVA PARA ADM -->
         <div id="secao-adm-liberacao" class="hidden bg-red-50 rounded-xl p-6 shadow-sm border border-red-200">
-            <h2 class="text-lg font-black text-red-900 mb-2">👑 Área da ADM: Liberar Data para o Listão</h2>
-            <p class="text-xs text-red-700 mb-4">Defina qual data estará aberta para os moderadores lançarem suas programações.</p>
-            
+            <h2 class="text-lg font-black text-red-900 mb-2">👑 Área da ADM: Liberar Data</h2>
             <form onsubmit="liberarData(event)" class="flex flex-col sm:flex-row gap-4 items-end">
                 <div class="flex-1 w-full">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Escolher Data</label>
-                    <input type="date" id="data-liberada" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Data</label>
+                    <input type="date" id="data-liberada" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
-                <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2.5 px-6 rounded-lg text-sm shadow">
-                    🔓 Liberar Data
-                </button>
+                <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2.5 px-6 rounded-lg text-sm">Liberar</button>
             </form>
         </div>
 
-        <!-- SEÇÃO PARA MODERADORES E ADMS: LANÇAR O QUE VAI POSTAR NA DATA LIBERADA -->
+        <!-- FORMULÁRIO DE LANÇAMENTO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h2 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">✍️ Lançar no Listão (Programação de Postagem)</h2>
+            <h2 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">✍️ Lançar no Listão</h2>
             
-            <form id="form-preenchimento-listao" onsubmit="lancarNoListao(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+            <form id="form-preenchimento-listao" onsubmit="lancarNoListao(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Data Liberada pela ADM</label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Data</label>
                     <select id="select-data-liberada" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="">Aguardando ADM liberar datas...</option>
+                        <option value="">Selecione...</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
                     <select id="select-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="">Carregando obras...</option>
+                        <option value="">Selecione...</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos a Postar</label>
-                    <input type="text" id="input-caps" placeholder="Ex: Cap. 10 ao 12" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Tipo</label>
+                    <select id="select-tipo" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="Recorrente">Recorrente</option>
+                        <option value="Curta">Curta</option>
+                    </select>
                 </div>
-                <div class="sm:col-span-3 flex justify-end">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos</label>
+                    <input type="text" id="input-caps" placeholder="Ex: 10 ao 12" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div class="sm:col-span-4 flex justify-end">
                     <button type="submit" class="bg-gray-900 hover:bg-black text-white font-bold py-2 px-6 rounded-lg text-sm">
-                        + Adicionar à Programação
+                        + Adicionar ao Listão
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- TABELA / QUADRO DO LISTÃO GERAL -->
+        <!-- TABELA DO LISTÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 overflow-x-auto">
-            <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📋 Programação Atual do Listão</h3>
+            <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📋 Programação Atual</h3>
             <table class="w-full text-left border-collapse min-w-max">
                 <thead>
                     <tr class="bg-gray-100 text-gray-700 text-xs uppercase tracking-wider border-b border-gray-300">
                         <th class="p-3">Data</th>
                         <th class="p-3">Obra</th>
+                        <th class="p-3">Tipo</th>
                         <th class="p-3">Capítulos</th>
-                        <th class="p-3">Moderador / Staff</th>
+                        <th class="p-3">Staff</th>
                         <th class="p-3 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-listao" class="divide-y divide-gray-100 text-sm">
-                    <tr><td colspan="5" class="p-4 text-center text-gray-500">Carregando listão...</td></tr>
+                    <tr><td colspan="6" class="p-4 text-center text-gray-500">Carregando...</td></tr>
                 </tbody>
             </table>
         </div>
-
     </main>
 
     <script>
@@ -94,122 +97,63 @@
             carregarListaoPreenchido();
         };
 
-        // Verifica se o usuário logado é Administrador para mostrar o painel de liberação
         function verificarPermissaoAdm() {
-            const cargo = localStorage.getItem('usuario_cargo');
-            if (cargo === 'Administrador') {
+            if (localStorage.getItem('usuario_cargo') === 'Administrador') {
                 document.getElementById('secao-adm-liberacao').classList.remove('hidden');
             }
         }
 
-        // ADM libera uma data (Salva na tabela listao_config)
         async function liberarData(event) {
             event.preventDefault();
-            const dataEscolhida = document.getElementById('data-liberada').value;
-
-            const { error } = await _supabase.from('listao_config').insert([{ data_liberada: dataEscolhida }]);
-            if (error) {
-                alert('Erro ao liberar data: ' + error.message);
-            } else {
-                alert('Data liberada com sucesso para os moderadores!');
-                document.getElementById('data-liberada').value = '';
-                carregarDatasLiberadas();
-            }
+            const { error } = await _supabase.from('listao_config').insert([{ data_liberada: document.getElementById('data-liberada').value }]);
+            if (error) alert(error.message); else { alert('Data liberada!'); carregarDatasLiberadas(); }
         }
 
-        // Carrega as datas liberadas pelas ADMs no select
         async function carregarDatasLiberadas() {
-            const { data } = await _supabase.from('listao_config').select('*').order('data_liberada', { ascending: true });
+            const { data } = await _supabase.from('listao_config').select('*').order('data_liberada');
             const select = document.getElementById('select-data-liberada');
-            
-            select.innerHTML = '<option value="">Selecione uma data liberada</option>';
-            if (data && data.length > 0) {
-                data.forEach(item => {
-                    const dataFormatada = new Date(item.data_liberada + 'T00:00:00').toLocaleDateString('pt-BR');
-                    select.innerHTML += `<option value="${item.data_liberada}">${dataFormatada}</option>`;
-                });
-            } else {
-                select.innerHTML = '<option value="">Nenhuma data liberada pela ADM ainda</option>';
-            }
+            select.innerHTML = '<option value="">Selecione...</option>';
+            if (data) data.forEach(item => select.innerHTML += `<option value="${item.data_liberada}">${new Date(item.data_liberada + 'T00:00:00').toLocaleDateString('pt-BR')}</option>`);
         }
 
-        // Carrega as obras no select de lançamento
         async function carregarObras() {
-            const { data } = await _supabase.from('obras').select('id, nome').order('nome');
+            const { data } = await _supabase.from('obras').select('nome').order('nome');
             const select = document.getElementById('select-obra');
-            select.innerHTML = '<option value="">Selecione a Obra</option>';
-            if (data) {
-                data.forEach(o => {
-                    select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
-                });
-            }
+            select.innerHTML = '<option value="">Selecione...</option>';
+            if (data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
         }
 
-        // Moderador lança o que vai postar na data (Salva na tabela listao_preenchimento)
         async function lancarNoListao(event) {
             event.preventDefault();
-            const dataPostagem = document.getElementById('select-data-liberada').value;
-            const obraNome = document.getElementById('select-obra').value;
-            const capitulos = document.getElementById('input-caps').value;
-            const responsavel = localStorage.getItem('usuario_nick') || 'Staff';
-
-            if (!dataPostagem) {
-                alert('Por favor, selecione uma data liberada pela ADM.');
-                return;
-            }
-
             const { error } = await _supabase.from('listao_preenchimento').insert([{
-                data_postagem: dataPostagem,
-                obra_nome: obraNome,
-                capitulos: capitulos,
-                responsavel: responsavel
+                data_postagem: document.getElementById('select-data-liberada').value,
+                obra_nome: document.getElementById('select-obra').value,
+                tipo_obra: document.getElementById('select-tipo').value, // <--- Ajustado para tipo_obra
+                capitulos: document.getElementById('input-caps').value,
+                responsavel: localStorage.getItem('usuario_nick') || 'Staff'
             }]);
-
-            if (error) {
-                alert('Erro ao lançar no listão: ' + error.message);
-            } else {
-                alert('Lançado no listão com sucesso!');
-                document.getElementById('form-preenchimento-listao').reset();
-                carregarListaoPreenchido();
-            }
+            if (error) alert('Erro: ' + error.message); else { alert('Lançado!'); carregarListaoPreenchido(); }
         }
 
-        // Carrega a tabela geral do listão preenchido
         async function carregarListaoPreenchido() {
-            const { data, error } = await _supabase.from('listao_preenchimento').select('*').order('data_postagem', { ascending: true });
+            const { data } = await _supabase.from('listao_preenchimento').select('*').order('data_postagem');
             const tbody = document.getElementById('tabela-listao');
-
-            if (error || !data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Nenhuma programação no listão no momento.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = data.map(item => {
-                const dataFormatada = new Date(item.data_postagem + 'T00:00:00').toLocaleDateString('pt-BR');
-                return `
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="p-3 font-semibold text-gray-700">${dataFormatada}</td>
-                        <td class="p-3 font-bold text-gray-900">${item.obra_nome}</td>
-                        <td class="p-3 text-red-700 font-semibold">${item.capitulos}</td>
-                        <td class="p-3 text-gray-600">${item.responsavel}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="deletarItemListao('${item.id}')" class="text-red-600 hover:text-red-800 text-xs font-bold bg-red-50 hover:bg-red-100 px-2 py-1 rounded">Remover</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center">Vazio.</td></tr>'; return; }
+            tbody.innerHTML = data.map(item => `
+                <tr class="hover:bg-gray-50">
+                    <td class="p-3">${new Date(item.data_postagem + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                    <td class="p-3 font-bold">${item.obra_nome}</td>
+                    <td class="p-3"><span class="px-2 py-1 rounded bg-gray-100 text-xs font-bold">${item.tipo_obra || '-'}</span></td>
+                    <td class="p-3 text-red-700">${item.capitulos}</td>
+                    <td class="p-3 text-gray-500">${item.responsavel}</td>
+                    <td class="p-3 text-center"><button onclick="deletar('${item.id}')" class="text-red-500 font-bold">X</button></td>
+                </tr>
+            `).join('');
         }
 
-        // Remove um item do listão
-        async function deletarItemListao(id) {
-            if (confirm('Deseja realmente remover este item do listão?')) {
-                const { error } = await _supabase.from('listao_preenchimento').delete().eq('id', id);
-                if (!error) {
-                    carregarListaoPreenchido();
-                } else {
-                    alert('Erro ao excluir: ' + error.message);
-                }
-            }
+        async function deletar(id) {
+            await _supabase.from('listao_preenchimento').delete().eq('id', id);
+            carregarListaoPreenchido();
         }
     </script>
 </body>
