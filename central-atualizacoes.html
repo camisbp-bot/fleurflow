@@ -11,12 +11,12 @@
 
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
         <h1 class="text-xl font-bold text-gray-800">📅 Lista de Atualização Diária</h1>
-        <button onclick="window.history.back()" class="text-sm font-bold text-gray-600 hover:text-red-700">&larr; Voltar</button>
+        <button onclick="window.history.back()" class="text-sm font-bold text-gray-600 hover:text-red-700 cursor-pointer">&larr; Voltar</button>
     </nav>
 
     <main class="max-w-4xl mx-auto p-6 mt-4 space-y-6">
         
-        <!-- FORMULÁRIO DE INSERÇÃO PARA MODERADORES E ADMS -->
+        <!-- FORMULÁRIO DE INSERÇÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
             <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização Diária</h2>
             <p class="text-xs text-gray-500 mb-4">Lance aqui a atualização realizada para constar no diário de hoje.</p>
@@ -33,14 +33,14 @@
                     <input type="text" id="atu-caps" placeholder="Ex: Cap. 10 e 11" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
                 <div>
-                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm shadow">
+                    <button type="submit" id="btn-lancar" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm shadow cursor-pointer">
                         Salvar Atualização
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- LANÇAMENTOS DE HOJE (LIMPA DIARIAMENTE) -->
+        <!-- LANÇAMENTOS DE HOJE -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
                 <h3 class="text-lg font-black text-gray-800">📌 Atualizações de Hoje</h3>
@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <!-- HISTÓRICO ARQUIVADO (ACESSO DAS ADMS) -->
+        <!-- HISTÓRICO ARQUIVADO -->
         <div id="secao-historico" class="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📁 Arquivo de Atualizações Passadas</h3>
             <div id="lista-historico" class="space-y-6 text-sm text-gray-600">
@@ -72,17 +72,21 @@
         };
 
         async function carregarObrasSelect() {
-            const { data } = await _supabase.from('obras').select('nome').order('nome');
-            const select = document.getElementById('atu-obra');
-            select.innerHTML = '<option value="">Selecione a Obra</option>';
-            if(data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
+            try {
+                const { data } = await _supabase.from('obras').select('nome').order('nome');
+                const select = document.getElementById('atu-obra');
+                select.innerHTML = '<option value="">Selecione a Obra</option>';
+                if(data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
+            } catch (err) {
+                console.error("Erro ao carregar obras:", err);
+            }
         }
 
         async function salvarAtualizacao(event) {
             event.preventDefault();
             const obra = document.getElementById('atu-obra').value;
             const caps = document.getElementById('atu-caps').value;
-            const responsavel = localStorage.getItem('usuario_nick') || 'Staff';
+            const responsavel = localStorage.getItem('usuario_nick') || 'Moderadora';
 
             const { error } = await _supabase.from('atualizacoes').insert([{ 
                 obra_nome: obra, 
@@ -100,58 +104,62 @@
         }
 
         async function carregarAtualizacoes() {
-            const { data, error } = await _supabase.from('atualizacoes').select('*').order('created_at', { ascending: false });
-            const listaHoje = document.getElementById('lista-hoje');
-            const listaHistorico = document.getElementById('lista-historico');
-            
-            if (error) {
-                listaHoje.innerHTML = '<p class="text-red-500">Erro ao carregar (verifique se a tabela "atualizacoes" existe no Supabase).</p>';
-                return;
-            }
-
-            listaHoje.innerHTML = ''; 
-            listaHistorico.innerHTML = '';
-            
-            const hojeDataStr = new Date().toLocaleDateString('pt-BR');
-            let historicoPorData = {};
-
-            if(data && data.length > 0) {
-                data.forEach(item => {
-                    const dataItem = new Date(item.created_at).toLocaleDateString('pt-BR');
-                    const card = `
-                        <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center">
-                            <div>
-                                <strong class="text-gray-800">${item.obra_nome}</strong> 
-                                <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
-                            </div>
-                            <span class="text-xs text-gray-500">Lançado por: ${item.responsavel}</span>
-                        </div>
-                    `;
-
-                    if(dataItem === hojeDataStr) {
-                        listaHoje.innerHTML += card;
-                    } else {
-                        if(!historicoPorData[dataItem]) historicoPorData[dataItem] = [];
-                        historicoPorData[dataItem].push(card);
-                    }
-                });
-            }
-
-            if(listaHoje.innerHTML === '') {
-                listaHoje.innerHTML = '<p class="text-gray-400">Nenhum lançamento registrado hoje ainda.</p>';
-            }
-            
-            if(Object.keys(historicoPorData).length === 0) {
-                listaHistorico.innerHTML = '<p class="text-gray-400">Nenhum arquivo anterior encontrado.</p>';
-            } else {
-                for (const [dataChave, cards] of Object.entries(historicoPorData)) {
-                    listaHistorico.innerHTML += `
-                        <div class="mb-4">
-                            <h4 class="font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded-md inline-block mb-2">Atualização ${dataChave}</h4>
-                            <div class="space-y-2">${cards.join('')}</div>
-                        </div>
-                    `;
+            try {
+                const { data, error } = await _supabase.from('atualizacoes').select('*').order('created_at', { ascending: false });
+                const listaHoje = document.getElementById('lista-hoje');
+                const listaHistorico = document.getElementById('lista-historico');
+                
+                if (error) {
+                    listaHoje.innerHTML = '<p class="text-red-500">Erro ao carregar (verifique se a tabela "atualizacoes" existe no Supabase).</p>';
+                    return;
                 }
+
+                listaHoje.innerHTML = ''; 
+                listaHistorico.innerHTML = '';
+                
+                const hojeDataStr = new Date().toLocaleDateString('pt-BR');
+                let historicoPorData = {};
+
+                if(data && data.length > 0) {
+                    data.forEach(item => {
+                        const dataItem = new Date(item.created_at).toLocaleDateString('pt-BR');
+                        const card = `
+                            <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center">
+                                <div>
+                                    <strong class="text-gray-800">${item.obra_nome}</strong> 
+                                    <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
+                                </div>
+                                <span class="text-xs text-gray-500">Por: ${item.responsavel}</span>
+                            </div>
+                        `;
+
+                        if(dataItem === hojeDataStr) {
+                            listaHoje.innerHTML += card;
+                        } else {
+                            if(!historicoPorData[dataItem]) historicoPorData[dataItem] = [];
+                            historicoPorData[dataItem].push(card);
+                        }
+                    });
+                }
+
+                if(listaHoje.innerHTML === '') {
+                    listaHoje.innerHTML = '<p class="text-gray-400">Nenhum lançamento registrado hoje ainda.</p>';
+                }
+                
+                if(Object.keys(historicoPorData).length === 0) {
+                    listaHistorico.innerHTML = '<p class="text-gray-400">Nenhum arquivo anterior encontrado.</p>';
+                } else {
+                    for (const [dataChave, cards] of Object.entries(historicoPorData)) {
+                        listaHistorico.innerHTML += `
+                            <div class="mb-4">
+                                <h4 class="font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded-md inline-block mb-2">Atualização ${dataChave}</h4>
+                                <div class="space-y-2">${cards.join('')}</div>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (err) {
+                console.error("Erro:", err);
             }
         }
 
