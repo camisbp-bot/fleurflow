@@ -48,27 +48,21 @@
                 <input type="password" id="staff-senha" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
             </div>
 
-            <!-- CHECKBOXES DE FUNÇÕES -->
+            <!-- CHECKBOXES COM AS 4 FUNÇÕES OFICIAIS -->
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-2">Funções na Scan</label>
                 <div class="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-300">
                     <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
+                        <input type="checkbox" name="funcao" value="Organizer" class="rounded text-red-700"> Organizer
+                    </label>
+                    <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
                         <input type="checkbox" name="funcao" value="Tradutor" class="rounded text-red-700"> Tradutor
-                    </label>
-                    <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
-                        <input type="checkbox" name="funcao" value="Revisor" class="rounded text-red-700"> Revisor
-                    </label>
-                    <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
-                        <input type="checkbox" name="funcao" value="Typesetter" class="rounded text-red-700"> Typesetter
                     </label>
                     <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
                         <input type="checkbox" name="funcao" value="Cleaner" class="rounded text-red-700"> Cleaner
                     </label>
                     <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
-                        <input type="checkbox" name="funcao" value="Raw Hunter" class="rounded text-red-700"> Raw Hunter
-                    </label>
-                    <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
-                        <input type="checkbox" name="funcao" value="QC" class="rounded text-red-700"> QC
+                        <input type="checkbox" name="funcao" value="Editor" class="rounded text-red-700"> Editor
                     </label>
                 </div>
             </div>
@@ -92,7 +86,6 @@
             event.preventDefault();
             const btn = document.getElementById('btn-cadastrar');
             
-            // Pega as caixinhas marcadas
             const checkboxes = document.querySelectorAll('input[name="funcao"]:checked');
             const funcoesArray = Array.from(checkboxes).map(cb => cb.value);
             const funcoesString = funcoesArray.join(', ');
