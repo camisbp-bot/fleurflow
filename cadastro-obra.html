@@ -24,7 +24,7 @@
         
         <div class="mb-6">
             <h2 class="text-2xl font-black text-gray-900">Cadastrar Nova Obra</h2>
-            <p class="text-gray-600 mt-1">Preencha os detalhes, faça upload das imagens e vincule a equipe.</p>
+            <p class="text-gray-600 mt-1">Preencha todos os detalhes exigidos pelo banco de dados para registrar a obra.</p>
         </div>
 
         <form id="form-cadastro-obra" onsubmit="salvarNovaObra(event)" class="space-y-6">
@@ -80,9 +80,9 @@
                 </div>
             </div>
 
-            <!-- 2. ARQUIVOS E CAPA -->
+            <!-- 2. ARQUIVOS E PLATAFORMA -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">📁 Capa e Links</h3>
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">📁 Links e Publicação</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
@@ -102,9 +102,33 @@
                 </div>
             </div>
 
-            <!-- 3. LAYOUTS -->
+            <!-- 3. CRONOGRAMA E CAPÍTULOS (ESTAVA FALTANDO!) -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra (Upload de Imagens)</h3>
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">⏱️ Cronograma e Progresso</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Dia Oficial de Lançamento</label>
+                        <input type="text" id="obra-dia-oficial" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Segunda-feira">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Dia de Lançamento (Scan)</label>
+                        <input type="text" id="obra-dia-scan" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Quarta-feira">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Último Capítulo na Plataforma Oficial</label>
+                        <input type="number" id="obra-capitulo-plat" value="0" min="0" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Último Capítulo na Fleur</label>
+                        <input type="number" id="obra-capitulo-fleur" value="0" min="0" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. LAYOUTS (AGORA COM UPLOAD DE IMAGENS) -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra (Upload)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Lançamento</label>
@@ -121,7 +145,7 @@
                 </div>
             </div>
 
-            <!-- 4. EQUIPE / STAFF VINCULADA -->
+            <!-- 5. EQUIPE / STAFF VINCULADA -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">👥 Staff Vinculada</h3>
                 <div id="lista-membros-staff" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -145,39 +169,36 @@
 
         window.onload = async () => {
             try {
-                // Busca TODOS os membros da equipe sem filtro rígido para evitar falhas de carregamento
+                // Puxa id, nick e cargo_sistema
                 const { data: equipe, error } = await _supabase.from('equipe').select('id, nick, cargo_sistema');
                 
                 if (error) throw error;
 
                 const selectResp = document.getElementById('obra-responsavel');
-                selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
-                
                 const containerStaff = document.getElementById('lista-membros-staff');
+                
+                selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
                 containerStaff.innerHTML = '';
 
                 if (!equipe || equipe.length === 0) {
-                    selectResp.innerHTML = '<option value="">Nenhum membro encontrado na tabela equipe</option>';
+                    selectResp.innerHTML = '<option value="">Nenhum membro encontrado</option>';
                     containerStaff.innerHTML = '<p class="text-xs text-gray-400">Nenhum membro encontrado.</p>';
                 } else {
-                    // Preenche o select de responsáveis
                     equipe.forEach(l => {
-                        selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema || 'Membro'})</option>`;
+                        selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema || 'Moderador'})</option>`;
                     });
 
-                    // Preenche os checkboxes de staff
                     containerStaff.innerHTML = equipe.map(m => `
                         <label class="flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
                             <input type="checkbox" name="staff_membros" value="${m.id}" class="rounded text-red-700 focus:ring-red-700">
                             <span class="font-semibold text-gray-800">${m.nick}</span>
-                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema || 'Membro'})</span>
+                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema || 'Moderador'})</span>
                         </label>
                     `).join('');
                 }
             } catch (err) {
                 console.error("Erro ao carregar equipe:", err.message);
-                document.getElementById('obra-responsavel').innerHTML = '<option value="">Erro ao carregar (Verifique RLS no Supabase)</option>';
-                document.getElementById('lista-membros-staff').innerHTML = `<p class="text-xs text-red-500">Erro: ${err.message}</p>`;
+                document.getElementById('obra-responsavel').innerHTML = '<option value="">Erro ao carregar dados</option>';
             }
         };
 
@@ -214,31 +235,39 @@
             btn.textContent = 'Enviando imagens e salvando obra...';
 
             try {
+                // Upload das imagens
                 const capaUrl = await fazerUpload('obra-capa', 'capas');
                 const layoutLanc = await fazerUpload('obra-layout-lancamento', 'layouts');
                 const layoutAtu = await fazerUpload('obra-layout-atualizacao', 'layouts');
                 const layoutFin = await fazerUpload('obra-layout-finalizacao', 'layouts');
 
+                // Pegar os arrays de checkbox
                 const checkboxes = document.querySelectorAll('input[name="staff_membros"]:checked');
                 const staff_ids = Array.from(checkboxes).map(cb => cb.value);
 
+                // Montar o objeto com TODAS as 17 colunas
                 const dadosObra = {
                     nome: document.getElementById('obra-nome').value,
                     sinopse: document.getElementById('obra-sinopse').value,
                     tipo: document.getElementById('obra-tipo').value,
                     responsavel_nick: document.getElementById('obra-responsavel').value,
                     plataforma_oficial: document.getElementById('obra-plataforma').value,
+                    dia_oficial: document.getElementById('obra-dia-oficial').value,
+                    dia_scan: document.getElementById('obra-dia-scan').value,
                     prioridade: document.getElementById('obra-prioridade').value,
                     drive_url: document.getElementById('obra-drive').value,
                     capa_url: capaUrl,
                     layout_lancamento: layoutLanc,
                     layout_atualizacao: layoutAtu,
                     layout_finalizacao: layoutFin,
+                    capitulo_plataforma: parseInt(document.getElementById('obra-capitulo-plat').value) || 0,
+                    capitulo_fleur: parseInt(document.getElementById('obra-capitulo-fleur').value) || 0,
                     status: document.getElementById('obra-status').value,
                     staff_ids: staff_ids
                 };
 
                 const { error } = await _supabase.from('obras').insert([dadosObra]);
+                
                 if (error) throw error;
 
                 alert("Obra e imagens salvas com sucesso!");
