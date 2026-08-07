@@ -48,8 +48,7 @@
         </form>
     </div>
 
-    <!-- SCRIPT CORRIGIDO -->
-    <script>
+   <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -57,45 +56,65 @@
         async function fazerLogin(event) {
             event.preventDefault();
 
-            // O .trim() salva sua vida removendo espaços que o teclado do celular coloca no final da palavra
             const identificador = document.getElementById('login-identificador').value.trim();
             const senha = document.getElementById('login-senha').value.trim();
 
             try {
-                // O .ilike faz o banco aceitar letras maiúsculas e minúsculas sem frescura (camis, Camis, CAMIS)
-                const { data, error } = await _supabase
+                // 1. Busca TODOS os membros para ignorar qualquer problema de pesquisa do banco
+                const { data: equipe, error } = await _supabase
                     .from('equipe')
-                    .select('*')
-                    .or(`nick.ilike.${identificador},email.ilike.${identificador}`)
-                    .eq('senha', senha)
-                    .single();
+                    .select('*');
 
-                if (error || !data) {
-                    alert('Nick/E-mail ou senha incorretos!');
-                    console.error("Erro no Supabase:", error);
-                } else {
-                    // 1. SALVA OS DADOS DO USUÁRIO NA MEMÓRIA DO NAVEGADOR
-                    localStorage.setItem('usuario_nick', data.nick);
-                    localStorage.setItem('usuario_cargo', data.cargo_sistema);
-                    localStorage.setItem('usuario_id', data.id);
-
-                    alert(`Bem-vinda de volta, ${data.nick}!`);
-
-                    // 2. REDIRECIONAMENTO COM BASE NO CARGO
-                    if (data.cargo_sistema === 'Administrador') {
-                        window.location.href = 'dashboard-adm.html';
-                    } 
-                    else if (data.cargo_sistema === 'Moderador') {
-                        window.location.href = 'dashboard-moderador.html'; // Corrigido!
-                    } 
-                    else {
-                        // Se for Tradutor, Editor, Cleaner (Staff geral)
-                        window.location.href = 'dashboard-staff.html';
-                    }
+                // TESTE A: Ver se o Supabase deixou ler a tabela
+                if (error) {
+                    alert('Erro de permissão no Supabase: ' + error.message);
+                    return;
                 }
+
+                // TESTE B: Ver se a tabela veio vazia (Significa que o RLS está bloqueando)
+                if (!equipe || equipe.length === 0) {
+                    alert('Nenhum usuário retornou! O Supabase está bloqueando a leitura.\n\nVá no Supabase > Table Editor > equipe > Desative o RLS (Disable RLS).');
+                    return;
+                }
+
+                // 2. Procura o usuário que você digitou na lista que voltou
+                const usuario = equipe.find(u => 
+                    (u.nick && u.nick.toLowerCase() === identificador.toLowerCase()) || 
+                    (u.email && u.email.toLowerCase() === identificador.toLowerCase())
+                );
+
+                // TESTE C: Ver se achou o Nick
+                if (!usuario) {
+                    alert(`O Nick "${identificador}" não foi encontrado na tabela da equipe.`);
+                    return;
+                }
+
+                // TESTE D: Compara a senha e mostra exatamente o que tem lá!
+                if (usuario.senha !== senha) {
+                    alert(`SENHA INCORRETA!\n\nVocê digitou: [${senha}]\nNo banco de dados está salvo: [${usuario.senha}]\n\nVeja se tem algum espaço a mais sobrando no banco!`);
+                    return;
+                }
+
+                // SE PASSAR POR TUDO, FAZ O LOGIN:
+                localStorage.setItem('usuario_nick', usuario.nick);
+                localStorage.setItem('usuario_cargo', usuario.cargo_sistema);
+                localStorage.setItem('usuario_id', usuario.id);
+
+                alert(`Bem-vinda, ${usuario.nick}!`);
+
+                // REDIRECIONA PARA A TELA CERTA
+                if (usuario.cargo_sistema === 'Administrador') {
+                    window.location.href = 'dashboard-adm.html';
+                } 
+                else if (usuario.cargo_sistema === 'Moderador') {
+                    window.location.href = 'dashboard-moderador.html';
+                } 
+                else {
+                    window.location.href = 'dashboard-staff.html';
+                }
+
             } catch (err) {
-                alert('Erro de comunicação com o sistema.');
-                console.error("Erro geral:", err);
+                alert('Erro no script: ' + err.message);
             }
         }
     </script>
