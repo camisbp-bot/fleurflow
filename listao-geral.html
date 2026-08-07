@@ -63,7 +63,7 @@
                     <select id="listao-tipo" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                         <option value="Recorrente">Recorrente</option>
                         <option value="Curta">Curta</option>
-                        <option value="Nova Obra">Nova Obra</option>
+                        <option value="Lançamento">Lançamento</option>
                         <option value="Finalização">Finalização</option>
                     </select>
                 </div>
@@ -95,7 +95,7 @@
                 </div>
             </div>
 
-            <!-- ÁREA DO GERADOR DO TELEGRAM (Oculta por padrão) -->
+            <!-- ÁREA DO GERADOR DO TELEGRAM -->
             <div id="area-telegram-listao" class="hidden p-6 bg-blue-50 border-b border-blue-100">
                 <h4 class="text-md font-black text-blue-800 mb-2">Mensagem do Cronograma:</h4>
                 <textarea id="texto-telegram-listao" rows="12" class="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none" readonly></textarea>
@@ -167,7 +167,6 @@
             event.preventDefault();
             const novaData = document.getElementById('nova-data-adm').value;
             
-            // Usando a coluna 'data_listao'
             const { error } = await _supabase.from('listao_config').insert([{ data_listao: novaData }]);
             
             if(error) {
@@ -186,7 +185,6 @@
         }
 
         async function carregarDatasLiberadas() {
-            // Lendo da coluna 'data_listao'
             const { data, error } = await _supabase.from('listao_config').select('*').order('data_listao', { ascending: true });
             
             const containerTags = document.getElementById('lista-datas-liberadas');
@@ -218,10 +216,10 @@
                     </div>
                 `;
 
-                // O 'value' enviado pro banco de preenchimento vai ser a data certinha
                 selectListao.innerHTML += `<option value="${item.data_listao}">${dataDisplay}</option>`;
             });
         }
+
         /* ------------------------------------------- */
 
         async function carregarObrasSelect() {
@@ -241,7 +239,6 @@
                 return;
             }
 
-            // Inserindo em 'data_referencia' da tabela preenchimento
             const obj = {
                 data_referencia: dataSelecionada,
                 obra_nome: document.getElementById('listao-obra').value,
