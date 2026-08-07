@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FleurFlow - Nova Obra</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="manifest" href="manifest.json">
 </head>
@@ -17,7 +15,7 @@
             <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
             <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Ficha da Obra</h1>
         </div>
-        <div class="flex items-center gap-4">
+        <div>
             <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar</button>
         </div>
     </nav>
@@ -25,85 +23,71 @@
     <main class="max-w-5xl mx-auto p-6 mt-4">
         <div class="mb-6">
             <h2 class="text-2xl font-black text-gray-900">Cadastrar Nova Obra</h2>
-            <p class="text-gray-600 mt-1">Preencha os detalhes, escolha o responsável e vincule a equipe.</p>
+            <p class="text-gray-600 mt-1">Preencha os detalhes e salve no sistema.</p>
         </div>
 
         <form id="form-cadastro-obra" onsubmit="salvarNovaObra(event)" class="space-y-6">
-            <!-- INFORMAÇÕES BÁSICAS -->
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2 mb-4">📋 Informações Básicas</h3>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2">📋 Informações Básicas</h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nome da Obra / Projeto</label>
-                        <input type="text" id="nome-obra" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Ex: Projeto Gardênia">
-                    </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nome da Obra / Projeto</label>
+                    <input type="text" id="nome-obra" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Ex: Projeto Gardênia">
+                </div>
 
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Descrição / Detalhes</label>
-                        <textarea id="descricao-obra" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Descreva brevemente a obra..."></textarea>
-                    </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Descrição / Detalhes</label>
+                    <textarea id="descricao-obra" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Descreva brevemente a obra..."></textarea>
+                </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Responsável Principal</label>
-                        <input type="text" id="responsavel-obra" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Nome do responsável">
-                    </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Responsável Principal</label>
+                    <input type="text" id="responsavel-obra" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="Nome do responsável">
                 </div>
             </div>
 
-            <!-- BOTÃO DE SALVAR -->
             <div class="flex justify-end gap-4">
                 <button type="button" onclick="voltar()" class="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition">Cancelar</button>
-                <button type="submit" class="px-6 py-2.5 bg-red-900 text-white rounded-lg font-semibold hover:bg-red-800 transition shadow-md">Salvar e Cadastrar</button>
+                <button type="submit" id="btn-salvar" class="px-6 py-2.5 bg-red-900 text-white rounded-lg font-semibold hover:bg-red-800 transition shadow-md">Salvar e Cadastrar</button>
             </div>
         </form>
     </main>
 
     <script>
-        // CONFIGURAÇÃO DO SUPABASE (Substitua pelas suas chaves reais se necessário)
         const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
         const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
-        
-        // Inicializa o cliente do Supabase
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         function voltar() {
-            window.location.href = 'index.html';
+            window.location.href = 'dashboard-adm.html';
         }
 
         async function salvarNovaObra(event) {
-            // Evita que a página recarregue e trave
-            event.preventDefault();
+            event.preventDefault(); // Impede o recarregamento padrão e o travamento
 
-            // Captura os valores dos campos
+            const btn = document.getElementById('btn-salvar');
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+
             const nome = document.getElementById('nome-obra').value;
             const descricao = document.getElementById('descricao-obra').value;
             const responsavel = document.getElementById('responsavel-obra').value;
 
             try {
-                // Envia os dados para a tabela 'obras' no Supabase
-                const { data, error } = await supabaseClient
+                const { error } = await supabaseClient
                     .from('obras')
-                    .insert([
-                        { 
-                            nome: nome, 
-                            descricao: descricao, 
-                            responsavel: responsavel 
-                        }
-                    ]);
+                    .insert([{ nome, descricao, responsavel }]);
 
-                if (error) {
-                    throw error;
-                }
+                if (error) throw error;
 
                 alert('Obra cadastrada com sucesso!');
-                
-                // Redireciona diretamente para a tela inicial do dashboard
-                window.location.href = 'index.html';
+                window.location.href = 'dashboard-adm.html';
 
             } catch (error) {
-                console.error('Erro ao cadastrar obra:', error.message);
+                console.error('Erro ao cadastrar:', error.message);
                 alert('Erro ao cadastrar obra: ' + error.message);
+                btn.disabled = false;
+                btn.textContent = 'Salvar e Cadastrar';
             }
         }
     </script>
