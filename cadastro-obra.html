@@ -24,7 +24,7 @@
         
         <div class="mb-6">
             <h2 class="text-2xl font-black text-gray-900">Cadastrar Nova Obra</h2>
-            <p class="text-gray-600 mt-1">Preencha os detalhes, adicione os arquivos e vincule a equipe.</p>
+            <p class="text-gray-600 mt-1">Preencha todos os detalhes exigidos pelo banco de dados para registrar a obra.</p>
         </div>
 
         <form id="form-cadastro-obra" onsubmit="salvarNovaObra(event)" class="space-y-6">
@@ -36,32 +36,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Nome da Obra</label>
-                        <input type="text" id="obra-nome" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Ex: Projeto Gardênia">
+                        <input type="text" id="obra-nome" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
                     </div>
                     
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Sinopse</label>
-                        <textarea id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Digite a sinopse da obra..."></textarea>
+                        <textarea id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none"></textarea>
                     </div>
 
-                    <!-- RESPONSÁVEL -->
                     <div class="md:col-span-2 bg-red-50 p-4 rounded-lg border border-red-100">
                         <label class="block text-xs font-black text-red-800 mb-1">👑 ADM / Moderador Responsável (Dono da Obra)</label>
                         <select id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
                             <option value="">Carregando líderes...</option>
                         </select>
-                    </div>
-
-                    <!-- CAPA (UPLOAD DE ARQUIVO RESTAURADO) -->
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Capa Oficial (Upload)</label>
-                        <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
-                    </div>
-
-                    <!-- LINK DO DRIVE RESTAURADO -->
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Link da Pasta (Google Drive)</label>
-                        <input type="url" id="obra-drive" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="https://drive.google.com/drive/folders/...">
                     </div>
 
                     <div>
@@ -81,46 +68,88 @@
                             <option value="Baixa">💤 Baixa</option>
                         </select>
                     </div>
-                </div>
-            </div>
-
-            <!-- 2. PLATAFORMA -->
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🌐 Plataforma & Publicação</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Status de Publicação</label>
-                        <select id="obra-status-pub" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Status da Obra</label>
+                        <select id="obra-status" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                             <option value="Ativo">🟢 Ativo (Lançando)</option>
                             <option value="Hiato">🟡 Em Hiato</option>
                             <option value="Concluido">🔴 Concluído</option>
                         </select>
                     </div>
+                </div>
+            </div>
+
+            <!-- 2. ARQUIVOS E PLATAFORMA -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">📁 Links e Publicação</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- CAPA -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Capa Oficial (Upload)</label>
+                        <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Link da Pasta (Google Drive)</label>
+                        <input type="url" id="obra-drive" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="https://drive.google.com/drive/folders/...">
+                    </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Plataforma Principal</label>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Plataforma Oficial</label>
                         <input type="text" id="obra-plataforma" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: MangaDex, Site Próprio, etc.">
                     </div>
                 </div>
             </div>
 
-            <!-- 3. LAYOUTS -->
+            <!-- 3. CRONOGRAMA E CAPÍTULOS -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts</h3>
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">⏱️ Cronograma e Progresso</h3>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
-                        <input type="checkbox" id="layout-creditos" class="rounded text-red-700 focus:ring-red-700">
-                        <span class="font-semibold text-gray-800">Página de Créditos Pronta?</span>
-                    </label>
-                    <label class="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
-                        <input type="checkbox" id="layout-recrutamento" class="rounded text-red-700 focus:ring-red-700">
-                        <span class="font-semibold text-gray-800">Página de Recrutamento Pronta?</span>
-                    </label>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Dia Oficial de Lançamento</label>
+                        <input type="text" id="obra-dia-oficial" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Segunda-feira">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Dia de Lançamento (Scan)</label>
+                        <input type="text" id="obra-dia-scan" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Quarta-feira">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Último Capítulo na Plataforma</label>
+                        <input type="number" id="obra-capitulo-plat" value="0" min="0" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Último Capítulo na Fleur</label>
+                        <input type="number" id="obra-capitulo-fleur" value="0" min="0" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    </div>
                 </div>
             </div>
 
-            <!-- 4. EQUIPE / STAFF VINCULADA -->
+            <!-- 4. LAYOUTS -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Lançamento</label>
+                        <input type="text" id="obra-layout-lancamento" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Padrão, Especial...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Atualização</label>
+                        <input type="text" id="obra-layout-atualizacao" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Padrão, Especial...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Finalização</label>
+                        <input type="text" id="obra-layout-finalizacao" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Padrão, Especial...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. EQUIPE / STAFF VINCULADA -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">👥 Staff Vinculada</h3>
+                <p class="text-xs text-red-600 font-bold mb-3">Atenção: A coluna "staff_ids" no Supabase precisa ser do tipo "uuid[]" (Array) para salvar múltiplos membros!</p>
                 <div id="lista-membros-staff" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <p class="text-xs text-gray-500">Carregando membros da equipe...</p>
                 </div>
@@ -136,6 +165,7 @@
     </main>
 
     <script>
+        // SUAS CHAVES REAIS
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -181,54 +211,47 @@
         }
 
         async function salvarNovaObra(event) {
-            event.preventDefault(); // Previne o reload (e o travamento)
+            event.preventDefault(); 
             
             const btn = document.getElementById('btn-salvar');
             btn.disabled = true;
             btn.textContent = 'Salvando obra...';
 
             try {
-                // Pega os dados básicos
-                const nome = document.getElementById('obra-nome').value;
-                const sinopse = document.getElementById('obra-sinopse').value;
-                const responsavel_nick = document.getElementById('obra-responsavel').value;
-                const drive = document.getElementById('obra-drive').value;
-                const tipo = document.getElementById('obra-tipo').value;
-                const prioridade = document.getElementById('obra-prioridade').value;
-                
                 // Pega arquivos (Upload de Capa)
                 const capaInput = document.getElementById('obra-capa');
                 let nomeArquivoCapa = null;
                 if (capaInput.files.length > 0) {
-                    nomeArquivoCapa = capaInput.files[0].name;
-                    // Lógica futura: Fazer o upload desse arquivo para o Storage do Supabase aqui
+                    nomeArquivoCapa = capaInput.files[0].name; // Futuramente fazer o upload real pro Storage
                 }
 
-                // Pega Plataforma e Layouts
-                const status_pub = document.getElementById('obra-status-pub').value;
-                const plataforma = document.getElementById('obra-plataforma').value;
-                const layout_creditos = document.getElementById('layout-creditos').checked;
-                const layout_recrutamento = document.getElementById('layout-recrutamento').checked;
-
-                // Pega os Staffs selecionados
+                // Coleta os UUIDs dos staffs selecionados (Gera um Array)
                 const checkboxes = document.querySelectorAll('input[name="staff_membros"]:checked');
                 const staff_ids = Array.from(checkboxes).map(cb => cb.value);
 
-                // Insere no banco
-                const { error } = await _supabase.from('obras').insert([{ 
-                    nome, 
-                    sinopse, 
-                    responsavel_nick, 
-                    drive,
-                    tipo, 
-                    prioridade,
-                    capa_arquivo: nomeArquivoCapa,
-                    status_pub,
-                    plataforma,
-                    layout_creditos,
-                    layout_recrutamento,
-                    staff_ids
-                }]);
+                // Monta o pacote de dados EXATAMENTE com os nomes das colunas do Supabase
+                const dadosObra = {
+                    nome: document.getElementById('obra-nome').value,
+                    sinopse: document.getElementById('obra-sinopse').value,
+                    tipo: document.getElementById('obra-tipo').value,
+                    responsavel_nick: document.getElementById('obra-responsavel').value,
+                    plataforma_oficial: document.getElementById('obra-plataforma').value,
+                    dia_oficial: document.getElementById('obra-dia-oficial').value,
+                    dia_scan: document.getElementById('obra-dia-scan').value,
+                    prioridade: document.getElementById('obra-prioridade').value,
+                    drive_url: document.getElementById('obra-drive').value,
+                    capa_url: nomeArquivoCapa, // Enviando o nome do arquivo da capa
+                    layout_lancamento: document.getElementById('obra-layout-lancamento').value,
+                    layout_atualizacao: document.getElementById('obra-layout-atualizacao').value,
+                    layout_finalizacao: document.getElementById('obra-layout-finalizacao').value,
+                    capitulo_plataforma: parseInt(document.getElementById('obra-capitulo-plat').value) || 0,
+                    capitulo_fleur: parseInt(document.getElementById('obra-capitulo-fleur').value) || 0,
+                    status: document.getElementById('obra-status').value,
+                    staff_ids: staff_ids // ATENÇÃO: Só vai salvar se no Supabase estiver como uuid[]
+                };
+
+                // Envia para o banco
+                const { error } = await _supabase.from('obras').insert([dadosObra]);
 
                 if (error) throw error;
 
