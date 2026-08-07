@@ -1,73 +1,73 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FleurFlow - Nova Obra</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="manifest" href="manifest.json">
-</head>
-<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+<HTML língua="pt-BR">
+<caboça>
+    <meta conjunto de caracteres="UTF-8">
+    <meta nome="janela de visualização" conteúdo="largura=largura do dispositivo, escala inicial=1,0">
+    <título>FleurFlow - Nova Obra</título>
+    <roteiro fonte="https://cdn.tailwindcss.com"></script>
+    <roteiro fonte="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link relação="manifesto" href="manifesto.json">
+</caboça>
+<corpo classe="bg-cinza-100 texto-cinza-900 min-h-tela pb-10">
 
-    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <div class="flex items-center gap-4">
-            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Ficha da Obra</h1>
-        </div>
-        <div class="flex items-center gap-4">
-            <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar</button>
-        </div>
-    </nav>
+    <navegação classe="bg-borda branca-borda b-cinza-200 px-6 py-3 flex justify-entre itens-sombra central-sm topo pegajoso-0 z-10">
+        <dividir classe="itens flexíveis - lacuna central - 4">
+            <imagem fonte="MARCA.png" alt="Logotipo Fleur" class="h-10 object-contain">
+            <h1 classe="texto-xl fonte-negrito texto-cinza-800 borda-l borda-cinza-300 pl-4">Ficha da Obra</h1>
+        </dividir>
+        <dividir classe="itens flexíveis - lacuna central - 4">
+            <botão clicar em="voltar()" classe="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar</button>
+        </dividir>
+    </navegação>
 
-    <main class="max-w-5xl mx-auto p-6 mt-4">
+    <principal classe="max-w-5xl mx-auto p-6 mt-4">
         
-        <div class="mb-6">
-            <h2 class="text-2xl font-black text-gray-900">Cadastrar Nova Obra</h2>
-            <p class="text-gray-600 mt-1">Preencha todos os detalhes exigidos pelo banco de dados para registrar a obra.</p>
-        </div>
+        <dividir classe="mb-6">
+            <h2 classe="texto-2xl fonte-preto texto-cinza-900">Cadastrar Nova Obra</h2>
+            <p classe="texto-cinza-600 mt-1">Preencha todos os detalhes exigidos pelo banco de dados para registrar a obra.</p>
+        </dividir>
 
-        <form id="form-cadastro-obra" onsubmit="salvarNovaObra(event)" class="space-y-6">
+        <forma id="forma-cadastro-obra" em enviar="salvarNovaObra(event)" class="space-y-6">
             
             <!-- 1. INFORMAÇÕES BÁSICAS -->
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">📖 Informações Básicas</h3>
+            <dividir classe="bg-branco arredondado-xl p-6 sombra-sm borda borda-cinza-200">
+                <h3 classe="texto-lg fonte-preto texto-cinza-800 border-b border-cinza-100 pb-2 mb-4">📖 Informações Básicas</h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Nome da Obra</label>
-                        <input type="text" id="obra-nome" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
-                    </div>
+                <dividir classe="grau grau-cols-1 md:grau-cols-2 lacuna-4">
+                    <dividir classe="md:col-span-2">
+                        <rótulo classe="bloco texto-xs fonte-negrito texto-cinza-700 mb-1">Nome da Obra</label>
+                        <entrada tipo="texto" id="obra-nome" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                    </dividir>
                     
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Sinopse</label>
-                        <textarea id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none"></textarea>
-                    </div>
+                    <dividir classe="md:col-span-2">
+                        <rótulo classe="bloco texto-xs fonte-negrito texto-cinza-700 mb-1">Sinopse</label>
+                        <área de texto id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none"></textarea>
+                    </dividir>
 
-                    <div class="md:col-span-2 bg-red-50 p-4 rounded-lg border border-red-100">
-                        <label class="block text-xs font-black text-red-800 mb-1">👑 Responsável (Dono da Obra)</label>
-                        <select id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
-                            <option value="">Carregando equipe...</option>
-                        </select>
-                    </div>
+                    <dividir classe="md:col-span-2 bg-red-50 p-4 arredondado-lg border border-red-100">
+                        <rótulo classe="bloco texto-xs fonte-preto texto-vermelho-800 mb-1">👑 Responsável (Dono da Obra)</label>
+                        <selecionário id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                            <opção valentia="">Carregando equipamento...</option>
+                        </selecionário>
+                    </dividir>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de Obra</label>
-                        <select id="obra-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                            <option value="Recorrente">Recorrente</option>
-                            <option value="Curta">Curta</option>
-                        </select>
-                    </div>
+                    <dividir>
+                        <rótulo classe="bloco texto-xs fonte-negrito texto-cinza-700 mb-1">Tipo de Obra</label>
+                        <selecionário id="obra-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <opção valentia="Recorrente">Recorrente</option>
+                            <opção valentia="Curta">Curta</option>
+                        </selecionar>
+                    </dividir>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Nível de Prioridade</label>
-                        <select id="obra-prioridade" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                            <option value="Máxima">🔥 Máxima</option>
-                            <option value="Alta">⭐ Alta</option>
-                            <option value="Média" selected>📄 Média</option>
-                            <option value="Baixa">💤 Baixa</option>
-                        </select>
-                    </div>
+                    <dividir>
+                        <rótulo classe="bloco texto-xs fonte-negrito texto-cinza-700 mb-1">Nível de Prioridade</label>
+                        <selecionar id="obra-prioridade" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <opção valor="Máxima">🔥 Máxima</option>
+                            <opção valor="Alta">⭐ Alta</option>
+                            <opção valor="Média" selected>📄 Média</option>
+                            <opção valor="Baixa">💤 Baixa</option>
+                        </selecionar>
+                    </dividir>
                     
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Status da Obra</label>
@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-            <!-- 3. CRONOGRAMA E CAPÍTULOS (ESTAVA FALTANDO!) -->
+            <!-- 3. CRONOGRAMA E CAPÍTULOS -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">⏱️ Cronograma e Progresso</h3>
                 
@@ -126,21 +126,25 @@
                 </div>
             </div>
 
-            <!-- 4. LAYOUTS (AGORA COM UPLOAD DE IMAGENS) -->
+            <!-- 4. LAYOUTS (AGORA COM OS 4 TIPOS) -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra (Upload)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Lançamento</label>
-                        <input type="file" id="obra-layout-lancamento" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:bg-red-50 file:text-red-700 cursor-pointer">
+                        <input type="file" id="obra-layout-lancamento" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1 text-sm file:bg-red-50 file:text-red-700 cursor-pointer">
                     </div>
-                    <div>
+                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Atualização</label>
-                        <input type="file" id="obra-layout-atualizacao" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:bg-red-50 file:text-red-700 cursor-pointer">
+                        <input type="file" id="obra-layout-atualizacao" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1 text-sm file:bg-red-50 file:text-red-700 cursor-pointer">
                     </div>
-                    <div>
+                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Finalização</label>
-                        <input type="file" id="obra-layout-finalizacao" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:bg-red-50 file:text-red-700 cursor-pointer">
+                        <input type="file" id="obra-layout-finalizacao" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1 text-sm file:bg-red-50 file:text-red-700 cursor-pointer">
+                    </div>
+                    <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                        <label class="block text-xs font-bold text-red-800 mb-1">Layout Lançamento & Finalização</label>
+                        <input type="file" id="obra-layout-lanc-fin" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1 text-sm file:bg-red-50 file:text-red-700 cursor-pointer">
                     </div>
                 </div>
             </div>
@@ -169,7 +173,6 @@
 
         window.onload = async () => {
             try {
-                // Puxa id, nick e cargo_sistema
                 const { data: equipe, error } = await _supabase.from('equipe').select('id, nick, cargo_sistema');
                 
                 if (error) throw error;
@@ -209,23 +212,23 @@
             else window.location.href = 'index.html';
         }
 
-        async function fazerUpload(inputId, pasta) {
-            const input = document.getElementById(inputId);
-            if (!input.files || input.files.length === 0) return null;
+        assíncrono função fazerUpload(ID de entrada, pasta) {
+            const entrada = documento.obterElementoPorId(inputId);
+            se (!entrada.arquivos || entrada.arquivos.length === 0) return null;
             
-            const file = input.files[0];
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `${pasta}/${fileName}`;
+            const arquivo = entrada.arquivos[0];
+            const arquivoExt = arquivo.nome.dividir('.').pop();
+            const nome do arquivo = `${Data.agora()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const caminho do arquivo = `${macarrão}/${fileName}`;
 
-            const { error: uploadError } = await _supabase.storage.from('fleurflow-bucket').upload(filePath, file);
-            if (uploadError) {
-                console.error("Erro no upload:", uploadError.message);
-                throw new Error(`Erro ao enviar arquivo de ${inputId}: ` + uploadError.message);
+            const { erro: erro de upload } = await _supabase.storage.from('fleurflow-bucket').upload(filePath, file);
+            se (erro de upload) {
+                console.erro("Erro sem upload:", uploadError.message);
+                lançar novo Erro(`Erro ao enviar arquivo de ${inputId}: ` + uploadError.message);
             }
 
-            const { data } = _supabase.storage.from('fleurflow-bucket').getPublicUrl(filePath);
-            return data.publicUrl;
+            const { dados } = _supabase.armazenamento.from('fleurflow-bucket').getPublicUrl(filePath);
+            retornar dados.URL pública;
         }
 
         async function salvarNovaObra(event) {
@@ -234,52 +237,52 @@
             btn.disabled = true;
             btn.textContent = 'Enviando imagens e salvando obra...';
 
-            try {
-                // Upload das imagens
-                const capaUrl = await fazerUpload('obra-capa', 'capas');
-                const layoutLanc = await fazerUpload('obra-layout-lancamento', 'layouts');
-                const layoutAtu = await fazerUpload('obra-layout-atualizacao', 'layouts');
-                const layoutFin = await fazerUpload('obra-layout-finalizacao', 'layouts');
+            tentar {
+                // Carregar das 4 imagens (Capa + 4 Layouts)
+                const capaUrl = esperar fazerUpload('obra-capa', 'capas');
+                const layoutLanc = esperar fazerUpload('obra-layout-lancamento', 'layouts');
+                const layoutAtu = esperar fazerUpload('obra-layout-atualizacao', 'layouts');
+                const layoutFin = esperar fazerUpload('obra-layout-finalizacao', 'layouts');
+                const layoutLancFin = esperar fazerUpload('obra-layout-lanc-fin', 'layouts');
 
-                // Pegar os arrays de checkbox
-                const checkboxes = document.querySelectorAll('input[name="staff_membros"]:checked');
-                const staff_ids = Array.from(checkboxes).map(cb => cb.value);
+                const caixas de seleção = documento.querySelectorAll('input[name="staff_membros"]:checked');
+                const pessoal_ids = Matriz.de(checkboxes).map(cb => cb.value);
 
-                // Montar o objeto com TODAS as 17 colunas
                 const dadosObra = {
-                    nome: document.getElementById('obra-nome').value,
-                    sinopse: document.getElementById('obra-sinopse').value,
-                    tipo: document.getElementById('obra-tipo').value,
-                    responsavel_nick: document.getElementById('obra-responsavel').value,
-                    plataforma_oficial: document.getElementById('obra-plataforma').value,
-                    dia_oficial: document.getElementById('obra-dia-oficial').value,
-                    dia_scan: document.getElementById('obra-dia-scan').value,
-                    prioridade: document.getElementById('obra-prioridade').value,
-                    drive_url: document.getElementById('obra-drive').value,
+                    nome: documento.obterElementoPorId('obra-nome').value,
+                    sinopse: documento.obterElementoPorId('obra-sinopse').value,
+                    tipo: documento.obterElementoPorId('obra-tipo').value,
+                    responsavel_nick: documento.getElementById('obra-responsavel').value,
+                    plataforma_oficial: documento.getElementById('obra-plataforma').value,
+                    dia_oficial: documento.getElementById('obra-dia-oficial').value,
+                    dia_scan: documento.obterElementoPorId('obra-dia-scan').value,
+                    prioridade: documento.getElementById('obra-prioridade').value,
+                    url_de acionamento: documento.obterElementoPorId('obra-drive').value,
                     capa_url: capaUrl,
                     layout_lancamento: layoutLanc,
                     layout_atualizacao: layoutAtu,
                     layout_finalizacao: layoutFin,
-                    capitulo_plataforma: parseInt(document.getElementById('obra-capitulo-plat').value) || 0,
-                    capitulo_fleur: parseInt(document.getElementById('obra-capitulo-fleur').value) || 0,
-                    status: document.getElementById('obra-status').value,
-                    staff_ids: staff_ids
+                    layout_lancamento_finalizar: layoutLancFin, // Nova coluna enviada pro Supabase
+                    capítulo_plataforma: parseInt(document.getElementById('obra-capitulo-plat').value) || 0,
+                    capítulo_flor: parseInt(document.getElementById('obra-capitulo-fleur').value) || 0,
+                    status: documento.obterElementoPorId('obra-status').value,
+                    pessoal_ids: pessoal_ids
                 };
 
-                const { error } = await _supabase.from('obras').insert([dadosObra]);
+                const { erro } = esperar _supabase.de('obras').inseirista([dadosObra]);
                 
-                if (error) throw error;
+                se (erro) lançar erro;
 
-                alert("Obra e imagens salvas com sucesso!");
+                alerta("Obra e imagens salvas com sucesso!");
                 voltar();
 
-            } catch (error) {
-                console.error('Erro ao salvar:', error.message);
-                alert('Erro ao salvar: ' + error.message);
-                btn.disabled = false;
-                btn.textContent = '💾 Salvar Obra Completa';
+            } Pégar (erro) {
+                console.erro('Erro ao salvar:', erro.mensagem);
+                alerta('Erro ao salvar: ' + erro.mensagem);
+                btn.desabilitado = falso;
+                btn.textoConteúdo = '💾 Salvar Obra Completa';
             }
         }
-    </script>
-</body>
-</html>
+    </roteiro>
+</corpo>
+</HTML>
