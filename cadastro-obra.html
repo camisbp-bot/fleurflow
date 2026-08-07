@@ -45,9 +45,9 @@
                     </div>
 
                     <div class="md:col-span-2 bg-red-50 p-4 rounded-lg border border-red-100">
-                        <label class="block text-xs font-black text-red-800 mb-1">👑 ADM / Moderador Responsável (Dono da Obra)</label>
+                        <label class="block text-xs font-black text-red-800 mb-1">👑 Responsável (Dono da Obra)</label>
                         <select id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
-                            <option value="">Carregando líderes...</option>
+                            <option value="">Carregando equipe...</option>
                         </select>
                     </div>
 
@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-            <!-- 3. LAYOUTS (AGORA COM UPLOAD DE IMAGENS) -->
+            <!-- 3. LAYOUTS -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra (Upload de Imagens)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -145,25 +145,40 @@
 
         window.onload = async () => {
             try {
-                const selectResp = document.getElementById('obra-responsavel');
-                const { data: lideres } = await _supabase.from('equipe').select('nick, cargo_sistema').in('cargo_sistema', ['Administrador', 'Moderador']);
-                selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
-                if (lideres) lideres.forEach(l => selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema})</option>`);
+                // Busca TODOS os membros da equipe sem filtro rígido para evitar falhas de carregamento
+                const { data: equipe, error } = await _supabase.from('equipe').select('id, nick, cargo_sistema');
+                
+                if (error) throw error;
 
+                const selectResp = document.getElementById('obra-responsavel');
+                selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
+                
                 const containerStaff = document.getElementById('lista-membros-staff');
-                const { data: equipe } = await _supabase.from('equipe').select('id, nick, cargo_sistema');
+                containerStaff.innerHTML = '';
+
                 if (!equipe || equipe.length === 0) {
+                    selectResp.innerHTML = '<option value="">Nenhum membro encontrado na tabela equipe</option>';
                     containerStaff.innerHTML = '<p class="text-xs text-gray-400">Nenhum membro encontrado.</p>';
                 } else {
+                    // Preenche o select de responsáveis
+                    equipe.forEach(l => {
+                        selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema || 'Membro'})</option>`;
+                    });
+
+                    // Preenche os checkboxes de staff
                     containerStaff.innerHTML = equipe.map(m => `
                         <label class="flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
                             <input type="checkbox" name="staff_membros" value="${m.id}" class="rounded text-red-700 focus:ring-red-700">
                             <span class="font-semibold text-gray-800">${m.nick}</span>
-                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema})</span>
+                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema || 'Membro'})</span>
                         </label>
                     `).join('');
                 }
-            } catch (err) { console.error(err); }
+            } catch (err) {
+                console.error("Erro ao carregar equipe:", err.message);
+                document.getElementById('obra-responsavel').innerHTML = '<option value="">Erro ao carregar (Verifique RLS no Supabase)</option>';
+                document.getElementById('lista-membros-staff').innerHTML = `<p class="text-xs text-red-500">Erro: ${err.message}</p>`;
+            }
         };
 
         function voltar() {
@@ -173,14 +188,13 @@
             else window.location.href = 'index.html';
         }
 
-        // Função auxiliar para fazer upload de imagens para o Supabase Storage
         async function fazerUpload(inputId, pasta) {
             const input = document.getElementById(inputId);
             if (!input.files || input.files.length === 0) return null;
             
             const file = input.files[0];
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36.substring(2)}.${fileExt}`;
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
             const filePath = `${pasta}/${fileName}`;
 
             const { error: uploadError } = await _supabase.storage.from('fleurflow-bucket').upload(filePath, file);
@@ -200,7 +214,6 @@
             btn.textContent = 'Enviando imagens e salvando obra...';
 
             try {
-                // Faz o upload de todas as imagens para o Storage
                 const capaUrl = await fazerUpload('obra-capa', 'capas');
                 const layoutLanc = await fazerUpload('obra-layout-lancamento', 'layouts');
                 const layoutAtu = await fazerUpload('obra-layout-atualizacao', 'layouts');
@@ -217,7 +230,7 @@
                     plataforma_oficial: document.getElementById('obra-plataforma').value,
                     prioridade: document.getElementById('obra-prioridade').value,
                     drive_url: document.getElementById('obra-drive').value,
-                    capa_url: capaUrl, // URL pública da imagem upada
+                    capa_url: capaUrl,
                     layout_lancamento: layoutLanc,
                     layout_atualizacao: layoutAtu,
                     layout_finalizacao: layoutFin,
