@@ -3,54 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FleurFlow - Painel Moderador</title>
+    <title>Moderador - FleurFlow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="manifest" href="manifest.json">
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
+    <!-- NAVBAR -->
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
         <div class="flex items-center gap-4">
             <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Painel Moderador</h1>
+            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Painel do Moderador</h1>
         </div>
         <div>
             <button onclick="sair()" class="text-sm font-bold text-red-600 hover:text-red-800 transition">Sair</button>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <!-- ATALHOS PRINCIPAIS -->
+        <!-- ATALHOS RÁPIDOS (Lista Diária & Listão) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Lista de Atualização Diária -->
-            <div onclick="window.location.href='central-atualizacoes.html'" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:border-red-500 transition flex items-center justify-between">
+            <div onclick="window.location.href='central-atualizacoes.html'" class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:border-red-500 transition flex items-center justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800">📅 Lista de Atualização Diária</h3>
-                    <p class="text-sm text-gray-600 mt-1">Acompanhe e modere as atualizações das equipes.</p>
+                    <h3 class="font-bold text-gray-800">📅 Lista de Atualização Diária</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Acompanhe os diários e atualizações das obras.</p>
                 </div>
-                <span class="text-2xl">&rarr;</span>
+                <span class="text-xl text-gray-400">&rarr;</span>
             </div>
 
-            <!-- O Listão -->
-            <div onclick="window.location.href='listao.html'" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:border-red-500 transition flex items-center justify-between">
+            <div onclick="window.location.href='listao.html'" class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:border-red-500 transition flex items-center justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800">📊 O Listão Geral</h3>
-                    <p class="text-sm text-gray-600 mt-1">Visualização geral de todas as obras do sistema.</p>
+                    <h3 class="font-bold text-gray-800">📊 O Listão Geral</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Visualização completa de todas as obras do sistema.</p>
                 </div>
-                <span class="text-2xl">&rarr;</span>
+                <span class="text-xl text-gray-400">&rarr;</span>
             </div>
         </div>
 
-        <!-- SEÇÃO DE MODERAÇÃO -->
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">🛡️ Painel de Moderação</h3>
-            <div id="painel-moderacao" class="text-gray-600 text-sm">
-                Carregando painel...
+        <!-- MINHAS TAREFAS -->
+        <section class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
+            <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">⏱️ Minhas Entregas Pendentes (Como Staff)</h2>
+            <div id="grid-minhas-tarefas" class="text-sm text-gray-600">
+                Nenhuma entrega pendente no momento.
             </div>
-        </div>
+        </section>
 
+        <!-- DUAS COLUNAS: GERENCIA x STAFF -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h2 class="text-xl font-black text-gray-900 mb-4">👑 Minhas Obras (Gerenciamento)</h2>
+                <div id="grid-minhas-gerenciadas" class="space-y-4 text-sm text-gray-600">
+                    Carregando obras gerenciadas...
+                </div>
+            </section>
+            
+            <section class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h2 class="text-xl font-black text-gray-900 mb-4">👥 Obras que sou Staff</h2>
+                <div id="grid-minhas-staff" class="space-y-4 text-sm text-gray-600">
+                    Carregando obras de staff...
+                </div>
+            </section>
+        </div>
     </main>
 
     <script>
@@ -62,13 +77,45 @@
             window.location.href = 'index.html';
         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
+        window.onload = async () => {
             try {
-                document.getElementById('painel-moderacao').innerHTML = '<p class="text-gray-500">Nenhuma pendência de moderação no momento.</p>';
+                const { data, error } = await supabaseClient.from('obras').select('*');
+                if (error) throw error;
+
+                const meuNick = localStorage.getItem('usuario_nick') || '';
+                const meuId = localStorage.getItem('usuario_id') || '';
+                
+                const minhasGerenciadas = data ? data.filter(o => o.responsavel_nick === meuNick) : [];
+                const minhasStaff = data ? data.filter(o => o.staff_ids && o.staff_ids.includes(meuId) && o.responsavel_nick !== meuNick) : [];
+                
+                // Renderiza Gerenciadas
+                const divGerenciadas = document.getElementById('grid-minhas-gerenciadas');
+                if (minhasGerenciadas.length === 0) {
+                    divGerenciadas.innerHTML = '<p class="text-gray-400">Você não gerencia nenhuma obra.</p>';
+                } else {
+                    divGerenciadas.innerHTML = minhasGerenciadas.map(o => `
+                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 font-semibold text-gray-800">
+                            ${o.nome}
+                        </div>
+                    `).join('');
+                }
+
+                // Renderiza Staff
+                const divStaff = document.getElementById('grid-minhas-staff');
+                if (minhasStaff.length === 0) {
+                    divStaff.innerHTML = '<p class="text-gray-400">Você não está vinculado como staff em outras obras.</p>';
+                } else {
+                    divStaff.innerHTML = minhasStaff.map(o => `
+                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 font-semibold text-gray-800">
+                            ${o.nome}
+                        </div>
+                    `).join('');
+                }
+
             } catch (err) {
-                console.error("Erro:", err);
+                console.error("Erro ao carregar painel do moderador:", err.message);
             }
-        });
+        };
     </script>
 </body>
 </html>
