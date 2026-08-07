@@ -26,7 +26,7 @@
             <p class="text-sm text-gray-500">Selecione uma das opções abaixo para gerenciar a scan.</p>
         </div>
 
-        <!-- 1. CADASTRAR NOVA OBRA (O BOTÃO QUE FALTAVA!) -->
+        <!-- 1. CADASTRAR NOVA OBRA -->
         <div onclick="window.location.href='cadastro-obra.html'" class="bg-red-700 rounded-xl p-5 shadow-md border border-red-800 hover:bg-red-800 transition cursor-pointer flex justify-between items-center group">
             <div>
                 <h3 class="text-lg font-black text-white flex items-center gap-2">
@@ -39,59 +39,58 @@
 
         <!-- 2. LISTA DE ATUALIZAÇÃO DIÁRIA -->
         <div onclick="window.location.href='central-atualizacoes.html'" class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:border-red-300 hover:shadow-md transition cursor-pointer flex justify-between items-center group">
-            <dividir>
-                <h3 classe="texto-lg fonte-preto texto-cinza-800 flex itens-centro lacuna-2">
+            <div>
+                <h3 class="text-lg font-black text-gray-800 flex items-center gap-2">
                     📅 Lista de Atualização Diária
                 </h3>
-                <p classe="texto-sm texto-cinza-500 mt-1">Acompanhe os diários e atualizações das obras.</p>
-            </dividir>
-            <extensão classe="texto-cinza-300 grupo-hover:texto-vermelho-700 transição texto-xl">&rarr;</span>
-        </dividir>
+                <p class="text-sm text-gray-500 mt-1">Acompanhe os diários e atualizações das obras.</p>
+            </div>
+            <span class="text-gray-300 group-hover:text-red-700 transition text-xl">&rarr;</span>
+        </div>
 
-        <!-- 3. O LISTA GERAL -->
-        <dividir clicar em="janela.localização.href='listao-geral.html'" class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:border-red-300 hover:shadow-md transition cursor-pointer flex justify-between items-center group">
-            <dividir>
-                <h3 classe="texto-lg fonte-preto texto-cinza-800 flex itens-centro lacuna-2">
-                    📊 O Lista Geral
+        <!-- 3. O LISTÃO GERAL -->
+        <div onclick="window.location.href='listao-geral.html'" class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:border-red-300 hover:shadow-md transition cursor-pointer flex justify-between items-center group">
+            <div>
+                <h3 class="text-lg font-black text-gray-800 flex items-center gap-2">
+                    📊 O Listão Geral
                 </h3>
-                <p classe="texto-sm texto-cinza-500 mt-1">Visualização completa de todas as obras do sistema.</p>
-            </dividir>
-            <extensão classe="texto-cinza-300 grupo-hover:texto-vermelho-700 transição texto-xl">&rarr;</span>
-        </dividir>
+                <p class="text-sm text-gray-500 mt-1">Visualização completa de todas as obras do sistema.</p>
+            </div>
+            <span class="text-gray-300 group-hover:text-red-700 transition text-xl">&rarr;</span>
+        </div>
 
-        <!-- 4. MINHAS ENTRADAS PENDENTES -->
-        <dividir classe="bg-vermelho-50 arredondado-xl p-5 sombra-sm borda borda-vermelho-100">
-            <h3 classe="texto-fonte LG-preto texto-cinza-800 itens flexíveis-lacuna central-2 mb-2">
-                ⏱️ Minhas Entregas Pendentes (Equipe do Como)
+        <!-- 4. MINHAS ENTREGAS PENDENTES -->
+        <div class="bg-red-50 rounded-xl p-5 shadow-sm border border-red-100">
+            <h3 class="text-lg font-black text-gray-800 flex items-center gap-2 mb-2">
+                ⏱️ Minhas Entregas Pendentes (Como Staff)
             </h3>
-            <p classe="texto-sm texto-cinza-600">Nenhuma entrega pendente no momento.</p>
-        </dividir>
+            <p class="text-sm text-gray-600">Nenhuma entrega pendente no momento.</p>
+        </div>
 
-        <!-- 5. MINHAS OBRAS GERAMENTO -->
-        <dividir classe="bg-branco arredondado-xl p-5 sombra-sm borda borda-cinza-200">
-            <h3 classe="texto-fonte LG-preto texto-cinza-800 itens flexíveis-lacuna central-2 mb-2">
+        <!-- 5. MINHAS OBRAS GERENCIAMENTO -->
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+            <h3 class="text-lg font-black text-gray-800 flex items-center gap-2 mb-2">
                 👑 Minhas Obras (Gerenciamento)
             </h3>
-            <p classe="texto-sm texto-cinza-500">Você não está gerando nenhuma obra no momento.</p>
-        </dividir>
+            <p class="text-sm text-gray-500">Você não gerencia nenhuma obra no momento.</p>
+        </div>
 
-    </principal>
+    </main>
 
-    <roteiro>
-        janela.carregar = () => {
-            const apelido = armamento local.obterItem('usuario_nick');
-            se(apelido) {
-                documento.obterElementoPorId('boas-vindas').texto interno = `Olá, ${apelido}!`;
-            } outro {
-                // Se não estiver logado, expulsa para a tela de login
-                janela.localização.href = 'índice.html';
+    <script>
+        window.onload = () => {
+            const nick = localStorage.getItem('usuario_nick');
+            if(nick) {
+                document.getElementById('boas-vindas').innerText = `Olá, ${nick}!`;
+            } else {
+                window.location.href = 'index.html';
             }
         };
 
-        função dizer() {
-            armamento local.claro();
-            janela.localização.href = 'índice.html';
+        function sair() {
+            localStorage.clear();
+            window.location.href = 'index.html';
         }
-    </roteiro>
-</corpo>
-</HTML>
+    </script>
+</body>
+</html>
