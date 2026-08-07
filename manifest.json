@@ -1,7 +1,7 @@
 {
   "name": "FleurFlow",
   "short_name": "FleurFlow",
-  "start_url": "./login.html",
+  "start_url": "/fleurflow/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#b91c1c",
