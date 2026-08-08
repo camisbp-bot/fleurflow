@@ -3,100 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FleurFlow - Painel Administrador</title>
+    <title>FleurFlow - Dashboard ADM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="manifest" href="manifest.json">
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
-    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <div class="flex items-center gap-4">
-            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Painel Administrador</h1>
+    <!-- BARRA DE NAVEGAÇÃO -->
+    <nav class="bg-red-900 text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-10">
+        <div class="flex items-center gap-3">
+            <h1 class="text-xl font-black tracking-wider">FleurFlow <span class="text-red-300 text-sm font-normal">| Painel ADM</span></h1>
         </div>
-        <div>
-            <button onclick="sair()" class="text-sm font-bold text-red-600 hover:text-red-800 transition">Sair</button>
+        <div class="flex items-center gap-4">
+            <span id="nome-usuario" class="text-sm font-semibold text-red-100 hidden sm:block">Olá, ADM</span>
+            <button onclick="sair()" class="bg-red-800 hover:bg-red-950 text-white text-xs font-bold py-2 px-4 rounded-full transition cursor-pointer">Sair</button>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <!-- ACESSOS RÁPIDOS / ATALHOS PRINCIPAIS -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Lista de Atualização Diária -->
-            <div onclick="window.location.href='central-atualizacoes.html'" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:border-red-500 transition flex items-center justify-between">
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800">📅 Lista de Atualização Diária</h3>
-                    <p class="text-sm text-gray-600 mt-1">Acompanhe as atualizações e diários das obras.</p>
-                </div>
-                <span class="text-2xl">&rarr;</span>
-            </div>
-
-            <!-- O Listão -->
-            <div onclick="window.location.href='listao.html'" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:border-red-500 transition flex items-center justify-between">
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800">📊 O Listão Geral</h3>
-                    <p class="text-sm text-gray-600 mt-1">Visualize a listagem completa de obras e status.</p>
-                </div>
-                <span class="text-2xl">&rarr;</span>
-            </div>
-        </div>
-
-        <!-- GERENCIAMENTO DE OBRAS -->
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
-                <h3 class="text-lg font-bold text-gray-800">👑 Gerenciamento de Obras</h3>
-                <button onclick="window.location.href='cadastro-obra.html'" class="px-4 py-2 bg-red-900 text-white text-sm font-semibold rounded-lg hover:bg-red-800 transition">
-                    + Cadastrar Nova Obra
+        <!-- ACESSO RÁPIDO (FERRAMENTAS EXCLUSIVAS) -->
+        <section>
+            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👑 Ferramentas da Administração</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">📖</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Cadastrar Obra</span>
+                </button>
+                <button onclick="window.location.href='listao-geral.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">📊</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Listão & Telegram</span>
+                </button>
+                <button onclick="window.location.href='andamento.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">⚙️</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Andamento (Staff)</span>
+                </button>
+                <button onclick="alert('Página de central em breve!')" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">🔔</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Atualizações Diárias</span>
                 </button>
             </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <div id="lista-obras-adm" class="text-gray-600 text-sm">
-                Carregando obras...
-            </div>
+            <!-- LISTAGEM POR MODERADOR (VISÃO ADM) -->
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-96">
+                <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👥 Obras por Moderador</h2>
+                <div class="overflow-y-auto flex-1 pr-2 space-y-4" id="lista-todas-obras">
+                    <p class="text-sm text-gray-500">Carregando dados da equipe...</p>
+                </div>
+            </section>
+
+            <!-- MINHAS OBRAS (IGUAL AO MODERADOR) -->
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-96">
+                <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">💖 Minhas Obras (Staff)</h2>
+                <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-minhas-obras">
+                    <p class="text-sm text-gray-500">Buscando suas obras...</p>
+                </div>
+            </section>
         </div>
 
     </main>
 
     <script>
-        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
-        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        window.onload = () => {
+            const nick = localStorage.getItem('usuario_nick');
+            if(!nick) { window.location.href = 'index.html'; return; }
+            document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
+            
+            carregarMinhasObras(nick);
+            carregarObrasPorModerador();
+        };
 
         function sair() {
+            localStorage.clear();
             window.location.href = 'index.html';
         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            try {
-                const { data, error } = await supabaseClient.from('obras').select('*');
-                const container = document.getElementById('lista-obras-adm');
-                
-                if (error) throw error;
+        async function carregarMinhasObras(meuNick) {
+            const { data, error } = await _supabase.from('obras').select('*').eq('responsavel_nick', meuNick);
+            const container = document.getElementById('lista-minhas-obras');
+            container.innerHTML = '';
 
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500">Nenhuma obra cadastrada no momento.</p>';
-                    return;
-                }
+            if (error || !data || data.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Você ainda não assumiu nenhuma obra.</p>`;
+                return;
+            }
 
-                container.innerHTML = `
-                    <div class="space-y-2">
-                        ${data.map(obra => `
-                            <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
-                                <div>
-                                    <span class="font-bold text-gray-800">${obra.nome}</span>
-                                    <p class="text-xs text-gray-500">Resp: ${obra.responsavel || 'Não definido'}</p>
-                                </div>
-                            </div>
-                        `).join('')}
+            data.forEach(obra => {
+                let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
+                container.innerHTML += `
+                    <div class="p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-gray-800">${obra.nome}</h3>
+                            <p class="text-xs text-gray-500 mt-1">Língua: ${obra.lingua || 'Não informada'}</p>
+                        </div>
+                        <span class="text-xs font-bold px-3 py-1 rounded-full ${corStatus}">${obra.status}</span>
                     </div>
                 `;
-            } catch (err) {
-                console.error("Erro ao carregar obras:", err.message);
-                document.getElementById('lista-obras-adm').innerHTML = '<p class="text-red-500">Erro ao carregar lista de obras.</p>';
+            });
+        }
+
+        async function carregarObrasPorModerador() {
+            const { data, error } = await _supabase.from('obras').select('*').order('responsavel_nick');
+            const container = document.getElementById('lista-todas-obras');
+            container.innerHTML = '';
+
+            if (error || !data || data.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra cadastrada no sistema.</p>`;
+                return;
             }
-        });
+
+            // Agrupar obras por moderador
+            const obrasPorMod = {};
+            data.forEach(obra => {
+                const mod = obra.responsavel_nick || 'Sem Moderador';
+                if(!obrasPorMod[mod]) obrasPorMod[mod] = [];
+                obrasPorMod[mod].push(obra);
+            });
+
+            // Gerar visual
+            for (const mod in obrasPorMod) {
+                let htmlMod = `
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-black text-red-900 mb-2 border-b border-gray-200 pb-2">👤 ${mod} <span class="text-xs font-normal text-gray-500 ml-2">(${obrasPorMod[mod].length} obras)</span></h3>
+                        <ul class="space-y-1">
+                `;
+                obrasPorMod[mod].forEach(obra => {
+                    htmlMod += `<li class="text-sm text-gray-700 flex justify-between"><span>• ${obra.nome}</span> <span class="text-[10px] text-gray-400 bg-white px-1 rounded border border-gray-200">${obra.status}</span></li>`;
+                });
+                htmlMod += `</ul></div>`;
+                container.innerHTML += htmlMod;
+            }
+        }
     </script>
 </body>
 </html>
