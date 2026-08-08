@@ -16,11 +16,9 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
         
-        <!-- ÁREA DE DIVISÃO DE TAREFAS -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">🧩 Painel de Divisão de Tarefas</h2>
             
-            <!-- 1º PASSO: SELECIONAR A OBRA -->
             <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl mb-6 shadow-sm">
                 <label class="block text-sm font-black text-blue-900 mb-1">1º Passo: Selecione a Obra</label>
                 <p class="text-xs text-blue-700 mb-3">O sistema carregará automaticamente apenas a equipe que foi vinculada a este projeto.</p>
@@ -29,14 +27,14 @@
                 </select>
             </div>
 
-            <!-- 2º PASSO: ATRIBUIR TAREFAS (Fica escondido até escolher a obra) -->
+            <!-- 2º PASSO: ATRIBUIR TAREFAS (COM DATA E HORA!) -->
             <form id="form-tarefa" onsubmit="adicionarTarefa(event)" class="hidden bg-gray-50 border border-gray-200 p-5 rounded-xl shadow-inner">
-                <h3 class="text-sm font-black text-gray-800 border-b border-gray-200 pb-2 mb-4">2º Passo: Atribuir Etapas</h3>
+                <h3 class="text-sm font-black text-gray-800 border-b border-gray-200 pb-2 mb-4">2º Passo: Atribuir Etapas e Prazos</h3>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo(s)</label>
-                        <input type="text" id="tarefa-capitulo" placeholder="Ex: 15 ou 15 ao 20" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        <input type="text" id="tarefa-capitulo" placeholder="Ex: 15" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
                     </div>
 
                     <div>
@@ -52,10 +50,15 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-red-700 mb-1">Responsável (Staff da Obra)</label>
+                        <label class="block text-xs font-bold text-red-700 mb-1">Responsável</label>
                         <select id="tarefa-responsavel" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
-                            <!-- Preenchido automaticamente via JS -->
                         </select>
+                    </div>
+
+                    <!-- CAMPO ATUALIZADO: DATA E HORA -->
+                    <div>
+                        <label class="block text-xs font-bold text-red-700 mb-1">Prazo (Data e Hora)</label>
+                        <input type="datetime-local" id="tarefa-prazo" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
                     </div>
 
                     <div>
@@ -67,7 +70,6 @@
             </form>
         </div>
 
-        <!-- LISTA DE TAREFAS PENDENTES -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h3 class="text-lg font-black text-gray-800">📋 Controle de Entregas Pendentes</h3>
@@ -78,17 +80,15 @@
                 <table class="w-full text-left text-sm text-gray-600">
                     <thead class="text-xs uppercase font-black text-gray-400 border-b border-gray-200">
                         <tr>
-                            <th class="px-4 py-3">Obra</th>
-                            <th class="px-4 py-3">Capítulo</th>
+                            <th class="px-4 py-3">Prazo</th>
+                            <th class="px-4 py-3">Obra & Cap</th>
                             <th class="px-4 py-3">Etapa</th>
                             <th class="px-4 py-3">Responsável</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3 text-right">Ação</th>
                         </tr>
                     </thead>
-                    <tbody id="tabela-tarefas" class="divide-y divide-gray-100">
-                        <!-- Tarefas vão aparecer aqui -->
-                    </tbody>
+                    <tbody id="tabela-tarefas" class="divide-y divide-gray-100"></tbody>
                 </table>
             </div>
         </div>
@@ -104,45 +104,32 @@
         let todaEquipe = [];
 
         window.onload = async () => {
-            // TRAVA DE SEGURANÇA: Só passa se for ADM ou Moderador
             const cargo = localStorage.getItem('usuario_cargo');
             if (cargo !== 'Administrador' && cargo !== 'Moderador') {
                 window.location.href = 'index.html';
                 return;
             }
-
             await carregarDadosIniciais();
             await carregarTarefas();
         };
 
         function voltar() {
             const cargo = localStorage.getItem('usuario_cargo');
-            if (cargo === 'Administrador') {
-                window.location.href = 'dashboard-adm.html';
-            } else {
-                window.location.href = 'dashboard-moderador.html';
-            }
+            if (cargo === 'Administrador') window.location.href = 'dashboard-adm.html';
+            else window.location.href = 'dashboard-moderador.html';
         }
 
         async function carregarDadosIniciais() {
             try {
-                // Puxa as obras e a equipe
                 const { data: obras } = await _supabase.from('obras').select('id, nome, staff_ids, responsavel_nick').order('nome');
                 todasObras = obras || [];
-
                 const { data: equipe } = await _supabase.from('equipe').select('id, nick, cargo_sistema').order('nick');
                 todaEquipe = equipe || [];
 
-                // Preenche o Step 1
                 const selectObra = document.getElementById('tarefa-obra');
                 selectObra.innerHTML = '<option value="">👇 Clique aqui e selecione a obra...</option>';
-                
-                todasObras.forEach(o => {
-                    selectObra.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
-                });
-            } catch (err) {
-                console.error("Erro ao carregar dados iniciais:", err);
-            }
+                todasObras.forEach(o => selectObra.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
+            } catch (err) { console.error("Erro:", err); }
         }
 
         function aoSelecionarObra() {
@@ -150,35 +137,18 @@
             const painelDivisao = document.getElementById('form-tarefa');
             const selectResp = document.getElementById('tarefa-responsavel');
 
-            // Se voltar para "Selecione", esconde o painel do Passo 2
-            if (!nomeObra) {
-                painelDivisao.classList.add('hidden');
-                return;
-            }
+            if (!nomeObra) { painelDivisao.classList.add('hidden'); return; }
 
-            const obraSelecionada = todasObras.find(o => o.nome === nomeObra);
-            
-            if (obraSelecionada) {
-                // Garante que a lista de IDs seja tratada como string para não dar erro
-                const staffIds = (obraSelecionada.staff_ids || []).map(String);
-                
-                // Pega o nome dos donos/responsáveis também (para o moderador poder se atribuir a tarefa)
-                const donos = obraSelecionada.responsavel_nick ? obraSelecionada.responsavel_nick.split(', ') : [];
-                
-                // Filtra a equipe: Mostra SÓ quem está na array de staff_ids OU quem é Dono
+            const obra = todasObras.find(o => o.nome === nomeObra);
+            if (obra) {
+                const staffIds = (obra.staff_ids || []).map(String);
+                const donos = obra.responsavel_nick ? obra.responsavel_nick.split(', ') : [];
                 const equipeObra = todaEquipe.filter(m => staffIds.includes(String(m.id)) || donos.includes(m.nick));
 
                 selectResp.innerHTML = '<option value="">Selecione quem vai fazer...</option>';
+                if (equipeObra.length === 0) selectResp.innerHTML = '<option value="">⚠️ Ninguém foi vinculado!</option>';
+                else equipeObra.forEach(m => selectResp.innerHTML += `<option value="${m.nick}">${m.nick} (${m.cargo_sistema || 'Staff'})</option>`);
                 
-                if (equipeObra.length === 0) {
-                    selectResp.innerHTML = '<option value="">⚠️ Ninguém foi vinculado a esta obra!</option>';
-                } else {
-                    equipeObra.forEach(m => {
-                        selectResp.innerHTML += `<option value="${m.nick}">${m.nick} (${m.cargo_sistema || 'Staff'})</option>`;
-                    });
-                }
-
-                // Revela o formulário de atribuição
                 painelDivisao.classList.remove('hidden');
             }
         }
@@ -188,10 +158,7 @@
             const btn = e.target.querySelector('button[type="submit"]');
             
             const responsavel = document.getElementById('tarefa-responsavel').value;
-            if(!responsavel) {
-                alert("Você precisa selecionar um responsável válido!");
-                return;
-            }
+            if(!responsavel) return alert("Selecione um responsável válido!");
 
             btn.disabled = true;
             btn.textContent = 'Adicionando...';
@@ -201,18 +168,16 @@
                 capitulo: document.getElementById('tarefa-capitulo').value,
                 etapa: document.getElementById('tarefa-etapa').value,
                 responsavel_nick: responsavel,
+                prazo: document.getElementById('tarefa-prazo').value, // Envia a Data + Hora
                 status: 'Pendente'
             };
 
             const { error } = await _supabase.from('tarefas').insert([obj]);
 
-            if (error) {
-                alert('Erro ao atribuir tarefa: ' + error.message);
-                console.error(error);
-            } else {
+            if (error) { alert('Erro: ' + error.message); } 
+            else {
                 document.getElementById('tarefa-capitulo').value = '';
-                document.getElementById('tarefa-etapa').value = 'Tradução';
-                document.getElementById('tarefa-responsavel').value = ''; // Reseta o responsável
+                document.getElementById('tarefa-prazo').value = '';
                 carregarTarefas();
             }
 
@@ -224,28 +189,41 @@
             const tb = document.getElementById('tabela-tarefas');
             tb.innerHTML = '<tr><td colspan="6" class="px-4 py-4 text-center text-gray-400 text-xs">Carregando andamento...</td></tr>';
 
-            const { data, error } = await _supabase.from('tarefas').select('*').order('created_at', { ascending: false });
+            const { data, error } = await _supabase.from('tarefas').select('*').order('prazo', { ascending: true });
 
-            if (error) {
-                tb.innerHTML = `<tr><td colspan="6" class="px-4 py-4 text-center text-red-500 text-xs">Erro: ${error.message}</td></tr>`;
-                return;
-            }
+            if (error) { tb.innerHTML = `<tr><td colspan="6" class="text-red-500 text-center py-4">${error.message}</td></tr>`; return; }
 
             tb.innerHTML = '';
-            const tarefasPendentes = data.filter(t => t.status !== 'Concluído');
+            const pendentes = data.filter(t => t.status !== 'Concluído');
 
-            if (tarefasPendentes.length === 0) {
-                tb.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400 text-sm">Nenhuma tarefa pendente no momento! 🎉</td></tr>`;
-                return;
-            }
+            if (pendentes.length === 0) { tb.innerHTML = `<tr><td colspan="6" class="text-gray-400 text-center py-8">Nenhuma tarefa pendente! 🎉</td></tr>`; return; }
 
-            tarefasPendentes.forEach(t => {
+            const agora = new Date();
+
+            pendentes.forEach(t => {
                 let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700';
                 
+                // Formata DATA E HORA
+                let dataFormatada = 'Sem prazo';
+                let corPrazo = 'text-gray-500';
+                
+                if (t.prazo) {
+                    const dataPrazo = new Date(t.prazo);
+                    dataFormatada = dataPrazo.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+                    
+                    if (dataPrazo < agora) {
+                        corPrazo = 'text-red-600 font-black bg-red-100 px-2 py-0.5 rounded'; // Atrasado
+                    } else if (dataPrazo.toDateString() === agora.toDateString()) {
+                        corPrazo = 'text-orange-600 font-bold'; // Prazo hoje
+                    } else {
+                        corPrazo = 'text-green-600 font-semibold'; // No prazo
+                    }
+                }
+
                 tb.innerHTML += `
                     <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-3 font-bold text-gray-800">${t.obra_nome}</td>
-                        <td class="px-4 py-3 font-semibold text-red-700">Cap. ${t.capitulo}</td>
+                        <td class="px-4 py-3 text-sm ${corPrazo}">${dataFormatada}</td>
+                        <td class="px-4 py-3"><span class="font-bold text-gray-800">${t.obra_nome}</span> <span class="font-semibold text-red-700 ml-1">C.${t.capitulo}</span></td>
                         <td class="px-4 py-3 text-xs uppercase font-bold text-gray-500">${t.etapa}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">👤 ${t.responsavel_nick}</td>
                         <td class="px-4 py-3">
@@ -263,15 +241,13 @@
 
         async function mudarStatus(id, novoStatus) {
             const { error } = await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id);
-            if(error) alert("Erro ao atualizar: " + error.message);
-            else carregarTarefas();
+            if(error) alert("Erro: " + error.message); else carregarTarefas();
         }
 
         async function excluirTarefa(id) {
-            if(confirm("Tem certeza que deseja apagar essa tarefa?")) {
+            if(confirm("Deseja apagar essa tarefa?")) {
                 const { error } = await _supabase.from('tarefas').delete().eq('id', id);
-                if(error) alert("Erro ao excluir: " + error.message);
-                else carregarTarefas();
+                if(!error) carregarTarefas();
             }
         }
     </script>
