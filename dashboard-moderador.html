@@ -7,64 +7,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen pb-10">
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
-    <nav class="bg-white px-6 py-4 flex justify-between items-center shadow-sm border-b border-gray-200 sticky top-0 z-10">
+    <!-- BARRA DE NAVEGAÇÃO IGUAL A DA ADM -->
+    <nav class="bg-red-900 text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-10">
         <div class="flex items-center gap-3">
-            <h1 class="text-xl font-black text-gray-800 tracking-tight">FleurFlow <span class="text-gray-400 text-sm font-normal">| Painel do Moderador</span></h1>
+            <h1 class="text-xl font-black tracking-wider">FleurFlow <span class="text-red-300 text-sm font-normal">| Painel do Moderador</span></h1>
         </div>
-        <div>
-            <button onclick="sair()" class="text-red-700 hover:text-red-900 text-sm font-bold transition cursor-pointer">Sair</button>
+        <div class="flex items-center gap-4">
+            <span id="nome-usuario" class="text-sm font-semibold text-red-100 hidden sm:block">Olá, Moderador</span>
+            <button onclick="sair()" class="bg-red-800 hover:bg-red-950 text-white text-xs font-bold py-2 px-4 rounded-full transition cursor-pointer">Sair</button>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6 mt-6 space-y-8">
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <div class="mb-6">
-            <h2 id="saudacao" class="text-2xl font-black text-gray-900">Olá, Moderador!</h2>
-            <p class="text-gray-600 text-sm">Selecione uma das opções abaixo para gerenciar a scan.</p>
-        </div>
+        <!-- FERRAMENTAS (Design em Cards igual ADM) -->
+        <section>
+            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">🛠️ Ferramentas da Moderação</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">📖</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Cadastrar Obra</span>
+                </button>
+                <button onclick="window.location.href='listao-geral.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">📊</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Listão & Telegram</span>
+                </button>
+                <button onclick="window.location.href='andamento.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">⚙️</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Andamento (Staff)</span>
+                </button>
+                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">🔔</span>
+                    <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Atualizações Diárias</span>
+                </button>
+            </div>
+        </section>
 
-        <!-- MENU DE BOTÕES -->
-        <div class="space-y-4">
-            
-            <button onclick="window.location.href='cadastro-obra.html'" class="w-full bg-red-700 hover:bg-red-800 text-left p-6 rounded-xl flex justify-between items-center transition shadow-md cursor-pointer group">
-                <div>
-                    <h3 class="text-white font-black text-lg flex items-center gap-2">➕ Cadastrar Nova Obra / Editar</h3>
-                    <p class="text-red-100 text-xs mt-1">Adicione novos projetos, links, imagens e vincule a staff.</p>
-                </div>
-                <span class="text-white opacity-50 group-hover:opacity-100 transition text-xl">&rarr;</span>
-            </button>
-
-            <button onclick="window.location.href='central-atualizacoes.html'" class="w-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm text-left p-6 rounded-xl flex justify-between items-center transition cursor-pointer group">
-                <div>
-                    <h3 class="text-gray-800 font-black text-lg flex items-center gap-2">📅 Lista de Atualização Diária</h3>
-                    <p class="text-gray-500 text-xs mt-1">Acompanhe os diários e envie atualizações para aprovação.</p>
-                </div>
-                <span class="text-gray-300 group-hover:text-gray-500 transition text-xl">&rarr;</span>
-            </button>
-
-            <button onclick="window.location.href='listao-geral.html'" class="w-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm text-left p-6 rounded-xl flex justify-between items-center transition cursor-pointer group">
-                <div>
-                    <h3 class="text-gray-800 font-black text-lg flex items-center gap-2">📊 O Listão Geral</h3>
-                    <p class="text-gray-500 text-xs mt-1">Insira os cronogramas semanais nas datas liberadas pela ADM.</p>
-                </div>
-                <span class="text-gray-300 group-hover:text-gray-500 transition text-xl">&rarr;</span>
-            </button>
-            
-            <button onclick="window.location.href='andamento.html'" class="w-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm text-left p-6 rounded-xl flex justify-between items-center transition cursor-pointer group">
-                <div>
-                    <h3 class="text-gray-800 font-black text-lg flex items-center gap-2">⚙️ Andamento (Staff)</h3>
-                    <p class="text-gray-500 text-xs mt-1">Acompanhe as entregas pendentes da equipe nas obras que você gerencia.</p>
-                </div>
-                <span class="text-gray-300 group-hover:text-gray-500 transition text-xl">&rarr;</span>
-            </button>
-        </div>
-
-        <!-- CAIXA DE GERENCIAMENTO (DONO E STAFF) -->
-        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-8">
+        <!-- CAIXA DE GERENCIAMENTO (IGUAL ADM) -->
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-[500px]">
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👑 Minhas Obras (Gerenciamento & Staff)</h2>
-            <div class="overflow-y-auto max-h-96 pr-2 space-y-3" id="lista-minhas-obras">
+            <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-minhas-obras">
                 <p class="text-sm text-gray-500">Buscando suas obras...</p>
             </div>
         </section>
@@ -79,7 +63,7 @@
         window.onload = () => {
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
-            document.getElementById('saudacao').textContent = `Olá, ${nick}!`;
+            document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
             
             carregarMinhasObras(nick);
         };
@@ -90,9 +74,11 @@
         }
 
         async function carregarMinhasObras(meuNick) {
+            // 1. Descobre o ID do Mod logado
             const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
 
+            // 2. Puxa todas as obras do banco
             const { data: obras, error } = await _supabase.from('obras').select('*').order('nome');
             const container = document.getElementById('lista-minhas-obras');
             container.innerHTML = '';
@@ -102,6 +88,7 @@
                 return;
             }
 
+            // 3. Filtra apenas as que o Mod é dono OU é staff
             const minhasObras = obras.filter(obra => {
                 const souDono = obra.responsavel_nick && obra.responsavel_nick.includes(meuNick);
                 const souStaff = obra.staff_ids && meuId && obra.staff_ids.map(String).includes(meuId);
