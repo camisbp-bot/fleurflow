@@ -6,17 +6,15 @@
     <title>FleurFlow - Nova Obra</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="manifest" href="manifest.json">
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
         <div class="flex items-center gap-4">
-            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Ficha da Obra</h1>
+            <h1 class="text-xl font-bold text-gray-800 border-gray-300">Ficha da Obra</h1>
         </div>
         <div class="flex items-center gap-4">
-            <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition">&larr; Voltar</button>
+            <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 transition cursor-pointer">&larr; Voltar</button>
         </div>
     </nav>
 
@@ -44,9 +42,21 @@
                         <textarea id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none"></textarea>
                     </div>
 
-                    <div class="md:col-span-2 bg-red-50 p-4 rounded-lg border border-red-100">
+                    <!-- CAMPO NOVO: LÍNGUA ORIGINAL -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Língua Original</label>
+                        <select id="obra-lingua" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                            <option value="">Selecione...</option>
+                            <option value="Coreano">Coreano</option>
+                            <option value="Inglês">Inglês</option>
+                            <option value="Espanhol">Espanhol</option>
+                            <option value="Francês">Francês</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-red-50 p-3 rounded-lg border border-red-100">
                         <label class="block text-xs font-black text-red-800 mb-1">👑 Responsável (Dono da Obra)</label>
-                        <select id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        <select id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
                             <option value="">Carregando equipe...</option>
                         </select>
                     </div>
@@ -87,7 +97,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Capa Oficial (Upload de Imagem)</label>
-                        <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
+                        <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 cursor-pointer">
                     </div>
 
                     <div class="md:col-span-2">
@@ -159,7 +169,7 @@
             
             <!-- BOTÃO SALVAR -->
             <div class="flex justify-end gap-4">
-                <button type="submit" id="btn-salvar" class="bg-red-700 hover:bg-red-800 text-white font-black py-3 px-8 rounded-xl transition text-lg shadow-xl shadow-red-700/30">
+                <button type="submit" id="btn-salvar" class="bg-red-700 hover:bg-red-800 text-white font-black py-3 px-8 rounded-xl transition text-lg shadow-xl shadow-red-700/30 cursor-pointer">
                     💾 Salvar Obra Completa
                 </button>
             </div>
@@ -188,14 +198,14 @@
                     containerStaff.innerHTML = '<p class="text-xs text-gray-400">Nenhum membro encontrado.</p>';
                 } else {
                     equipe.forEach(l => {
-                        selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema || 'Moderador'})</option>`;
+                        selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema || 'Staff'})</option>`;
                     });
 
                     containerStaff.innerHTML = equipe.map(m => `
                         <label class="flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
                             <input type="checkbox" name="staff_membros" value="${m.id}" class="rounded text-red-700 focus:ring-red-700">
                             <span class="font-semibold text-gray-800">${m.nick}</span>
-                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema || 'Moderador'})</span>
+                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema || 'Staff'})</span>
                         </label>
                     `).join('');
                 }
@@ -238,7 +248,6 @@
             btn.textContent = 'Enviando imagens e salvando obra...';
 
             try {
-                // Upload das 4 imagens (Capa + 4 Layouts)
                 const capaUrl = await fazerUpload('obra-capa', 'capas');
                 const layoutLanc = await fazerUpload('obra-layout-lancamento', 'layouts');
                 const layoutAtu = await fazerUpload('obra-layout-atualizacao', 'layouts');
@@ -250,6 +259,7 @@
 
                 const dadosObra = {
                     nome: document.getElementById('obra-nome').value,
+                    lingua: document.getElementById('obra-lingua').value,
                     sinopse: document.getElementById('obra-sinopse').value,
                     tipo: document.getElementById('obra-tipo').value,
                     responsavel_nick: document.getElementById('obra-responsavel').value,
