@@ -70,6 +70,14 @@
                     <input type="text" id="listao-obs" placeholder="Ex: DESCENSURA OFICIAL" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
 
+                <!-- CAMPO NOVO: MÚLTIPLOS RESPONSÁVEIS -->
+                <div class="md:col-span-4">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">👥 Responsável(is) pela Postagem</label>
+                    <div id="listao-responsaveis" class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-300 max-h-40 overflow-y-auto">
+                        <p class="text-xs text-gray-500">Carregando equipe...</p>
+                    </div>
+                </div>
+
                 <div class="md:col-span-4">
                     <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-lg text-sm shadow cursor-pointer">+ Adicionar à Programação</button>
                 </div>
@@ -130,6 +138,7 @@
 
             carregarObrasSelect();
             carregarDatasLiberadas();
+            carregarEquipe(); // Carrega as caixinhas de responsáveis
             carregarListao();
         };
 
@@ -142,6 +151,27 @@
                 dataCurta: `${String(partes[2]).padStart(2, '0')}/${String(partes[1]).padStart(2, '0')}`,
                 diaSemana: dias[dataObj.getDay()]
             };
+        }
+
+        async function carregarEquipe() {
+            const { data } = await _supabase.from('equipe').select('nick').order('nick');
+            const container = document.getElementById('listao-responsaveis');
+            container.innerHTML = '';
+            const meuNick = localStorage.getItem('usuario_nick');
+            
+            if(data) {
+                data.forEach(m => {
+                    // Já marca o nome do usuário atual por padrão
+                    const marcado = (m.nick === meuNick) ? 'checked' : '';
+                    container.innerHTML += `
+                        <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer p-1 hover:bg-gray-100 rounded">
+                            <input type="checkbox" name="resp_listao" value="${m.nick}" class="rounded text-red-700" ${marcado}> ${m.nick}
+                        </label>
+                    `;
+                });
+            } else {
+                container.innerHTML = '<p class="text-xs text-red-500">Erro ao carregar equipe.</p>';
+            }
         }
 
         async function liberarData(e) {
@@ -175,6 +205,16 @@
 
         async function salvarNoListao(e) {
             e.preventDefault();
+            
+            // Pega todos os responsáveis marcados
+            const checkboxes = document.querySelectorAll('input[name="resp_listao"]:checked');
+            const responsaveisSelecionados = Array.from(checkboxes).map(cb => cb.value).join(', ');
+
+            if(!responsaveisSelecionados) {
+                alert("Por favor, marque pelo menos um responsável!");
+                return;
+            }
+
             const obj = {
                 data_referencia: document.getElementById('listao-data').value,
                 obra_nome: document.getElementById('listao-obra').value,
@@ -182,10 +222,14 @@
                 classificacao_obra: document.getElementById('listao-classificacao').value,
                 tipo_postagem: document.getElementById('listao-postagem').value,
                 observacao_telegram: document.getElementById('listao-obs').value,
-                responsavel_nick: localStorage.getItem('usuario_nick') || 'Desconhecido'
+                responsavel_nick: responsaveisSelecionados // Salva todos os nomes juntos
             };
             const { error } = await _supabase.from('listao_preenchimento').insert([obj]);
-            if (!error) { document.getElementById('form-listao').reset(); carregarListao(); }
+            if (!error) { 
+                document.getElementById('listao-caps').value = '';
+                document.getElementById('listao-obs').value = '';
+                carregarListao(); 
+            }
             else alert('Erro: ' + error.message);
         }
 
@@ -203,7 +247,7 @@
                         <td class="px-4 py-3 font-semibold text-gray-800">${i.obra_nome} <span class="text-[10px] text-gray-400">(${i.classificacao_obra})</span>${obsTag}</td>
                         <td class="px-4 py-3 text-xs bg-gray-100 rounded">${i.tipo_postagem}</td>
                         <td class="px-4 py-3 text-red-700 font-bold">${i.capitulos}</td>
-                        <td class="px-4 py-3 text-xs">${i.responsavel_nick}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">${i.responsavel_nick}</td>
                         <td class="px-4 py-3 text-right"><button onclick="remover('${i.id}')" class="text-red-500 font-bold text-xs">Excluir</button></td>
                     </tr>`;
             });
