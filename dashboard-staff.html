@@ -3,55 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FleurFlow - Área da Equipe</title>
+    <title>FleurFlow - Painel da Staff</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="manifest" href="manifest.json">
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+<body class="bg-gray-50 text-gray-900 min-h-screen pb-10">
 
-    <!-- Barra de Navegação -->
-    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <div class="flex items-center gap-4">
-            <img src="MARCA.png" alt="Logo Fleur" class="h-10 object-contain">
-            <h1 class="text-xl font-bold text-gray-800 border-l border-gray-300 pl-4">Área da Equipe</h1>
+    <nav class="bg-red-900 text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-10">
+        <div class="flex items-center gap-3">
+            <h1 class="text-xl font-black tracking-wider">FleurFlow <span class="text-red-300 text-sm font-normal">| Painel da Staff</span></h1>
         </div>
         <div class="flex items-center gap-4">
-            <span id="nome-usuario" class="text-sm font-bold text-gray-600 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">Membro da Staff</span>
-            <button onclick="sair()" class="text-sm font-bold text-red-700 hover:underline">Sair</button>
+            <span id="saudacao" class="text-sm font-semibold text-red-100 hidden sm:block">Olá, Staff! 🌸</span>
+            <button onclick="sair()" class="bg-red-800 hover:bg-red-950 text-white text-xs font-bold py-2 px-4 rounded-full transition cursor-pointer">Sair</button>
         </div>
     </nav>
 
-    <!-- Conteúdo Principal -->
-    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-10">
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <!-- Saudação -->
-        <div>
-            <h2 id="saudacao" class="text-2xl font-black text-gray-900">Olá, bem-vindo(a) de volta! 🌸</h2>
-            <p class="text-gray-600 mt-1">Verifique suas tarefas ativas e acesse os materiais das suas obras abaixo.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section>
+            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">📝 Seu Quadro de Tarefas</h2>
             
-            <!-- COLUNA ESQUERDA: MINHAS TAREFAS ATIVAS -->
-            <div class="lg:col-span-2 space-y-4">
-                <h3 class="text-lg font-black text-gray-800 border-b border-gray-200 pb-2">📝 Minhas Tarefas Ativas</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <div id="lista-tarefas" class="space-y-4">
-                    <p class="text-sm text-gray-500 bg-white p-4 rounded-xl border border-gray-200">Carregando suas tarefas...</p>
+                <!-- ATRASADAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
+                    <div class="bg-red-50 p-4 border-b border-red-100 rounded-t-xl">
+                        <h3 class="font-black text-red-800 flex items-center gap-2">🚨 Em Atraso</h3>
+                    </div>
+                    <div class="overflow-y-auto flex-1 p-4 space-y-3" id="lista-atrasadas">
+                        <p class="text-sm text-gray-400">Buscando...</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- COLUNA DIREITA: OBRAS QUE FAÇO PARTE -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-black text-gray-800 border-b border-gray-200 pb-2">📚 Obras que Faço Parte</h3>
-                
-                <div id="lista-minhas-obras" class="space-y-4">
-                    <p class="text-sm text-gray-500 bg-white p-4 rounded-xl border border-gray-200">Carregando suas obras...</p>
+                <!-- HOJE -->
+                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
+                    <div class="bg-orange-50 p-4 border-b border-orange-100 rounded-t-xl">
+                        <h3 class="font-black text-orange-800 flex items-center gap-2">🗓️ Prazo Hoje</h3>
+                    </div>
+                    <div class="overflow-y-auto flex-1 p-4 space-y-3" id="lista-hoje">
+                        <p class="text-sm text-gray-400">Buscando...</p>
+                    </div>
                 </div>
-            </div>
 
-        </div>
+                <!-- ATIVAS (FUTURAS) -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
+                    <div class="bg-gray-50 p-4 border-b border-gray-200 rounded-t-xl">
+                        <h3 class="font-black text-gray-800 flex items-center gap-2">📋 Outras Tarefas Ativas</h3>
+                    </div>
+                    <div class="overflow-y-auto flex-1 p-4 space-y-3" id="lista-ativas">
+                        <p class="text-sm text-gray-400">Buscando...</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-8">
+            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">💖 Obras que Faço Parte</h2>
+            <p class="text-xs text-gray-500 mb-4">Acesse os links oficiais e os drives dos projetos em que você trabalha.</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="lista-minhas-obras">
+                <p class="text-sm text-gray-400 italic">Buscando suas obras...</p>
+            </div>
+        </section>
 
     </main>
 
@@ -62,153 +77,147 @@
 
         window.onload = () => {
             const nick = localStorage.getItem('usuario_nick');
-            const id = localStorage.getItem('usuario_id');
+            if(!nick) { window.location.href = 'index.html'; return; }
+            document.getElementById('saudacao').textContent = `Olá, ${nick}! 🌸`;
             
-            if (!id) {
-                window.location.href = 'login.html'; // Expulsa se não estiver logado
-                return;
-            }
-
-            document.getElementById('nome-usuario').innerText = nick;
-            document.getElementById('saudacao').innerText = `Olá, ${nick}! 🌸`;
-            
-            carregarMinhasTarefas(nick);
-            carregarMinhasObras(id);
+            carregarTarefasStaff(nick);
+            carregarObrasStaff(nick);
         };
-
-        // Carrega as tarefas atribuídas a este nick específico
-        async function carregarMinhasTarefas(nickUsuario) {
-            const container = document.getElementById('lista-tarefas');
-            
-            const { data, error } = await _supabase
-                .from('tarefas')
-                .select('*')
-                .eq('responsavel_nick', nickUsuario)
-                .order('prazo', { ascending: true });
-
-            if (error) {
-                container.innerHTML = '<p class="text-red-500 text-sm">Erro ao carregar tarefas.</p>';
-                return;
-            }
-
-            // Filtra apenas as pendentes/atrasadas para o topo, ou mostra tudo
-            const tarefasAtivas = data.filter(t => t.status !== 'Concluído');
-
-            if (tarefasAtivas.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm bg-white p-4 rounded-xl border border-gray-200">Você não tem nenhuma tarefa pendente no momento. Bom trabalho! 🎉</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-
-            const agora = new Date();
-
-            tarefasAtivas.forEach(tarefa => {
-                const prazoData = new Date(tarefa.prazo);
-                let statusAtual = tarefa.status;
-                if (agora > prazoData && statusAtual !== 'Concluído') {
-                    statusAtual = 'Atrasado';
-                }
-
-                const dataFmt = prazoData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                const horaFmt = prazoData.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-                const card = `
-                    <div class="bg-white border ${statusAtual === 'Atrasado' ? 'border-red-400 bg-red-50' : 'border-red-200'} rounded-xl p-5 shadow-sm border-l-4 border-l-red-600">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h4 class="text-lg font-black text-gray-900">${tarefa.obra_nome} - Cap. ${tarefa.capitulo}</h4>
-                                <p class="text-sm font-bold text-red-700 mt-1">Função: ${tarefa.funcao} <span class="text-gray-500 font-normal">(${tarefa.paginas})</span></p>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-xs font-bold ${statusAtual === 'Atrasado' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-800'} px-3 py-1 rounded-full">
-                                    ${statusAtual === 'Atrasado' ? '🚨 Atrasado' : `Prazo: ${dataFmt} às ${horaFmt}`}
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-end mt-4">
-                            <button onclick="entregarTarefa('${tarefa.id}', '${tarefa.obra_nome}', '${tarefa.funcao}')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition text-sm flex items-center gap-2">
-                                ✅ Marcar como Concluído
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += card;
-            });
-        }
-
-        // Função que muda o status para Concluído e notifica opcionalmente via WhatsApp
-        async function entregarTarefa(idTarefa, obraNome, funcao) {
-            if (!confirm('Deseja realmente marcar esta tarefa como entregue?')) return;
-
-            const { error } = await _supabase
-                .from('tarefas')
-                .update({ status: 'Concluído' })
-                .eq('id', idTarefa);
-
-            if (error) {
-                alert("Erro ao enviar entrega: " + error.message);
-            } else {
-                alert("Tarefa entregue com sucesso! O status foi atualizado para Concluído.");
-                
-                // Opcional: Abre o WhatsApp com a mensagem pronta para avisar a moderação
-                const msg = `Oie! A staff ${localStorage.getItem('usuario_nick')} acabou de entregar a tarefa de ${funcao} na obra ${funcao === 'Edição' ? obraNome : obraNome}. Tudo pronto para conferir! 🌸`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-
-                location.reload(); // Recarrega a página
-            }
-        }
-
-        // Carrega as obras fixas do usuário
-        async function carregarMinhasObras(usuarioId) {
-            const container = document.getElementById('lista-minhas-obras');
-            
-            const { data, error } = await _supabase.from('obras').select('*');
-            
-            if (error) {
-                container.innerHTML = '<p class="text-red-500 text-sm">Erro ao carregar obras.</p>';
-                return;
-            }
-
-            const minhasObras = data.filter(obra => obra.staff_ids && obra.staff_ids.includes(usuarioId));
-
-            if (minhasObras.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm bg-white p-4 rounded-xl border border-gray-200">Você ainda não foi vinculado(a) a nenhuma obra fixa.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-
-            minhasObras.forEach(obra => {
-                const capaImg = obra.capa_url ? obra.capa_url : 'https://via.placeholder.com/150x200?text=Sem+Capa';
-                const linkDrive = obra.drive_url ? obra.drive_url : '#';
-                
-                const card = `
-                    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
-                        <div class="h-32 bg-gray-200 relative overflow-hidden">
-                            <img src="${capaImg}" alt="Capa ${obra.nome}" class="w-full h-full object-cover object-center opacity-90 hover:opacity-100 transition">
-                            <div class="absolute bottom-2 right-2">
-                                <span class="bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm">${obra.plataforma_oficial || 'Oficial'}</span>
-                            </div>
-                        </div>
-                        <div class="p-4 flex-1 flex flex-col">
-                            <h4 class="text-md font-black text-gray-900 line-clamp-1 mb-1">${obra.nome}</h4>
-                            <p class="text-xs text-gray-600 line-clamp-3 mb-3 flex-1">${obra.sinopse || 'Sem sinopse cadastrada.'}</p>
-                            
-                            <a href="${linkDrive}" target="_blank" class="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs py-2 rounded-lg border border-gray-300 transition">
-                                📁 Abrir Pasta no Drive
-                            </a>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += card;
-            });
-        }
 
         function sair() {
             localStorage.clear();
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
+        }
+
+        async function carregarTarefasStaff(meuNick) {
+            const listaAtrasadas = document.getElementById('lista-atrasadas');
+            const listaHoje = document.getElementById('lista-hoje');
+            const listaAtivas = document.getElementById('lista-ativas');
+
+            listaAtrasadas.innerHTML = '';
+            listaHoje.innerHTML = '';
+            listaAtivas.innerHTML = '';
+
+            const { data, error } = await _supabase.from('tarefas')
+                .select('*')
+                .eq('responsavel_nick', meuNick)
+                .neq('status', 'Concluído')
+                .order('prazo', { ascending: true });
+
+            if (error || !data || data.length === 0) {
+                const msgVazio = `<div class="text-center py-6"><p class="text-sm text-gray-400">Nenhuma tarefa aqui.</p><p class="text-2xl mt-2">🎉</p></div>`;
+                listaAtrasadas.innerHTML = msgVazio;
+                listaHoje.innerHTML = msgVazio;
+                listaAtivas.innerHTML = msgVazio;
+                return;
+            }
+
+            const agora = new Date();
+            const hojeStr = agora.toDateString();
+
+            let temAtraso = false, temHoje = false, temAtiva = false;
+
+            data.forEach(t => {
+                const corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
+                const botaoAcao = t.status === 'Pendente' 
+                    ? `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded w-full mt-2 transition shadow-sm">▶️ Iniciar Tarefa</button>`
+                    : `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-xs bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1.5 rounded w-full mt-2 transition shadow-sm">✅ Entregar</button>`;
+
+                let prazoFormatado = '';
+                if (t.prazo) {
+                    const d = new Date(t.prazo);
+                    prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`;
+                }
+
+                const cardHTML = `
+                    <div class="bg-white border border-gray-100 p-3 rounded-lg shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-gray-800 text-sm leading-tight">${t.obra_nome}</span>
+                            <span class="text-xs font-black text-red-700 whitespace-nowrap ml-2">C. ${t.capitulo}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] uppercase font-black text-gray-500">${t.etapa}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${corStatus}">${t.status}</span>
+                        </div>
+                        ${t.prazo ? `<p class="text-[10px] font-bold text-gray-600 mt-2 bg-gray-50 px-2 py-1 rounded inline-block">${prazoFormatado}</p>` : ''}
+                        ${botaoAcao}
+                    </div>
+                `;
+
+                if (!t.prazo) {
+                    listaAtivas.innerHTML += cardHTML;
+                    temAtiva = true;
+                } else {
+                    const dataPrazo = new Date(t.prazo);
+                    
+                    if (dataPrazo < agora) {
+                        listaAtrasadas.innerHTML += cardHTML;
+                        temAtraso = true;
+                    } else if (dataPrazo.toDateString() === hojeStr) {
+                        listaHoje.innerHTML += cardHTML;
+                        temHoje = true;
+                    } else {
+                        listaAtivas.innerHTML += cardHTML;
+                        temAtiva = true;
+                    }
+                }
+            });
+
+            const msgVazio = `<div class="text-center py-6"><p class="text-sm text-gray-400">Tudo limpo por aqui!</p><p class="text-2xl mt-2">✨</p></div>`;
+            if(!temAtraso) listaAtrasadas.innerHTML = msgVazio;
+            if(!temHoje) listaHoje.innerHTML = msgVazio;
+            if(!temAtiva) listaAtivas.innerHTML = msgVazio;
+        }
+
+        async function carregarObrasStaff(meuNick) {
+            const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
+            const meuId = usuario ? String(usuario.id) : null;
+
+            const { data: obras, error } = await _supabase.from('obras').select('*').order('nome');
+            const container = document.getElementById('lista-minhas-obras');
+            container.innerHTML = '';
+
+            if (error || !obras || obras.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra cadastrada no sistema.</p>`;
+                return;
+            }
+
+            const minhasObras = obras.filter(obra => obra.staff_ids && meuId && obra.staff_ids.map(String).includes(meuId));
+
+            if (minhasObras.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic w-full col-span-3">Você ainda não foi vinculado(a) a nenhuma obra pela moderação.</p>`;
+                return;
+            }
+
+            minhasObras.forEach(obra => {
+                let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
+                let btnDrive = obra.drive_url ? `<a href="${obra.drive_url}" target="_blank" class="block w-full text-center mt-3 text-xs bg-gray-900 hover:bg-black text-white font-bold py-2 rounded-md transition shadow-sm cursor-pointer">📁 Acessar Pasta (Drive)</a>` : '';
+
+                container.innerHTML += `
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl hover:border-red-300 transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-gray-800 leading-tight">${obra.nome}</h3>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus} ml-2 whitespace-nowrap">${obra.status}</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-1">Língua: ${obra.lingua || 'N/A'}</p>
+                            <p class="text-[10px] text-red-700 font-semibold mt-2">Dono(a): ${obra.responsavel_nick || 'Não definido'}</p>
+                        </div>
+                        ${btnDrive}
+                    </div>
+                `;
+            });
+        }
+
+        async function mudarStatusTarefa(id, novoStatus) {
+            const btn = event.target;
+            const textOriginal = btn.innerHTML;
+            btn.innerHTML = '⏳';
+            btn.disabled = true;
+
+            const { error } = await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id);
+            if(error) { alert("Erro: " + error.message); btn.innerHTML = textOriginal; btn.disabled = false; }
+            else { carregarTarefasStaff(localStorage.getItem('usuario_nick')); }
         }
     </script>
 </body>
