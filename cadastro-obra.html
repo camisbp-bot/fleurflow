@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FleurFlow - Nova Obra</title>
+    <title>FleurFlow - Ficha da Obra</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -20,9 +20,14 @@
 
     <main class="max-w-5xl mx-auto p-6 mt-4">
         
-        <div class="mb-6">
-            <h2 class="text-2xl font-black text-gray-900">Cadastrar Nova Obra</h2>
-            <p class="text-gray-600 mt-1">Preencha todos os detalhes exigidos pelo banco de dados para registrar a obra.</p>
+        <!-- CAIXA NOVA: SELETOR DE EDIÇÃO -->
+        <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl shadow-sm mb-6">
+            <label class="block text-sm font-black text-blue-900 mb-1">✏️ Editar Obra Existente</label>
+            <p class="text-xs text-blue-700 mb-3">Para mudar status, prioridade ou atualizar dados, selecione a obra abaixo. Para uma obra nova, deixe em "Criar Nova Obra".</p>
+            <select id="select-editar-obra" onchange="carregarDadosEdicao()" class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                <option value="">✨ + Criar Nova Obra do Zero</option>
+                <!-- As obras vão carregar aqui -->
+            </select>
         </div>
 
         <form id="form-cadastro-obra" onsubmit="salvarNovaObra(event)" class="space-y-6">
@@ -42,7 +47,6 @@
                         <textarea id="obra-sinopse" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none"></textarea>
                     </div>
 
-                    <!-- CAMPO NOVO: LÍNGUA ORIGINAL -->
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Língua Original</label>
                         <select id="obra-lingua" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
@@ -82,9 +86,9 @@
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Status da Obra</label>
                         <select id="obra-status" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                            <option value="Ativo">🟢 Ativo (Lançando)</option>
-                            <option value="Hiato">🟡 Em Hiato</option>
-                            <option value="Concluido">🔴 Concluído</option>
+                            <option value="Ativa">🟢 Ativa (Lançando)</option>
+                            <option value="Pausada">🟡 Pausada / Em Hiato</option>
+                            <option value="Finalizada">🔴 Finalizada</option>
                         </select>
                     </div>
                 </div>
@@ -98,6 +102,7 @@
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Capa Oficial (Upload de Imagem)</label>
                         <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 cursor-pointer">
+                        <p class="text-[10px] text-gray-400 mt-1">Ao editar, envie uma nova imagem apenas se quiser trocar a atual.</p>
                     </div>
 
                     <div class="md:col-span-2">
@@ -139,6 +144,7 @@
             <!-- 4. LAYOUTS (OS 4 TIPOS) -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra (Upload)</h3>
+                <p class="text-[10px] text-gray-400 mb-3">Na edição, faça upload apenas dos layouts que quiser substituir.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Lançamento</label>
@@ -170,7 +176,7 @@
             <!-- BOTÃO SALVAR -->
             <div class="flex justify-end gap-4">
                 <button type="submit" id="btn-salvar" class="bg-red-700 hover:bg-red-800 text-white font-black py-3 px-8 rounded-xl transition text-lg shadow-xl shadow-red-700/30 cursor-pointer">
-                    💾 Salvar Obra Completa
+                    💾 Salvar Obra
                 </button>
             </div>
         </form>
@@ -181,10 +187,17 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let idObraEditando = null;
+        let imagensAtuais = { capa: null, lanc: null, atu: null, fin: null, lancFin: null };
+
         window.onload = async () => {
+            await carregarEquipe();
+            await carregarListaObrasParaEdicao();
+        };
+
+        async function carregarEquipe() {
             try {
-                const { data: equipe, error } = await _supabase.from('equipe').select('id, nick, cargo_sistema');
-                
+                const { data: equipe, error } = await _supabase.from('equipe').select('id, nick, cargo_sistema').order('nick');
                 if (error) throw error;
 
                 const selectResp = document.getElementById('obra-responsavel');
@@ -193,10 +206,7 @@
                 selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
                 containerStaff.innerHTML = '';
 
-                if (!equipe || equipe.length === 0) {
-                    selectResp.innerHTML = '<option value="">Nenhum membro encontrado</option>';
-                    containerStaff.innerHTML = '<p class="text-xs text-gray-400">Nenhum membro encontrado.</p>';
-                } else {
+                if (equipe) {
                     equipe.forEach(l => {
                         selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema || 'Staff'})</option>`;
                     });
@@ -205,15 +215,85 @@
                         <label class="flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
                             <input type="checkbox" name="staff_membros" value="${m.id}" class="rounded text-red-700 focus:ring-red-700">
                             <span class="font-semibold text-gray-800">${m.nick}</span>
-                            <span class="text-xs text-gray-500 ml-auto">(${m.cargo_sistema || 'Staff'})</span>
+                            <span class="text-[10px] text-gray-400 ml-auto">${m.cargo_sistema || 'Staff'}</span>
                         </label>
                     `).join('');
                 }
             } catch (err) {
-                console.error("Erro ao carregar equipe:", err.message);
-                document.getElementById('obra-responsavel').innerHTML = '<option value="">Erro ao carregar dados</option>';
+                console.error("Erro equipe:", err.message);
             }
-        };
+        }
+
+        async function carregarListaObrasParaEdicao() {
+            const { data } = await _supabase.from('obras').select('id, nome').order('nome');
+            const select = document.getElementById('select-editar-obra');
+            if(data) {
+                data.forEach(obra => {
+                    select.innerHTML += `<option value="${obra.id}">${obra.nome}</option>`;
+                });
+            }
+        }
+
+        async function carregarDadosEdicao() {
+            const idSelecionado = document.getElementById('select-editar-obra').value;
+            const btn = document.getElementById('btn-salvar');
+            
+            // Limpa as caixinhas da staff
+            document.querySelectorAll('input[name="staff_membros"]').forEach(cb => cb.checked = false);
+
+            if (!idSelecionado) {
+                // MODO: CRIAR NOVA OBRA
+                idObraEditando = null;
+                document.getElementById('form-cadastro-obra').reset();
+                imagensAtuais = { capa: null, lanc: null, atu: null, fin: null, lancFin: null };
+                btn.textContent = '💾 Salvar Nova Obra';
+                btn.classList.replace('bg-blue-600', 'bg-red-700');
+                btn.classList.replace('hover:bg-blue-700', 'hover:bg-red-800');
+                return;
+            }
+
+            // MODO: EDITAR OBRA EXISTENTE
+            const { data: obra, error } = await _supabase.from('obras').select('*').eq('id', idSelecionado).single();
+            if (error) { alert("Erro ao buscar dados da obra!"); return; }
+
+            idObraEditando = obra.id;
+            
+            document.getElementById('obra-nome').value = obra.nome || '';
+            document.getElementById('obra-sinopse').value = obra.sinopse || '';
+            document.getElementById('obra-lingua').value = obra.lingua || '';
+            document.getElementById('obra-responsavel').value = obra.responsavel_nick || '';
+            document.getElementById('obra-tipo').value = obra.tipo || 'Recorrente';
+            document.getElementById('obra-prioridade').value = obra.prioridade || 'Média';
+            document.getElementById('obra-status').value = obra.status || 'Ativa';
+            
+            document.getElementById('obra-drive').value = obra.drive_url || '';
+            document.getElementById('obra-plataforma').value = obra.plataforma_oficial || '';
+            
+            document.getElementById('obra-dia-oficial').value = obra.dia_oficial || '';
+            document.getElementById('obra-dia-scan').value = obra.dia_scan || '';
+            document.getElementById('obra-capitulo-plat').value = obra.capitulo_plataforma || 0;
+            document.getElementById('obra-capitulo-fleur').value = obra.capitulo_fleur || 0;
+
+            // Salva as imagens atuais para não perder se o usuário não fizer novo upload
+            imagensAtuais.capa = obra.capa_url;
+            imagensAtuais.lanc = obra.layout_lancamento;
+            imagensAtuais.atu = obra.layout_atualizacao;
+            imagensAtuais.fin = obra.layout_finalizacao;
+            imagensAtuais.lancFin = obra.layout_lancamento_finalizacao;
+
+            // Marca as caixinhas da staff
+            if(obra.staff_ids && Array.isArray(obra.staff_ids)) {
+                obra.staff_ids.forEach(idStaff => {
+                    const cb = document.querySelector(`input[value="${idStaff}"]`);
+                    if(cb) cb.checked = true;
+                });
+            }
+
+            // Altera visual do botão
+            btn.textContent = '🔄 Atualizar Dados da Obra';
+            btn.classList.replace('bg-red-700', 'bg-blue-600');
+            btn.classList.replace('hover:bg-red-800', 'hover:bg-blue-700');
+        }
 
         function voltar() {
             const cargo = localStorage.getItem('usuario_cargo');
@@ -222,9 +302,10 @@
             else window.location.href = 'index.html';
         }
 
-        async function fazerUpload(inputId, pasta) {
+        async function fazerUpload(inputId, pasta, urlAtualDaObra) {
             const input = document.getElementById(inputId);
-            if (!input.files || input.files.length === 0) return null;
+            // Se o cara tá editando e não botou arquivo novo, mantém a URL antiga
+            if (!input.files || input.files.length === 0) return urlAtualDaObra;
             
             const file = input.files[0];
             const fileExt = file.name.split('.').pop();
@@ -232,10 +313,7 @@
             const filePath = `${pasta}/${fileName}`;
 
             const { error: uploadError } = await _supabase.storage.from('fleurflow-bucket').upload(filePath, file);
-            if (uploadError) {
-                console.error("Erro no upload:", uploadError.message);
-                throw new Error(`Erro ao enviar arquivo de ${inputId}: ` + uploadError.message);
-            }
+            if (uploadError) throw new Error(`Erro ao enviar arquivo de ${inputId}: ` + uploadError.message);
 
             const { data } = _supabase.storage.from('fleurflow-bucket').getPublicUrl(filePath);
             return data.publicUrl;
@@ -244,15 +322,17 @@
         async function salvarNovaObra(event) {
             event.preventDefault(); 
             const btn = document.getElementById('btn-salvar');
+            const textoOriginal = btn.textContent;
             btn.disabled = true;
-            btn.textContent = 'Enviando imagens e salvando obra...';
+            btn.textContent = 'Enviando imagens e processando...';
 
             try {
-                const capaUrl = await fazerUpload('obra-capa', 'capas');
-                const layoutLanc = await fazerUpload('obra-layout-lancamento', 'layouts');
-                const layoutAtu = await fazerUpload('obra-layout-atualizacao', 'layouts');
-                const layoutFin = await fazerUpload('obra-layout-finalizacao', 'layouts');
-                const layoutLancFin = await fazerUpload('obra-layout-lanc-fin', 'layouts');
+                // Upload das imagens (se não enviar nada, pega as antigas pelo "imagensAtuais")
+                const capaUrl = await fazerUpload('obra-capa', 'capas', imagensAtuais.capa);
+                const layoutLanc = await fazerUpload('obra-layout-lancamento', 'layouts', imagensAtuais.lanc);
+                const layoutAtu = await fazerUpload('obra-layout-atualizacao', 'layouts', imagensAtuais.atu);
+                const layoutFin = await fazerUpload('obra-layout-finalizacao', 'layouts', imagensAtuais.fin);
+                const layoutLancFin = await fazerUpload('obra-layout-lanc-fin', 'layouts', imagensAtuais.lancFin);
 
                 const checkboxes = document.querySelectorAll('input[name="staff_membros"]:checked');
                 const staff_ids = Array.from(checkboxes).map(cb => cb.value);
@@ -279,18 +359,25 @@
                     staff_ids: staff_ids
                 };
 
-                const { error } = await _supabase.from('obras').insert([dadosObra]);
+                if (idObraEditando) {
+                    // MODO ATUALIZAÇÃO
+                    const { error } = await _supabase.from('obras').update(dadosObra).eq('id', idObraEditando);
+                    if (error) throw error;
+                    alert("Obra atualizada com sucesso!");
+                } else {
+                    // MODO CRIAÇÃO
+                    const { error } = await _supabase.from('obras').insert([dadosObra]);
+                    if (error) throw error;
+                    alert("Obra cadastrada com sucesso!");
+                }
                 
-                if (error) throw error;
-
-                alert("Obra e imagens salvas com sucesso!");
                 voltar();
 
             } catch (error) {
                 console.error('Erro ao salvar:', error.message);
-                alert('Erro ao salvar: ' + error.message);
+                alert('Erro ao processar: ' + error.message);
                 btn.disabled = false;
-                btn.textContent = '💾 Salvar Obra Completa';
+                btn.textContent = textoOriginal;
             }
         }
     </script>
