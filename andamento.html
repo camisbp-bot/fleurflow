@@ -10,57 +10,64 @@
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <h1 class="text-xl font-bold text-gray-800">⚙️ Andamento das Obras (Staff)</h1>
+        <h1 class="text-xl font-bold text-gray-800">⚙️ Divisão de Tarefas & Andamento</h1>
         <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 cursor-pointer">&larr; Voltar ao Painel</button>
     </nav>
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
         
-        <!-- NOVA TAREFA -->
+        <!-- ÁREA DE DIVISÃO DE TAREFAS -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h2 class="text-lg font-black text-gray-900 mb-4">➕ Atribuir Nova Tarefa / Capítulo</h2>
+            <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">🧩 Painel de Divisão de Tarefas</h2>
             
-            <form id="form-tarefa" onsubmit="adicionarTarefa(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
-                    <select id="tarefa-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="">Carregando...</option>
-                    </select>
-                </div>
+            <!-- 1º PASSO: SELECIONAR A OBRA -->
+            <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl mb-6 shadow-sm">
+                <label class="block text-sm font-black text-blue-900 mb-1">1º Passo: Selecione a Obra</label>
+                <p class="text-xs text-blue-700 mb-3">O sistema carregará automaticamente apenas a equipe que foi vinculada a este projeto.</p>
+                <select id="tarefa-obra" onchange="aoSelecionarObra()" class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                    <option value="">Aguarde, carregando obras...</option>
+                </select>
+            </div>
+
+            <!-- 2º PASSO: ATRIBUIR TAREFAS (Fica escondido até escolher a obra) -->
+            <form id="form-tarefa" onsubmit="adicionarTarefa(event)" class="hidden bg-gray-50 border border-gray-200 p-5 rounded-xl shadow-inner">
+                <h3 class="text-sm font-black text-gray-800 border-b border-gray-200 pb-2 mb-4">2º Passo: Atribuir Etapas</h3>
                 
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label>
-                    <input type="text" id="tarefa-capitulo" placeholder="Ex: 15" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo(s)</label>
+                        <input type="text" id="tarefa-capitulo" placeholder="Ex: 15 ou 15 ao 20" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
+                    </div>
 
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Etapa / Função</label>
-                    <select id="tarefa-etapa" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="Tradução">Tradução</option>
-                        <option value="Revisão">Revisão</option>
-                        <option value="Clean">Clean</option>
-                        <option value="Redraw">Redraw</option>
-                        <option value="Typeset">Typeset</option>
-                        <option value="Quality Check">Quality Check</option>
-                    </select>
-                </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Etapa / Função</label>
+                        <select id="tarefa-etapa" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
+                            <option value="Tradução">Tradução</option>
+                            <option value="Revisão">Revisão</option>
+                            <option value="Clean">Clean</option>
+                            <option value="Redraw">Redraw</option>
+                            <option value="Typeset">Typeset</option>
+                            <option value="Quality Check">Quality Check</option>
+                        </select>
+                    </div>
 
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Responsável (Staff)</label>
-                    <select id="tarefa-responsavel" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="">Carregando...</option>
-                    </select>
-                </div>
+                    <div>
+                        <label class="block text-xs font-bold text-red-700 mb-1">Responsável (Staff da Obra)</label>
+                        <select id="tarefa-responsavel" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
+                            <!-- Preenchido automaticamente via JS -->
+                        </select>
+                    </div>
 
-                <div class="md:col-span-1">
-                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 rounded-lg text-sm shadow cursor-pointer transition">
-                        Atribuir Tarefa
-                    </button>
+                    <div>
+                        <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 rounded-lg text-sm shadow cursor-pointer transition">
+                            ➕ Atribuir Tarefa
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
 
-        <!-- LISTA DE TAREFAS -->
+        <!-- LISTA DE TAREFAS PENDENTES -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h3 class="text-lg font-black text-gray-800">📋 Controle de Entregas Pendentes</h3>
@@ -93,6 +100,9 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let todasObras = [];
+        let todaEquipe = [];
+
         window.onload = async () => {
             // TRAVA DE SEGURANÇA: Só passa se for ADM ou Moderador
             const cargo = localStorage.getItem('usuario_cargo');
@@ -101,12 +111,10 @@
                 return;
             }
 
-            await carregarObrasSelect();
-            await carregarEquipe();
+            await carregarDadosIniciais();
             await carregarTarefas();
         };
 
-        // Botão de Voltar Mágico
         function voltar() {
             const cargo = localStorage.getItem('usuario_cargo');
             if (cargo === 'Administrador') {
@@ -116,23 +124,75 @@
             }
         }
 
-        async function carregarObrasSelect() {
-            const { data } = await _supabase.from('obras').select('nome').order('nome');
-            const select = document.getElementById('tarefa-obra');
-            select.innerHTML = '<option value="">Selecione...</option>';
-            if(data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
+        async function carregarDadosIniciais() {
+            try {
+                // Puxa as obras e a equipe
+                const { data: obras } = await _supabase.from('obras').select('id, nome, staff_ids, responsavel_nick').order('nome');
+                todasObras = obras || [];
+
+                const { data: equipe } = await _supabase.from('equipe').select('id, nick, cargo_sistema').order('nick');
+                todaEquipe = equipe || [];
+
+                // Preenche o Step 1
+                const selectObra = document.getElementById('tarefa-obra');
+                selectObra.innerHTML = '<option value="">👇 Clique aqui e selecione a obra...</option>';
+                
+                todasObras.forEach(o => {
+                    selectObra.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
+                });
+            } catch (err) {
+                console.error("Erro ao carregar dados iniciais:", err);
+            }
         }
 
-        async function carregarEquipe() {
-            const { data } = await _supabase.from('equipe').select('nick').order('nick');
-            const select = document.getElementById('tarefa-responsavel');
-            select.innerHTML = '<option value="">Selecione...</option>';
-            if(data) data.forEach(m => select.innerHTML += `<option value="${m.nick}">${m.nick}</option>`);
+        function aoSelecionarObra() {
+            const nomeObra = document.getElementById('tarefa-obra').value;
+            const painelDivisao = document.getElementById('form-tarefa');
+            const selectResp = document.getElementById('tarefa-responsavel');
+
+            // Se voltar para "Selecione", esconde o painel do Passo 2
+            if (!nomeObra) {
+                painelDivisao.classList.add('hidden');
+                return;
+            }
+
+            const obraSelecionada = todasObras.find(o => o.nome === nomeObra);
+            
+            if (obraSelecionada) {
+                // Garante que a lista de IDs seja tratada como string para não dar erro
+                const staffIds = (obraSelecionada.staff_ids || []).map(String);
+                
+                // Pega o nome dos donos/responsáveis também (para o moderador poder se atribuir a tarefa)
+                const donos = obraSelecionada.responsavel_nick ? obraSelecionada.responsavel_nick.split(', ') : [];
+                
+                // Filtra a equipe: Mostra SÓ quem está na array de staff_ids OU quem é Dono
+                const equipeObra = todaEquipe.filter(m => staffIds.includes(String(m.id)) || donos.includes(m.nick));
+
+                selectResp.innerHTML = '<option value="">Selecione quem vai fazer...</option>';
+                
+                if (equipeObra.length === 0) {
+                    selectResp.innerHTML = '<option value="">⚠️ Ninguém foi vinculado a esta obra!</option>';
+                } else {
+                    equipeObra.forEach(m => {
+                        selectResp.innerHTML += `<option value="${m.nick}">${m.nick} (${m.cargo_sistema || 'Staff'})</option>`;
+                    });
+                }
+
+                // Revela o formulário de atribuição
+                painelDivisao.classList.remove('hidden');
+            }
         }
 
         async function adicionarTarefa(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
+            
+            const responsavel = document.getElementById('tarefa-responsavel').value;
+            if(!responsavel) {
+                alert("Você precisa selecionar um responsável válido!");
+                return;
+            }
+
             btn.disabled = true;
             btn.textContent = 'Adicionando...';
 
@@ -140,11 +200,10 @@
                 obra_nome: document.getElementById('tarefa-obra').value,
                 capitulo: document.getElementById('tarefa-capitulo').value,
                 etapa: document.getElementById('tarefa-etapa').value,
-                responsavel_nick: document.getElementById('tarefa-responsavel').value,
+                responsavel_nick: responsavel,
                 status: 'Pendente'
             };
 
-            // Vai inserir na tabela "tarefas"
             const { error } = await _supabase.from('tarefas').insert([obj]);
 
             if (error) {
@@ -152,18 +211,19 @@
                 console.error(error);
             } else {
                 document.getElementById('tarefa-capitulo').value = '';
+                document.getElementById('tarefa-etapa').value = 'Tradução';
+                document.getElementById('tarefa-responsavel').value = ''; // Reseta o responsável
                 carregarTarefas();
             }
 
             btn.disabled = false;
-            btn.textContent = 'Atribuir Tarefa';
+            btn.textContent = '➕ Atribuir Tarefa';
         }
 
         async function carregarTarefas() {
             const tb = document.getElementById('tabela-tarefas');
             tb.innerHTML = '<tr><td colspan="6" class="px-4 py-4 text-center text-gray-400 text-xs">Carregando andamento...</td></tr>';
 
-            // Puxa as tarefas pendentes
             const { data, error } = await _supabase.from('tarefas').select('*').order('created_at', { ascending: false });
 
             if (error) {
@@ -172,7 +232,6 @@
             }
 
             tb.innerHTML = '';
-            
             const tarefasPendentes = data.filter(t => t.status !== 'Concluído');
 
             if (tarefasPendentes.length === 0) {
