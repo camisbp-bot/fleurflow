@@ -9,7 +9,6 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
-    <!-- BARRA DE NAVEGAÇÃO -->
     <nav class="bg-red-900 text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-10">
         <div class="flex items-center gap-3">
             <h1 class="text-xl font-black tracking-wider">FleurFlow <span class="text-red-300 text-sm font-normal">| Painel ADM</span></h1>
@@ -22,7 +21,6 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <!-- ACESSO RÁPIDO (FERRAMENTAS EXCLUSIVAS) -->
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👑 Ferramentas da Administração</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -38,7 +36,8 @@
                     <span class="text-3xl group-hover:scale-110 transition">⚙️</span>
                     <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Andamento (Staff)</span>
                 </button>
-                <button onclick="alert('Página de central em breve!')" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                <!-- BOTÃO ARRUMADO! -->
+                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
                     <span class="text-3xl group-hover:scale-110 transition">🔔</span>
                     <span class="text-sm font-bold text-gray-700 group-hover:text-red-700">Atualizações Diárias</span>
                 </button>
@@ -47,17 +46,16 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <!-- LISTAGEM POR MODERADOR (VISÃO ADM) -->
             <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-96">
                 <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👥 Obras por Moderador</h2>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-4" id="lista-todas-obras">
-                    <p class="text-sm text-gray-500">Carregando dados da equipe...</p>
+                    <p class="text-sm text-gray-500">Carregando dados...</p>
                 </div>
             </section>
 
-            <!-- MINHAS OBRAS (IGUAL AO MODERADOR) -->
+            <!-- MINHAS OBRAS (DONA OU STAFF) -->
             <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-96">
-                <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">💖 Minhas Obras (Staff)</h2>
+                <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">💖 Minhas Obras (Gerenciamento & Staff)</h2>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-minhas-obras">
                     <p class="text-sm text-gray-500">Buscando suas obras...</p>
                 </div>
@@ -86,21 +84,40 @@
         }
 
         async function carregarMinhasObras(meuNick) {
-            const { data, error } = await _supabase.from('obras').select('*').eq('responsavel_nick', meuNick);
+            // 1. Descobrir o ID da ADM logada (para cruzar com a lista de staff_ids)
+            const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
+            const meuId = usuario ? String(usuario.id) : null;
+
+            // 2. Puxar todas as obras
+            const { data: obras, error } = await _supabase.from('obras').select('*').order('nome');
             const container = document.getElementById('lista-minhas-obras');
             container.innerHTML = '';
 
-            if (error || !data || data.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 italic">Você ainda não assumiu nenhuma obra.</p>`;
+            if (error || !obras || obras.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra cadastrada.</p>`;
                 return;
             }
 
-            data.forEach(obra => {
+            // 3. Filtrar: Obras que sou Dona (responsavel_nick) OU que sou Staff (staff_ids)
+            const minhasObras = obras.filter(obra => {
+                const souDona = obra.responsavel_nick && obra.responsavel_nick.includes(meuNick);
+                const souStaff = obra.staff_ids && meuId && obra.staff_ids.map(String).includes(meuId);
+                return souDona || souStaff;
+            });
+
+            if (minhasObras.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Você não está em nenhuma obra no momento.</p>`;
+                return;
+            }
+
+            minhasObras.forEach(obra => {
                 let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
+                const papel = (obra.responsavel_nick && obra.responsavel_nick.includes(meuNick)) ? '👑 Dona' : '👥 Staff';
+
                 container.innerHTML += `
                     <div class="p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition flex justify-between items-center">
                         <div>
-                            <h3 class="font-bold text-gray-800">${obra.nome}</h3>
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">${obra.nome} <span class="text-[10px] text-gray-400 bg-white border border-gray-200 px-1 rounded">${papel}</span></h3>
                             <p class="text-xs text-gray-500 mt-1">Língua: ${obra.lingua || 'Não informada'}</p>
                         </div>
                         <span class="text-xs font-bold px-3 py-1 rounded-full ${corStatus}">${obra.status}</span>
@@ -115,19 +132,19 @@
             container.innerHTML = '';
 
             if (error || !data || data.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra cadastrada no sistema.</p>`;
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra cadastrada.</p>`;
                 return;
             }
 
-            // Agrupar obras por moderador
             const obrasPorMod = {};
             data.forEach(obra => {
-                const mod = obra.responsavel_nick || 'Sem Moderador';
-                if(!obrasPorMod[mod]) obrasPorMod[mod] = [];
-                obrasPorMod[mod].push(obra);
+                const repsArray = obra.responsavel_nick ? obra.responsavel_nick.split(', ') : ['Sem Moderador'];
+                repsArray.forEach(mod => {
+                    if(!obrasPorMod[mod]) obrasPorMod[mod] = [];
+                    obrasPorMod[mod].push(obra);
+                });
             });
 
-            // Gerar visual
             for (const mod in obrasPorMod) {
                 let htmlMod = `
                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
