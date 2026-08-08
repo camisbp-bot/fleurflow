@@ -20,13 +20,11 @@
 
     <main class="max-w-5xl mx-auto p-6 mt-4">
         
-        <!-- CAIXA NOVA: SELETOR DE EDIÇÃO -->
         <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl shadow-sm mb-6">
             <label class="block text-sm font-black text-blue-900 mb-1">✏️ Editar Obra Existente</label>
             <p class="text-xs text-blue-700 mb-3">Para mudar status, prioridade ou atualizar dados, selecione a obra abaixo. Para uma obra nova, deixe em "Criar Nova Obra".</p>
             <select id="select-editar-obra" onchange="carregarDadosEdicao()" class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
                 <option value="">✨ + Criar Nova Obra do Zero</option>
-                <!-- As obras vão carregar aqui -->
             </select>
         </div>
 
@@ -58,14 +56,6 @@
                         </select>
                     </div>
 
-                    <div class="bg-red-50 p-3 rounded-lg border border-red-100">
-                        <label class="block text-xs font-black text-red-800 mb-1">👑 Responsável (Dono da Obra)</label>
-                        <select id="obra-responsavel" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
-                            <option value="">Carregando equipe...</option>
-                        </select>
-                    </div>
-
-                    <!-- CAMPO ATUALIZADO: TIPO DE OBRA COM 'COMBO' -->
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de Obra</label>
                         <select id="obra-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
@@ -92,6 +82,14 @@
                             <option value="Pausada">🟡 Pausada / Em Hiato</option>
                             <option value="Finalizada">🔴 Finalizada</option>
                         </select>
+                    </div>
+
+                    <!-- MÚLTIPLOS RESPONSÁVEIS (NOVO) -->
+                    <div class="md:col-span-2 bg-red-50 p-4 rounded-lg border border-red-100">
+                        <label class="block text-xs font-black text-red-800 mb-2">👑 Responsável(is) (Dono da Obra)</label>
+                        <div id="lista-responsaveis" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <p class="text-xs text-gray-500">Carregando equipe...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,7 +141,7 @@
                 </div>
             </div>
 
-            <!-- 4. LAYOUTS (OS 4 TIPOS) -->
+            <!-- 4. LAYOUTS -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra (Upload)</h3>
                 <p class="text-[10px] text-gray-400 mb-3">Na edição, faça upload apenas dos layouts que quiser substituir.</p>
@@ -175,7 +173,6 @@
                 </div>
             </div>
             
-            <!-- BOTÃO SALVAR -->
             <div class="flex justify-end gap-4">
                 <button type="submit" id="btn-salvar" class="bg-red-700 hover:bg-red-800 text-white font-black py-3 px-8 rounded-xl transition text-lg shadow-xl shadow-red-700/30 cursor-pointer">
                     💾 Salvar Obra
@@ -202,24 +199,33 @@
                 const { data: equipe, error } = await _supabase.from('equipe').select('id, nick, cargo_sistema').order('nick');
                 if (error) throw error;
 
-                const selectResp = document.getElementById('obra-responsavel');
+                const containerResp = document.getElementById('lista-responsaveis');
                 const containerStaff = document.getElementById('lista-membros-staff');
                 
-                selectResp.innerHTML = '<option value="">Selecione o Responsável</option>';
+                containerResp.innerHTML = '';
                 containerStaff.innerHTML = '';
 
                 if (equipe) {
-                    equipe.forEach(l => {
-                        selectResp.innerHTML += `<option value="${l.nick}">${l.nick} (${l.cargo_sistema || 'Staff'})</option>`;
-                    });
+                    const meuNick = localStorage.getItem('usuario_nick');
 
-                    containerStaff.innerHTML = equipe.map(m => `
-                        <label class="flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
-                            <input type="checkbox" name="staff_membros" value="${m.id}" class="rounded text-red-700 focus:ring-red-700">
-                            <span class="font-semibold text-gray-800">${m.nick}</span>
-                            <span class="text-[10px] text-gray-400 ml-auto">${m.cargo_sistema || 'Staff'}</span>
-                        </label>
-                    `).join('');
+                    equipe.forEach(m => {
+                        // Caixinhas para Responsáveis (Dono)
+                        const marcadoResp = (m.nick === meuNick) ? 'checked' : '';
+                        containerResp.innerHTML += `
+                            <label class="flex items-center gap-2 p-1 bg-white border border-red-100 rounded text-sm cursor-pointer hover:bg-red-50">
+                                <input type="checkbox" name="resp_obra" value="${m.nick}" class="rounded text-red-700" ${marcadoResp}>
+                                <span class="font-bold text-red-900">${m.nick}</span>
+                            </label>
+                        `;
+                        // Caixinhas para Staff
+                        containerStaff.innerHTML += `
+                            <label class="flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm cursor-pointer hover:bg-gray-100">
+                                <input type="checkbox" name="staff_membros" value="${m.id}" class="rounded text-red-700">
+                                <span class="font-semibold text-gray-800">${m.nick}</span>
+                                <span class="text-[10px] text-gray-400 ml-auto">${m.cargo_sistema || 'Staff'}</span>
+                            </label>
+                        `;
+                    });
                 }
             } catch (err) {
                 console.error("Erro equipe:", err.message);
@@ -240,12 +246,20 @@
             const idSelecionado = document.getElementById('select-editar-obra').value;
             const btn = document.getElementById('btn-salvar');
             
+            // Limpa as seleções
             document.querySelectorAll('input[name="staff_membros"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[name="resp_obra"]').forEach(cb => cb.checked = false);
 
             if (!idSelecionado) {
                 idObraEditando = null;
                 document.getElementById('form-cadastro-obra').reset();
                 imagensAtuais = { capa: null, lanc: null, atu: null, fin: null, lancFin: null };
+                
+                // Remarca quem tá logado como responsável padrão
+                const meuNick = localStorage.getItem('usuario_nick');
+                const cbEu = document.querySelector(`input[name="resp_obra"][value="${meuNick}"]`);
+                if(cbEu) cbEu.checked = true;
+
                 btn.textContent = '💾 Salvar Nova Obra';
                 btn.classList.replace('bg-blue-600', 'bg-red-700');
                 btn.classList.replace('hover:bg-blue-700', 'hover:bg-red-800');
@@ -260,14 +274,12 @@
             document.getElementById('obra-nome').value = obra.nome || '';
             document.getElementById('obra-sinopse').value = obra.sinopse || '';
             document.getElementById('obra-lingua').value = obra.lingua || '';
-            document.getElementById('obra-responsavel').value = obra.responsavel_nick || '';
             document.getElementById('obra-tipo').value = obra.tipo || 'Recorrente';
             document.getElementById('obra-prioridade').value = obra.prioridade || 'Média';
             document.getElementById('obra-status').value = obra.status || 'Ativa';
             
             document.getElementById('obra-drive').value = obra.drive_url || '';
             document.getElementById('obra-plataforma').value = obra.plataforma_oficial || '';
-            
             document.getElementById('obra-dia-oficial').value = obra.dia_oficial || '';
             document.getElementById('obra-dia-scan').value = obra.dia_scan || '';
             document.getElementById('obra-capitulo-plat').value = obra.capitulo_plataforma || 0;
@@ -279,9 +291,19 @@
             imagensAtuais.fin = obra.layout_finalizacao;
             imagensAtuais.lancFin = obra.layout_lancamento_finalizacao;
 
+            // Marca os responsáveis que vieram do banco
+            if(obra.responsavel_nick) {
+                const respArray = obra.responsavel_nick.split(', ');
+                respArray.forEach(nick => {
+                    const cb = document.querySelector(`input[name="resp_obra"][value="${nick}"]`);
+                    if(cb) cb.checked = true;
+                });
+            }
+
+            // Marca a staff
             if(obra.staff_ids && Array.isArray(obra.staff_ids)) {
                 obra.staff_ids.forEach(idStaff => {
-                    const cb = document.querySelector(`input[value="${idStaff}"]`);
+                    const cb = document.querySelector(`input[name="staff_membros"][value="${idStaff}"]`);
                     if(cb) cb.checked = true;
                 });
             }
@@ -318,6 +340,15 @@
             event.preventDefault(); 
             const btn = document.getElementById('btn-salvar');
             const textoOriginal = btn.textContent;
+            
+            const cbResp = document.querySelectorAll('input[name="resp_obra"]:checked');
+            const responsaveisSelecionados = Array.from(cbResp).map(cb => cb.value).join(', ');
+
+            if(!responsaveisSelecionados) {
+                alert("Por favor, selecione pelo menos um Responsável (Dono) para a obra!");
+                return;
+            }
+
             btn.disabled = true;
             btn.textContent = 'Enviando imagens e processando...';
 
@@ -328,15 +359,15 @@
                 const layoutFin = await fazerUpload('obra-layout-finalizacao', 'layouts', imagensAtuais.fin);
                 const layoutLancFin = await fazerUpload('obra-layout-lanc-fin', 'layouts', imagensAtuais.lancFin);
 
-                const checkboxes = document.querySelectorAll('input[name="staff_membros"]:checked');
-                const staff_ids = Array.from(checkboxes).map(cb => cb.value);
+                const checkboxesStaff = document.querySelectorAll('input[name="staff_membros"]:checked');
+                const staff_ids = Array.from(checkboxesStaff).map(cb => cb.value);
 
                 const dadosObra = {
                     nome: document.getElementById('obra-nome').value,
                     lingua: document.getElementById('obra-lingua').value,
                     sinopse: document.getElementById('obra-sinopse').value,
                     tipo: document.getElementById('obra-tipo').value,
-                    responsavel_nick: document.getElementById('obra-responsavel').value,
+                    responsavel_nick: responsaveisSelecionados, 
                     plataforma_oficial: document.getElementById('obra-plataforma').value,
                     dia_oficial: document.getElementById('obra-dia-oficial').value,
                     dia_scan: document.getElementById('obra-dia-scan').value,
