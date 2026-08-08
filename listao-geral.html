@@ -177,10 +177,18 @@
             }
         }
 
-        async function liberarData(e) {
+       async function liberarData(e) {
             e.preventDefault();
             const { error } = await _supabase.from('listao_config').insert([{ data_listao: document.getElementById('nova-data-adm').value }]);
-            if(!error) { document.getElementById('nova-data-adm').value = ''; carregarDatasLiberadas(); }
+            
+            if (error) {
+                alert('🚨 Erro do Supabase: ' + error.message);
+                console.error(error);
+            } else { 
+                document.getElementById('nova-data-adm').value = ''; 
+                carregarDatasLiberadas(); 
+                alert('Data liberada com sucesso!');
+            }
         }
 
         async function fecharData(id) {
