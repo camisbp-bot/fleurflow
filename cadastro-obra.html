@@ -65,11 +65,13 @@
                         </select>
                     </div>
 
+                    <!-- CAMPO ATUALIZADO: TIPO DE OBRA COM 'COMBO' -->
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de Obra</label>
                         <select id="obra-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                             <option value="Recorrente">Recorrente</option>
                             <option value="Curta">Curta</option>
+                            <option value="Combo">Combo</option>
                         </select>
                     </div>
 
@@ -238,11 +240,9 @@
             const idSelecionado = document.getElementById('select-editar-obra').value;
             const btn = document.getElementById('btn-salvar');
             
-            // Limpa as caixinhas da staff
             document.querySelectorAll('input[name="staff_membros"]').forEach(cb => cb.checked = false);
 
             if (!idSelecionado) {
-                // MODO: CRIAR NOVA OBRA
                 idObraEditando = null;
                 document.getElementById('form-cadastro-obra').reset();
                 imagensAtuais = { capa: null, lanc: null, atu: null, fin: null, lancFin: null };
@@ -252,7 +252,6 @@
                 return;
             }
 
-            // MODO: EDITAR OBRA EXISTENTE
             const { data: obra, error } = await _supabase.from('obras').select('*').eq('id', idSelecionado).single();
             if (error) { alert("Erro ao buscar dados da obra!"); return; }
 
@@ -274,14 +273,12 @@
             document.getElementById('obra-capitulo-plat').value = obra.capitulo_plataforma || 0;
             document.getElementById('obra-capitulo-fleur').value = obra.capitulo_fleur || 0;
 
-            // Salva as imagens atuais para não perder se o usuário não fizer novo upload
             imagensAtuais.capa = obra.capa_url;
             imagensAtuais.lanc = obra.layout_lancamento;
             imagensAtuais.atu = obra.layout_atualizacao;
             imagensAtuais.fin = obra.layout_finalizacao;
             imagensAtuais.lancFin = obra.layout_lancamento_finalizacao;
 
-            // Marca as caixinhas da staff
             if(obra.staff_ids && Array.isArray(obra.staff_ids)) {
                 obra.staff_ids.forEach(idStaff => {
                     const cb = document.querySelector(`input[value="${idStaff}"]`);
@@ -289,7 +286,6 @@
                 });
             }
 
-            // Altera visual do botão
             btn.textContent = '🔄 Atualizar Dados da Obra';
             btn.classList.replace('bg-red-700', 'bg-blue-600');
             btn.classList.replace('hover:bg-red-800', 'hover:bg-blue-700');
@@ -304,7 +300,6 @@
 
         async function fazerUpload(inputId, pasta, urlAtualDaObra) {
             const input = document.getElementById(inputId);
-            // Se o cara tá editando e não botou arquivo novo, mantém a URL antiga
             if (!input.files || input.files.length === 0) return urlAtualDaObra;
             
             const file = input.files[0];
@@ -327,7 +322,6 @@
             btn.textContent = 'Enviando imagens e processando...';
 
             try {
-                // Upload das imagens (se não enviar nada, pega as antigas pelo "imagensAtuais")
                 const capaUrl = await fazerUpload('obra-capa', 'capas', imagensAtuais.capa);
                 const layoutLanc = await fazerUpload('obra-layout-lancamento', 'layouts', imagensAtuais.lanc);
                 const layoutAtu = await fazerUpload('obra-layout-atualizacao', 'layouts', imagensAtuais.atu);
@@ -360,12 +354,10 @@
                 };
 
                 if (idObraEditando) {
-                    // MODO ATUALIZAÇÃO
                     const { error } = await _supabase.from('obras').update(dadosObra).eq('id', idObraEditando);
                     if (error) throw error;
                     alert("Obra atualizada com sucesso!");
                 } else {
-                    // MODO CRIAÇÃO
                     const { error } = await _supabase.from('obras').insert([dadosObra]);
                     if (error) throw error;
                     alert("Obra cadastrada com sucesso!");
