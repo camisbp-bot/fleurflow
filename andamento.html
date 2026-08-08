@@ -16,37 +16,45 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
         
+        <!-- PAINEL DE ATRIBUIÇÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">🧩 Painel de Divisão de Tarefas</h2>
+            <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">🧩 1. Atribuir Tarefas ao Capítulo</h2>
             
-            <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl mb-6 shadow-sm">
-                <label class="block text-sm font-black text-blue-900 mb-1">1º Passo: Selecione a Obra</label>
-                <p class="text-xs text-blue-700 mb-3">O sistema carregará automaticamente apenas a equipe que foi vinculada a este projeto.</p>
-                <select id="tarefa-obra" onchange="aoSelecionarObra()" class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                    <option value="">Aguarde, carregando obras...</option>
-                </select>
+            <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-end">
+                <div class="w-full md:w-1/2">
+                    <label class="block text-sm font-black text-blue-900 mb-1">Selecione a Obra</label>
+                    <select id="tarefa-obra" onchange="aoSelecionarObra()" class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                        <option value="">Aguarde, carregando obras...</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <label class="block text-sm font-black text-blue-900 mb-1">Capítulo (Referência)</label>
+                    <input type="text" id="tarefa-capitulo" placeholder="Ex: 29" class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
             </div>
 
-            <!-- 2º PASSO: ATRIBUIR TAREFAS (COM DATA E HORA!) -->
+            <!-- FORMULÁRIO DE TAREFAS -->
             <form id="form-tarefa" onsubmit="adicionarTarefa(event)" class="hidden bg-gray-50 border border-gray-200 p-5 rounded-xl shadow-inner">
-                <h3 class="text-sm font-black text-gray-800 border-b border-gray-200 pb-2 mb-4">2º Passo: Atribuir Etapas e Prazos</h3>
+                <p class="text-xs text-gray-500 mb-4">Dica: Atribua o Organizer primeiro. Após ele dar OK e você verificar as páginas, volte aqui para atribuir o restante.</p>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                    
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo(s)</label>
-                        <input type="text" id="tarefa-capitulo" placeholder="Ex: 15" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Etapa / Função</label>
+                        <select id="tarefa-etapa" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
+                            <option value="Organizer / Raw">Organizer / Raw</option>
+                            <option value="Tradução">Tradução</option>
+                            <option value="Limpeza">Limpeza (Clean)</option>
+                            <option value="Edição">Edição (Typeset)</option>
+                            <option value="Revisão">Revisão</option>
+                            <option value="Redraw">Redraw</option>
+                            <option value="Quality Check">Quality Check</option>
+                        </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Etapa / Função</label>
-                        <select id="tarefa-etapa" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
-                            <option value="Tradução">Tradução</option>
-                            <option value="Revisão">Revisão</option>
-                            <option value="Clean">Clean</option>
-                            <option value="Redraw">Redraw</option>
-                            <option value="Typeset">Typeset</option>
-                            <option value="Quality Check">Quality Check</option>
-                        </select>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label>
+                        <input type="text" id="tarefa-paginas" placeholder="Ex: 1-3 ou Todas" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
                     </div>
 
                     <div>
@@ -55,7 +63,6 @@
                         </select>
                     </div>
 
-                    <!-- CAMPO ATUALIZADO: DATA E HORA -->
                     <div>
                         <label class="block text-xs font-bold text-red-700 mb-1">Prazo (Data e Hora)</label>
                         <input type="datetime-local" id="tarefa-prazo" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
@@ -70,9 +77,36 @@
             </form>
         </div>
 
+        <!-- GERADOR DE WHATSAPP -->
+        <div class="bg-green-50 rounded-xl p-6 shadow-sm border border-green-200">
+            <h2 class="text-lg font-black text-green-900 mb-2 flex items-center gap-2">📲 2. Gerar Divisão para WhatsApp</h2>
+            <p class="text-xs text-green-700 mb-4">Selecione a obra e digite o capítulo para o sistema montar o texto padrão de envio.</p>
+            
+            <div class="flex gap-4 items-end mb-4">
+                <div class="w-1/3">
+                    <label class="block text-xs font-bold text-green-800 mb-1">Obra</label>
+                    <select id="whats-obra" class="w-full bg-white border border-green-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div class="w-1/3">
+                    <label class="block text-xs font-bold text-green-800 mb-1">Capítulo</label>
+                    <input type="text" id="whats-capitulo" placeholder="Ex: 29" class="w-full bg-white border border-green-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div class="w-1/3">
+                    <button onclick="gerarWhatsApp()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg text-sm shadow cursor-pointer transition">
+                        Gerar Texto
+                    </button>
+                </div>
+            </div>
+
+            <textarea id="texto-whatsapp" rows="12" class="w-full bg-white border border-green-300 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none" readonly placeholder="O texto gerado aparecerá aqui..."></textarea>
+        </div>
+
+        <!-- LISTA DE TAREFAS -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="text-lg font-black text-gray-800">📋 Controle de Entregas Pendentes</h3>
+                <h3 class="text-lg font-black text-gray-800">📋 Controle de Entregas (Visão Geral)</h3>
                 <button onclick="carregarTarefas()" class="text-xs font-bold text-blue-600 hover:underline">🔄 Atualizar Lista</button>
             </div>
 
@@ -82,6 +116,7 @@
                         <tr>
                             <th class="px-4 py-3">Prazo</th>
                             <th class="px-4 py-3">Obra & Cap</th>
+                            <th class="px-4 py-3">Páginas</th>
                             <th class="px-4 py-3">Etapa</th>
                             <th class="px-4 py-3">Responsável</th>
                             <th class="px-4 py-3">Status</th>
@@ -102,6 +137,7 @@
 
         let todasObras = [];
         let todaEquipe = [];
+        let todasTarefasGlobais = [];
 
         window.onload = async () => {
             const cargo = localStorage.getItem('usuario_cargo');
@@ -127,8 +163,15 @@
                 todaEquipe = equipe || [];
 
                 const selectObra = document.getElementById('tarefa-obra');
+                const selectWhats = document.getElementById('whats-obra');
+                
                 selectObra.innerHTML = '<option value="">👇 Clique aqui e selecione a obra...</option>';
-                todasObras.forEach(o => selectObra.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
+                selectWhats.innerHTML = '<option value="">Selecione...</option>';
+                
+                todasObras.forEach(o => {
+                    selectObra.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
+                    selectWhats.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
+                });
             } catch (err) { console.error("Erro:", err); }
         }
 
@@ -158,17 +201,20 @@
             const btn = e.target.querySelector('button[type="submit"]');
             
             const responsavel = document.getElementById('tarefa-responsavel').value;
-            if(!responsavel) return alert("Selecione um responsável válido!");
+            const capitulo = document.getElementById('tarefa-capitulo').value;
+
+            if(!responsavel || !capitulo) return alert("Preencha o capítulo e o responsável!");
 
             btn.disabled = true;
             btn.textContent = 'Adicionando...';
 
             const obj = {
                 obra_nome: document.getElementById('tarefa-obra').value,
-                capitulo: document.getElementById('tarefa-capitulo').value,
+                capitulo: capitulo,
                 etapa: document.getElementById('tarefa-etapa').value,
+                paginas: document.getElementById('tarefa-paginas').value, // SALVA AS PÁGINAS
                 responsavel_nick: responsavel,
-                prazo: document.getElementById('tarefa-prazo').value, // Envia a Data + Hora
+                prazo: document.getElementById('tarefa-prazo').value,
                 status: 'Pendente'
             };
 
@@ -176,8 +222,9 @@
 
             if (error) { alert('Erro: ' + error.message); } 
             else {
-                document.getElementById('tarefa-capitulo').value = '';
+                document.getElementById('tarefa-paginas').value = '';
                 document.getElementById('tarefa-prazo').value = '';
+                // Não limpa o capítulo para facilitar atribuir várias tarefas ao mesmo cap.
                 carregarTarefas();
             }
 
@@ -187,43 +234,41 @@
 
         async function carregarTarefas() {
             const tb = document.getElementById('tabela-tarefas');
-            tb.innerHTML = '<tr><td colspan="6" class="px-4 py-4 text-center text-gray-400 text-xs">Carregando andamento...</td></tr>';
+            tb.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-400 text-xs">Carregando andamento...</td></tr>';
 
             const { data, error } = await _supabase.from('tarefas').select('*').order('prazo', { ascending: true });
 
-            if (error) { tb.innerHTML = `<tr><td colspan="6" class="text-red-500 text-center py-4">${error.message}</td></tr>`; return; }
+            if (error) { tb.innerHTML = `<tr><td colspan="7" class="text-red-500 text-center py-4">${error.message}</td></tr>`; return; }
 
+            todasTarefasGlobais = data || []; // Salva pro gerador de WhatsApp usar
             tb.innerHTML = '';
-            const pendentes = data.filter(t => t.status !== 'Concluído');
+            
+            // Aqui mostramos todas, para o ADM saber se o Organizer já deu OK
+            const ativasEConcluidasRecentes = data.slice(0, 50); // Mostra as últimas 50 para não pesar
 
-            if (pendentes.length === 0) { tb.innerHTML = `<tr><td colspan="6" class="text-gray-400 text-center py-8">Nenhuma tarefa pendente! 🎉</td></tr>`; return; }
+            if (ativasEConcluidasRecentes.length === 0) { tb.innerHTML = `<tr><td colspan="7" class="text-gray-400 text-center py-8">Nenhuma tarefa registrada! 🎉</td></tr>`; return; }
 
-            const agora = new Date();
+            const dataHoje = new Date();
 
-            pendentes.forEach(t => {
-                let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700';
+            ativasEConcluidasRecentes.forEach(t => {
+                let corStatus = '';
+                if(t.status === 'Em Andamento') corStatus = 'bg-blue-100 text-blue-700';
+                else if(t.status === 'Concluído') corStatus = 'bg-green-100 text-green-700';
+                else corStatus = 'bg-amber-100 text-amber-700';
                 
-                // Formata DATA E HORA
                 let dataFormatada = 'Sem prazo';
                 let corPrazo = 'text-gray-500';
-                
-                if (t.prazo) {
+                if(t.prazo) {
                     const dataPrazo = new Date(t.prazo);
-                    dataFormatada = dataPrazo.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-                    
-                    if (dataPrazo < agora) {
-                        corPrazo = 'text-red-600 font-black bg-red-100 px-2 py-0.5 rounded'; // Atrasado
-                    } else if (dataPrazo.toDateString() === agora.toDateString()) {
-                        corPrazo = 'text-orange-600 font-bold'; // Prazo hoje
-                    } else {
-                        corPrazo = 'text-green-600 font-semibold'; // No prazo
-                    }
+                    dataFormatada = dataPrazo.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'});
+                    if(dataPrazo < dataHoje && t.status !== 'Concluído') corPrazo = 'text-red-600 font-black bg-red-100 px-2 py-0.5 rounded';
                 }
 
                 tb.innerHTML += `
                     <tr class="hover:bg-gray-50">
                         <td class="px-4 py-3 text-sm ${corPrazo}">${dataFormatada}</td>
                         <td class="px-4 py-3"><span class="font-bold text-gray-800">${t.obra_nome}</span> <span class="font-semibold text-red-700 ml-1">C.${t.capitulo}</span></td>
+                        <td class="px-4 py-3 text-sm font-bold text-gray-600">PG: ${t.paginas || 'Todas'}</td>
                         <td class="px-4 py-3 text-xs uppercase font-bold text-gray-500">${t.etapa}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">👤 ${t.responsavel_nick}</td>
                         <td class="px-4 py-3">
@@ -232,7 +277,7 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 text-right space-x-2">
-                            <button onclick="mudarStatus('${t.id}', 'Concluído')" class="text-green-600 font-bold text-xs hover:underline">✅ Concluir</button>
+                            ${t.status !== 'Concluído' ? `<button onclick="mudarStatus('${t.id}', 'Concluído')" class="text-green-600 font-bold text-xs hover:underline">✅ Dar Baixa</button>` : ''}
                             <button onclick="excluirTarefa('${t.id}')" class="text-red-500 font-bold text-xs hover:underline">🗑️ Excluir</button>
                         </td>
                     </tr>`;
@@ -245,10 +290,83 @@
         }
 
         async function excluirTarefa(id) {
-            if(confirm("Deseja apagar essa tarefa?")) {
+            if(confirm("Deseja apagar essa tarefa permanentemente?")) {
                 const { error } = await _supabase.from('tarefas').delete().eq('id', id);
                 if(!error) carregarTarefas();
             }
+        }
+
+        // --- A MÁGICA DO WHATSAPP ---
+        function gerarWhatsApp() {
+            const obraSelecionada = document.getElementById('whats-obra').value;
+            const capituloSelecionado = document.getElementById('whats-capitulo').value.trim();
+            const textArea = document.getElementById('texto-whatsapp');
+
+            if(!obraSelecionada || !capituloSelecionado) {
+                alert("Por favor, selecione a obra e digite o capítulo para gerar o texto!");
+                return;
+            }
+
+            // Filtra as tarefas dessa obra e desse capitulo
+            const tarefasDoCapitulo = todasTarefasGlobais.filter(t => 
+                t.obra_nome === obraSelecionada && 
+                t.capitulo === capituloSelecionado &&
+                t.etapa !== 'Organizer / Raw' // Não precisa mandar a organizer no whatsapp da equipe
+            );
+
+            if(tarefasDoCapitulo.length === 0) {
+                textArea.value = "Nenhuma tarefa de edição/tradução encontrada para este capítulo no sistema. Lembre-se de atribuir as etapas primeiro!";
+                return;
+            }
+
+            // Agrupa por etapa
+            const agrupado = {
+                "TRADUÇÃO": [],
+                "LIMPEZA": [],
+                "EDIÇÃO": [],
+                "REVISÃO": [],
+                "OUTROS": []
+            };
+
+            tarefasDoCapitulo.forEach(t => {
+                let cat = "OUTROS";
+                const etapaUpper = t.etapa.toUpperCase();
+                
+                if(etapaUpper.includes("TRAD")) cat = "TRADUÇÃO";
+                else if(etapaUpper.includes("CLEAN") || etapaUpper.includes("LIMP")) cat = "LIMPEZA";
+                else if(etapaUpper.includes("TYPE") || etapaUpper.includes("EDIÇ")) cat = "EDIÇÃO";
+                else if(etapaUpper.includes("REV")) cat = "REVISÃO";
+                
+                let dataFormatada = "SEM PRAZO";
+                if(t.prazo) {
+                    const d = new Date(t.prazo);
+                    dataFormatada = d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'});
+                }
+
+                agrupado[cat].push({
+                    paginas: t.paginas || 'Todas',
+                    responsavel: t.responsavel_nick,
+                    prazo: dataFormatada
+                });
+            });
+
+            // Monta o texto no seu padrão!
+            let txt = `> CAPÍTULO ${capituloSelecionado}\n\n`;
+
+            for (const [etapa, lista] of Object.entries(agrupado)) {
+                if (lista.length > 0) {
+                    // Pega o prazo da primeira pessoa dessa etapa como referência pro cabeçalho
+                    const prazoReferencia = lista[0].prazo;
+                    txt += `\n> ${etapa} - (${prazoReferencia})\n\n`;
+                    
+                    lista.forEach(item => {
+                        txt += `PG ${item.paginas}: @${item.responsavel}\n`;
+                    });
+                }
+            }
+
+            txt += `\n\n‼️⚠️ Qualquer imprevisto, me avisem! ⚠️‼️`;
+            textArea.value = txt;
         }
     </script>
 </body>
