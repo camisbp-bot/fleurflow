@@ -11,127 +11,117 @@
 
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
         <h1 class="text-xl font-bold text-gray-800">📊 O Listão Geral</h1>
-        <button onclick="window.location.href='dashboard-moderador.html'" class="text-sm font-bold text-gray-600 hover:text-red-700 cursor-pointer">&larr; Voltar</button>
+        <button id="btn-voltar" class="text-sm font-bold text-gray-600 hover:text-red-700 cursor-pointer">&larr; Voltar</button>
     </nav>
 
-    <main class="max-w-5xl mx-auto p-6 mt-4 space-y-6">
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
         
-        <!-- PAINEL EXCLUSIVO ADM: GERENCIAR DATAS -->
+        <!-- PAINEL ADM: DATAS -->
         <div id="painel-adm-datas" class="hidden bg-red-50 rounded-xl p-6 shadow-sm border border-red-200">
-            <h2 class="text-lg font-black text-red-900 mb-2">👑 Painel ADM: Liberar Datas para a Staff</h2>
-            <p class="text-xs text-red-700 mb-4">A equipe só poderá agendar obras nas datas que você liberar abaixo.</p>
-            
-            <form onsubmit="liberarData(event)" class="flex flex-col sm:flex-row gap-4 items-end mb-4">
-                <div>
-                    <label class="block text-xs font-bold text-red-800 mb-1">Escolha a Nova Data</label>
-                    <input type="date" id="nova-data-adm" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500">
-                </div>
-                <div>
-                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg text-sm shadow cursor-pointer">
-                        Liberar Data
-                    </button>
-                </div>
+            <h2 class="text-lg font-black text-red-900 mb-2">👑 Painel ADM: Liberar Datas</h2>
+            <form onsubmit="liberarData(event)" class="flex gap-4 items-end mb-4">
+                <div><input type="date" id="nova-data-adm" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"></div>
+                <div><button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg text-sm shadow cursor-pointer">Liberar</button></div>
             </form>
-
-            <div class="border-t border-red-200 pt-3">
-                <p class="text-xs font-bold text-red-800 mb-2">Datas atualmente liberadas:</p>
-                <div id="lista-datas-liberadas" class="flex flex-wrap gap-2 text-sm">
-                    <span class="text-red-400 text-xs">Carregando datas...</span>
-                </div>
-            </div>
+            <div id="lista-datas-liberadas" class="flex flex-wrap gap-2 text-sm pt-3 border-t border-red-200"></div>
         </div>
 
         <!-- FORMULÁRIO DO LISTÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">✍️ Lançar no Listão</h2>
-            
-            <form id="form-listao" onsubmit="salvarNoListao(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4 items-end">
-                <div class="md:col-span-1">
+            <h2 class="text-lg font-black text-gray-900 mb-4">✍️ Lançar no Listão</h2>
+            <form id="form-listao" onsubmit="salvarNoListao(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                
+                <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Data Liberada</label>
-                    <select id="listao-data" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="">Aguarde...</option>
-                    </select>
+                    <select id="listao-data" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm"><option value="">Aguarde...</option></select>
                 </div>
+                
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
-                    <select id="listao-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="">Carregando obras...</option>
-                    </select>
+                    <select id="listao-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm"><option value="">Carregando...</option></select>
                 </div>
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Tipo</label>
-                    <select id="listao-tipo" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="Recorrente">Recorrente</option>
-                        <option value="Curta">Curta</option>
-                        <option value="Lançamento">Lançamento</option>
-                        <option value="Finalização">Finalização</option>
-                    </select>
-                </div>
-                <div class="md:col-span-1">
+
+                <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos</label>
                     <input type="text" id="listao-caps" placeholder="Ex: 10 ao 12" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
-                <div class="md:col-span-1">
-                    <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm shadow cursor-pointer">
-                        + Adicionar
-                    </button>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Classificação da Obra</label>
+                    <select id="listao-classificacao" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="Recorrente">Recorrente</option>
+                        <option value="Curtas">Curtas</option>
+                        <option value="Combos">Combos</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de Postagem</label>
+                    <select id="listao-postagem" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="Atualização">Atualização</option>
+                        <option value="Finalização">Finalização</option>
+                        <option value="Lançamento">Lançamento</option>
+                        <option value="Lançamento e Finalização">Lançamento e Finalização</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Observação / Tag (Opcional)</label>
+                    <input type="text" id="listao-obs" placeholder="Ex: DESCENSURA OFICIAL" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+
+                <div class="md:col-span-4">
+                    <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-lg text-sm shadow cursor-pointer">+ Adicionar à Programação</button>
                 </div>
             </form>
         </div>
 
         <!-- PROGRAMAÇÃO ATUAL -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center gap-4">
                 <h3 class="text-lg font-black text-gray-800 flex items-center gap-2">📋 Programação Atual</h3>
-                
                 <div class="flex gap-2">
-                    <button id="btn-limpar-listao" onclick="limparListao()" class="hidden bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold py-2 px-4 rounded-lg cursor-pointer">
-                        🗑️ Limpar Tudo
-                    </button>
-                    <!-- BOTÃO DO TELEGRAM (Apenas ADM) -->
-                    <button id="btn-gerar-telegram-listao" onclick="gerarTelegramListao()" class="hidden bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md cursor-pointer flex items-center gap-2">
-                        📲 Gerar Telegram
-                    </button>
+                    <button id="btn-limpar-listao" onclick="limparListao()" class="hidden bg-red-100 text-red-700 text-sm font-bold py-2 px-4 rounded-lg cursor-pointer">🗑️ Limpar Tudo</button>
+                    <button id="btn-gerar-telegram-listao" onclick="gerarTelegramListao()" class="hidden bg-blue-600 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md cursor-pointer">📲 Gerar Telegram</button>
                 </div>
             </div>
 
-            <!-- ÁREA DO GERADOR DO TELEGRAM -->
             <div id="area-telegram-listao" class="hidden p-6 bg-blue-50 border-b border-blue-100">
-                <h4 class="text-md font-black text-blue-800 mb-2">Mensagem do Cronograma:</h4>
-                <textarea id="texto-telegram-listao" rows="12" class="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none" readonly></textarea>
-                <button onclick="document.getElementById('area-telegram-listao').classList.add('hidden')" class="mt-2 text-xs font-bold text-gray-500 hover:text-gray-700 cursor-pointer">Fechar Janela</button>
+                <textarea id="texto-telegram-listao" rows="15" class="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800" readonly></textarea>
+                <button onclick="document.getElementById('area-telegram-listao').classList.add('hidden')" class="mt-2 text-xs font-bold text-gray-500">Fechar</button>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-600">
                     <thead class="bg-gray-50 text-xs uppercase font-black text-gray-700">
                         <tr>
-                            <th class="px-6 py-3">Data</th>
-                            <th class="px-6 py-3">Obra</th>
-                            <th class="px-6 py-3">Tipo</th>
-                            <th class="px-6 py-3">Capítulos</th>
-                            <th class="px-6 py-3">Resp.</th>
-                            <th class="px-6 py-3 text-right">Ação</th>
+                            <th class="px-4 py-3">Data</th>
+                            <th class="px-4 py-3">Obra</th>
+                            <th class="px-4 py-3">Postagem</th>
+                            <th class="px-4 py-3">Caps</th>
+                            <th class="px-4 py-3">Resp.</th>
+                            <th class="px-4 py-3 text-right">Ação</th>
                         </tr>
                     </thead>
-                    <tbody id="tabela-listao" class="divide-y divide-gray-100">
-                        <tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Carregando programação...</td></tr>
-                    </tbody>
+                    <tbody id="tabela-listao" class="divide-y divide-gray-100"></tbody>
                 </table>
             </div>
         </div>
-
     </main>
 
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         let dadosListao = [];
 
         window.onload = async () => {
             const cargo = localStorage.getItem('usuario_cargo');
+            
+            document.getElementById('btn-voltar').onclick = () => {
+                window.location.href = cargo === 'Administrador' ? 'dashboard-adm.html' : 'dashboard-moderador.html';
+            };
+
             if (cargo === 'Administrador') {
                 document.getElementById('painel-adm-datas').classList.remove('hidden');
                 document.getElementById('btn-gerar-telegram-listao').classList.remove('hidden');
@@ -146,208 +136,118 @@
         function formatarData(dataIso) {
             if(!dataIso) return { display: 'Sem data', diaSemana: 'Desconhecido', dataCurta: '--/--' };
             const partes = dataIso.split('-'); 
-            const ano = parseInt(partes[0]);
-            const mes = parseInt(partes[1]) - 1; 
-            const dia = parseInt(partes[2]);
-            
-            const dataObj = new Date(ano, mes, dia);
-            const diasSemana = ['DOMINGO', 'SEGUNDA-FEIRA', 'TERÇA-FEIRA', 'QUARTA-FEIRA', 'QUINTA-FEIRA', 'SEXTA-FEIRA', 'SÁBADO'];
-            
-            const diaFormatado = String(dia).padStart(2, '0');
-            const mesFormatado = String(mes + 1).padStart(2, '0');
-
+            const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
+            const dias = ['DOMINGO', 'SEGUNDA-FEIRA', 'TERÇA-FEIRA', 'QUARTA-FEIRA', 'QUINTA-FEIRA', 'SEXTA-FEIRA', 'SÁBADO'];
             return {
-                dataCurta: `${diaFormatado}/${mesFormatado}`,
-                diaSemana: diasSemana[dataObj.getDay()]
+                dataCurta: `${String(partes[2]).padStart(2, '0')}/${String(partes[1]).padStart(2, '0')}`,
+                diaSemana: dias[dataObj.getDay()]
             };
         }
 
-        /* ----- FUNÇÕES DA ADM: GERENCIAR DATAS (listao_config) ----- */
-        async function liberarData(event) {
-            event.preventDefault();
-            const novaData = document.getElementById('nova-data-adm').value;
-            
-            const { error } = await _supabase.from('listao_config').insert([{ data_listao: novaData }]);
-            
-            if(error) {
-                alert('Erro ao liberar data: ' + error.message);
-            } else {
-                document.getElementById('nova-data-adm').value = '';
-                carregarDatasLiberadas();
-            }
+        async function liberarData(e) {
+            e.preventDefault();
+            const { error } = await _supabase.from('listao_config').insert([{ data_listao: document.getElementById('nova-data-adm').value }]);
+            if(!error) { document.getElementById('nova-data-adm').value = ''; carregarDatasLiberadas(); }
         }
 
         async function fecharData(id) {
-            if(confirm('Isso vai remover esta data da lista de opções para a Staff. Confirmar?')) {
-                await _supabase.from('listao_config').delete().eq('id', id);
-                carregarDatasLiberadas();
-            }
+            if(confirm('Remover data?')) { await _supabase.from('listao_config').delete().eq('id', id); carregarDatasLiberadas(); }
         }
 
         async function carregarDatasLiberadas() {
-            const { data, error } = await _supabase.from('listao_config').select('*').order('data_listao', { ascending: true });
-            
-            const containerTags = document.getElementById('lista-datas-liberadas');
-            const selectListao = document.getElementById('listao-data');
-
-            if(error) {
-                console.error("Erro nas datas:", error);
-                containerTags.innerHTML = `<span class="text-red-500">Erro: RLS desligado na tabela listao_config?</span>`;
-                return;
-            }
-
-            containerTags.innerHTML = '';
-            selectListao.innerHTML = '<option value="">Selecione a data...</option>';
-
-            if(!data || data.length === 0) {
-                containerTags.innerHTML = '<span class="text-red-500 text-xs bg-red-100 px-2 py-1 rounded">Nenhuma data liberada no momento.</span>';
-                selectListao.innerHTML = '<option value="">(Nenhuma data liberada pela ADM)</option>';
-                return;
-            }
-
-            data.forEach(item => {
-                const info = formatarData(item.data_listao);
-                const dataDisplay = `${info.dataCurta} - ${info.diaSemana}`;
-                
-                containerTags.innerHTML += `
-                    <div class="flex items-center gap-1 bg-white border border-red-200 pl-3 pr-1 py-1 rounded-full shadow-sm">
-                        <span class="font-semibold text-red-900">${dataDisplay}</span>
-                        <button onclick="fecharData('${item.id}')" class="bg-red-100 hover:bg-red-200 text-red-600 rounded-full h-5 w-5 flex items-center justify-center font-bold ml-2 cursor-pointer" title="Remover data">X</button>
-                    </div>
-                `;
-
-                selectListao.innerHTML += `<option value="${item.data_listao}">${dataDisplay}</option>`;
+            const { data } = await _supabase.from('listao_config').select('*').order('data_listao', { ascending: true });
+            const tags = document.getElementById('lista-datas-liberadas');
+            const select = document.getElementById('listao-data');
+            tags.innerHTML = ''; select.innerHTML = '<option value="">Selecione a data...</option>';
+            if(data) data.forEach(i => {
+                const info = formatarData(i.data_listao);
+                const disp = `${info.dataCurta} - ${info.diaSemana}`;
+                tags.innerHTML += `<div class="bg-white border border-red-200 px-3 py-1 rounded-full"><span class="font-bold text-red-900">${disp}</span> <button onclick="fecharData('${i.id}')" class="text-red-500 font-bold ml-2">X</button></div>`;
+                select.innerHTML += `<option value="${i.data_listao}">${disp}</option>`;
             });
         }
-
-        /* ------------------------------------------- */
 
         async function carregarObrasSelect() {
             const { data } = await _supabase.from('obras').select('nome').order('nome');
-            const select = document.getElementById('listao-obra');
-            select.innerHTML = '<option value="">Selecione a Obra...</option>';
-            if(data) data.forEach(o => select.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
+            const sel = document.getElementById('listao-obra');
+            if(data) data.forEach(o => sel.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
         }
 
-        /* ----- FUNÇÕES DO LISTÃO GERAL (listao_preenchimento) ----- */
-        async function salvarNoListao(event) {
-            event.preventDefault();
-            
-            const dataSelecionada = document.getElementById('listao-data').value;
-            if(!dataSelecionada) {
-                alert("Por favor, selecione uma data válida liberada pela ADM.");
-                return;
-            }
-
+        async function salvarNoListao(e) {
+            e.preventDefault();
             const obj = {
-                data_referencia: dataSelecionada,
+                data_referencia: document.getElementById('listao-data').value,
                 obra_nome: document.getElementById('listao-obra').value,
-                tipo_obra: document.getElementById('listao-tipo').value,
                 capitulos: document.getElementById('listao-caps').value,
+                classificacao_obra: document.getElementById('listao-classificacao').value,
+                tipo_postagem: document.getElementById('listao-postagem').value,
+                observacao_telegram: document.getElementById('listao-obs').value,
                 responsavel_nick: localStorage.getItem('usuario_nick') || 'Desconhecido'
             };
-
             const { error } = await _supabase.from('listao_preenchimento').insert([obj]);
-
-            if (error) {
-                alert('Erro ao adicionar: ' + error.message);
-            } else {
-                document.getElementById('listao-caps').value = '';
-                carregarListao();
-            }
+            if (!error) { document.getElementById('form-listao').reset(); carregarListao(); }
+            else alert('Erro: ' + error.message);
         }
 
         async function carregarListao() {
-            const { data, error } = await _supabase.from('listao_preenchimento').select('*');
-            const tbody = document.getElementById('tabela-listao');
-            
-            if (error) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Erro: ${error.message} (Verifique se o RLS está desligado nesta tabela!)</td></tr>`;
-                return;
-            }
-
-            dadosListao = data || [];
-            tbody.innerHTML = '';
-
-            if (dadosListao.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Nenhuma obra no listão.</td></tr>`;
-                return;
-            }
-
+            const { data } = await _supabase.from('listao_preenchimento').select('*');
+            const tb = document.getElementById('tabela-listao');
+            dadosListao = data || []; tb.innerHTML = '';
             dadosListao.sort((a, b) => new Date(a.data_referencia) - new Date(b.data_referencia));
-
-            dadosListao.forEach(item => {
-                const infoData = formatarData(item.data_referencia);
-                
-                tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50 border-b border-gray-100 last:border-0">
-                        <td class="px-6 py-3 font-bold text-gray-800">
-                            ${infoData.dataCurta}
-                            <span class="block text-[10px] text-gray-400 font-normal uppercase">${infoData.diaSemana}</span>
-                        </td>
-                        <td class="px-6 py-3 text-gray-800 font-semibold">${item.obra_nome}</td>
-                        <td class="px-6 py-3"><span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">${item.tipo_obra}</span></td>
-                        <td class="px-6 py-3 text-red-700 font-bold">${item.capitulos}</td>
-                        <td class="px-6 py-3 text-gray-500 text-xs">${item.responsavel_nick}</td>
-                        <td class="px-6 py-3 text-right">
-                            <button onclick="removerDoListao('${item.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 px-2 py-1 rounded cursor-pointer">Excluir</button>
-                        </td>
-                    </tr>
-                `;
+            dadosListao.forEach(i => {
+                const info = formatarData(i.data_referencia);
+                const obsTag = i.observacao_telegram ? `<br><span class="text-[10px] text-blue-600 font-bold uppercase">${i.observacao_telegram}</span>` : '';
+                tb.innerHTML += `
+                    <tr class="hover:bg-gray-50 border-b">
+                        <td class="px-4 py-3 font-bold">${info.dataCurta}</td>
+                        <td class="px-4 py-3 font-semibold text-gray-800">${i.obra_nome} <span class="text-[10px] text-gray-400">(${i.classificacao_obra})</span>${obsTag}</td>
+                        <td class="px-4 py-3 text-xs bg-gray-100 rounded">${i.tipo_postagem}</td>
+                        <td class="px-4 py-3 text-red-700 font-bold">${i.capitulos}</td>
+                        <td class="px-4 py-3 text-xs">${i.responsavel_nick}</td>
+                        <td class="px-4 py-3 text-right"><button onclick="remover('${i.id}')" class="text-red-500 font-bold text-xs">Excluir</button></td>
+                    </tr>`;
             });
         }
 
-        async function removerDoListao(id) {
-            if(confirm('Tem certeza que deseja remover esta obra do listão?')) {
-                await _supabase.from('listao_preenchimento').delete().eq('id', id);
-                carregarListao();
-            }
-        }
-
-        async function limparListao() {
-            if(confirm('ALERTA: Isso vai APAGAR O LISTÃO INTEIRO do banco de dados. Tem certeza?')) {
-                await _supabase.from('listao_preenchimento').delete().neq('id', '0'); 
-                carregarListao();
-            }
-        }
+        async function remover(id) { if(confirm('Remover?')) { await _supabase.from('listao_preenchimento').delete().eq('id', id); carregarListao(); } }
+        async function limparListao() { if(confirm('APAGAR TUDO?')) { await _supabase.from('listao_preenchimento').delete().neq('id', '0'); carregarListao(); } }
 
         function gerarTelegramListao() {
-            if(dadosListao.length === 0) {
-                alert("O listão está vazio!");
-                return;
-            }
-
-            const container = document.getElementById('area-telegram-listao');
-            const textarea = document.getElementById('texto-telegram-listao');
-            container.classList.remove('hidden');
-
-            const cronograma = {};
+            if(dadosListao.length === 0) return alert("Listão vazio!");
+            document.getElementById('area-telegram-listao').classList.remove('hidden');
             
-            dadosListao.forEach(item => {
-                if(!item.data_referencia) return;
-                
-                if(!cronograma[item.data_referencia]) {
-                    cronograma[item.data_referencia] = [];
-                }
-                cronograma[item.data_referencia].push(`~ ${item.obra_nome} • ${item.capitulos}`);
+            const cronograma = {};
+            dadosListao.forEach(i => {
+                if(!i.data_referencia) return;
+                if(!cronograma[i.data_referencia]) cronograma[i.data_referencia] = [];
+                cronograma[i.data_referencia].push(i);
             });
 
-            const datasOrdenadas = Object.keys(cronograma).sort((a, b) => new Date(a) - new Date(b));
-
-            let textoFinal = "🗓️ PROGRAMAÇÃO DA SEMANA 🗓️\n\n";
-
-            datasOrdenadas.forEach(dataIso => {
+            let texto = "🗓️ PROGRAMAÇÃO DA SEMANA 🗓️\n\n";
+            Object.keys(cronograma).sort((a, b) => new Date(a) - new Date(b)).forEach(dataIso => {
                 const info = formatarData(dataIso);
-                textoFinal += `✨ ${info.diaSemana} (${info.dataCurta})\n`;
-                
-                cronograma[dataIso].forEach(linha => {
-                    textoFinal += `${linha}\n`;
+                texto += `📅 ${info.diaSemana} (${info.dataCurta})\n\n`;
+
+                const obrasDia = cronograma[dataIso];
+                const cats = { "Lançamento": [], "Lançamento e Finalização": [], "Atualização": [], "Finalização": [] };
+                obrasDia.forEach(o => { if(cats[o.tipo_postagem]) cats[o.tipo_postagem].push(o); });
+
+                ["Lançamento", "Lançamento e Finalização", "Atualização", "Finalização"].forEach(cat => {
+                    if(cats[cat].length > 0) {
+                        texto += `✨ ${cat.toUpperCase().replace(" E ", " & ")}\n\n`;
+                        cats[cat].forEach(ob => {
+                            let linha = `~ ${ob.obra_nome} • ${ob.capitulos}`;
+                            if(ob.observacao_telegram) linha += ` — ${ob.observacao_telegram}`;
+                            texto += `${linha}\n`;
+                        });
+                        texto += `\n`;
+                    }
                 });
-                textoFinal += `\n`;
+                texto += `========================\n\n`;
             });
 
-            textoFinal += `.\n.\n.\n🔗• Link: fbsquadx.com`;
-            textarea.value = textoFinal;
+            texto += `.\n.\n.\n🔗• Link: fbsquadx.com\n\n‼️ Copiem o link e colem no navegador do celular de vocês ‼️`;
+            document.getElementById('texto-telegram-listao').value = texto;
         }
     </script>
 </body>
