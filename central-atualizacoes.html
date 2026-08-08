@@ -19,7 +19,7 @@
         <!-- FORMULÁRIO DE INSERÇÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
             <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização para Conferência</h2>
-            <p class="text-xs text-gray-500 mb-4">Adicione a obra que será postada. Ela entrará na lista oficial somente após você confirmar com o "OK".</p>
+            <p class="text-xs text-gray-500 mb-4">Adicione a obra que será postada. Ao clicar em "OK", os capítulos da obra serão atualizados automaticamente no sistema.</p>
             
             <form id="form-atualizacao" onsubmit="salvarAtualizacao(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
                 <div>
@@ -38,8 +38,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos</label>
-                    <input type="text" id="atu-caps" placeholder="Ex: 00" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos (Somente os números)</label>
+                    <input type="text" id="atu-caps" placeholder="Ex: 10 ou 10 ao 12" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Aviso / TAG</label>
@@ -50,7 +50,6 @@
                     </select>
                 </div>
 
-                <!-- CAMPO DE MÚLTIPLOS RESPONSÁVEIS -->
                 <div class="md:col-span-4">
                     <label class="block text-xs font-bold text-gray-700 mb-1">👥 Responsável(is) pela Postagem</label>
                     <div id="atu-responsaveis" class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-300 max-h-32 overflow-y-auto">
@@ -66,7 +65,7 @@
             </form>
         </div>
 
-        <!-- FILA DE ESPERA (AGUARDANDO OK) -->
+        <!-- FILA DE ESPERA -->
         <div class="bg-amber-50 rounded-xl p-6 shadow-sm border border-amber-200">
             <h3 class="text-md font-black text-amber-900 mb-2">⏳ Aguardando Confirmação de Postagem</h3>
             <p class="text-xs text-amber-700 mb-4">Clique em "OK" somente após a obra estar efetivamente postada.</p>
@@ -91,19 +90,16 @@
                 Nenhum lançamento confirmado hoje ainda.
             </div>
 
-            <!-- ÁREA DO GERADOR DO TELEGRAM -->
+            <!-- ÁREA DO TELEGRAM -->
             <div id="area-telegram" class="hidden mt-6 pt-6 border-t border-dashed border-gray-300">
                 <h4 class="text-md font-black text-blue-800 mb-2">Mensagem para Copiar:</h4>
                 <textarea id="texto-telegram" rows="12" class="w-full bg-gray-50 border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none mb-4" readonly></textarea>
                 
                 <h4 class="text-md font-black text-blue-800 mb-2">Imagens dos Layouts (Para Salvar/Enviar):</h4>
-                <div id="imagens-telegram" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <!-- Imagens aparecerão aqui -->
-                </div>
+                <div id="imagens-telegram" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
             </div>
         </div>
 
-        <!-- HISTÓRICO ARQUIVADO -->
         <div id="secao-historico" class="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📁 Arquivo de Atualizações Passadas</h3>
             <div id="lista-historico" class="space-y-6 text-sm text-gray-600">
@@ -125,7 +121,6 @@
             if (cargo === 'Administrador') {
                 document.getElementById('btn-gerar-telegram').classList.remove('hidden');
             }
-
             carregarObrasSelect();
             carregarEquipe();
             carregarAtualizacoes();
@@ -165,9 +160,7 @@
             const aviso = document.getElementById('atu-aviso').value;
             const tipo = document.getElementById('atu-tipo').value;
             
-            // Junta o capítulo com o aviso (se houver)
             const capsFinal = aviso ? `${capsBruto} — ${aviso}` : capsBruto;
-            
             const checkboxes = document.querySelectorAll('input[name="resp_atu"]:checked');
             const responsaveisSelecionados = Array.from(checkboxes).map(cb => cb.value).join(', ');
 
@@ -178,7 +171,7 @@
 
             const { error } = await _supabase.from('atualizacoes').insert([{ 
                 obra_nome: obra, 
-                capitulos: capsFinal, // Salva o combo cap + tag
+                capitulos: capsFinal, 
                 tipo_postagem: tipo,
                 responsavel: responsaveisSelecionados,
                 confirmado: false 
@@ -194,10 +187,48 @@
             }
         }
 
-        async function confirmarPostagem(id) {
+        // FUNÇÃO TURBINADA QUE ATUALIZA A OBRA SOZINHA
+        async function confirmarPostagem(id, obraNome, capitulos, tipo) {
+            
+            // 1. Confirma na lista diária
             const { error } = await _supabase.from('atualizacoes').update({ confirmado: true }).eq('id', id);
-            if (error) alert('Erro ao confirmar: ' + error.message);
-            else carregarAtualizacoes();
+            
+            if (error) {
+                alert('Erro ao confirmar: ' + error.message);
+                return;
+            }
+
+            // 2. Tenta descobrir quantos capítulos tem nessa atualização
+            let ultimoCapNum = 0;
+            const capsSplit = capitulos.split('—')[0].trim(); // Tira a tag, ex: "45 ao 47" vira só "45 ao 47"
+            const numMatch = capsSplit.match(/\d+/g); // Pega só os números da string
+            
+            if (numMatch && numMatch.length > 0) {
+                ultimoCapNum = Math.max(...numMatch.map(Number)); 
+            }
+
+            if (ultimoCapNum > 0) {
+                // 3. Atualiza os capítulos na obra!
+                try {
+                    const { data: obraAtual } = await _supabase.from('obras').select('capitulo_fleur').eq('nome', obraNome).single();
+                    
+                    if(obraAtual) {
+                        const updates = {};
+                        // Só atualiza se o número postado for MAIOR que o cadastrado atualmente
+                        if (ultimoCapNum > obraAtual.capitulo_fleur) {
+                            updates.capitulo_fleur = ultimoCapNum;
+                        }
+
+                        if (Object.keys(updates).length > 0) {
+                           await _supabase.from('obras').update(updates).eq('nome', obraNome);
+                        }
+                    }
+                } catch(err) {
+                    console.log("Aviso: Obra não atualizada automaticamente.", err);
+                }
+            }
+
+            carregarAtualizacoes();
         }
 
         async function carregarAtualizacoes() {
@@ -225,6 +256,10 @@
                 data.forEach(item => {
                     const dataItem = new Date(item.created_at).toLocaleDateString('pt-BR');
 
+                    // Tratamento para evitar quebrar o botão se a obra tiver aspas (Ex: Monday's)
+                    const obraSegura = item.obra_nome ? item.obra_nome.replace(/'/g, "\\'") : '';
+                    const capsSeguros = item.capitulos ? item.capitulos.replace(/'/g, "\\'") : '';
+
                     if (!item.confirmado) {
                         temPendentes = true;
                         listaPendentes.innerHTML += `
@@ -236,7 +271,7 @@
                                     <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
                                     <p class="text-[10px] text-gray-500 mt-1">Resp: ${item.responsavel}</p>
                                 </div>
-                                <button onclick="confirmarPostagem('${item.id}')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow cursor-pointer">
+                                <button onclick="confirmarPostagem('${item.id}', '${obraSegura}', '${capsSeguros}', '${item.tipo_postagem}')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow cursor-pointer">
                                     ✅ OK
                                 </button>
                             </div>
@@ -317,7 +352,6 @@
             });
 
             let textoFinal = "";
-            
             for (const [cat, obras] of Object.entries(categorias)) {
                 if(obras.length > 0) {
                     textoFinal += `✨ ${cat}\n\n`;
@@ -373,7 +407,6 @@
                 } else {
                     document.getElementById('imagens-telegram').innerHTML = htmlImagens;
                 }
-
             } catch (err) {
                 console.error(err);
                 document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Erro ao carregar imagens.</p>";
