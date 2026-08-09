@@ -16,7 +16,6 @@
 
     <main class="max-w-4xl mx-auto p-6 mt-4 space-y-6">
         
-        <!-- FORMULÁRIO DE INSERÇÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
             <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização para Conferência</h2>
             <p class="text-xs text-gray-500 mb-4">Adicione a obra que será postada. Ao clicar em "OK", os capítulos da obra serão atualizados automaticamente no sistema.</p>
@@ -38,8 +37,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos (Somente os números)</label>
-                    <input type="text" id="atu-caps" placeholder="Ex: 10 ou 10 ao 12" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos (Ex: 84, 84 ao 86, Epílogo)</label>
+                    <input type="text" id="atu-caps" placeholder="O que foi postado" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Aviso / TAG</label>
@@ -65,7 +64,6 @@
             </form>
         </div>
 
-        <!-- FILA DE ESPERA -->
         <div class="bg-amber-50 rounded-xl p-6 shadow-sm border border-amber-200">
             <h3 class="text-md font-black text-amber-900 mb-2">⏳ Aguardando Confirmação de Postagem</h3>
             <p class="text-xs text-amber-700 mb-4">Clique em "OK" somente após a obra estar efetivamente postada.</p>
@@ -74,7 +72,6 @@
             </div>
         </div>
 
-        <!-- LANÇAMENTOS DE HOJE -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b border-gray-100 pb-4 gap-4">
                 <h3 class="text-lg font-black text-gray-800">📌 Atualizações de Hoje (Confirmadas)</h3>
@@ -90,7 +87,6 @@
                 Nenhum lançamento confirmado hoje ainda.
             </div>
 
-            <!-- ÁREA DO TELEGRAM -->
             <div id="area-telegram" class="hidden mt-6 pt-6 border-t border-dashed border-gray-300">
                 <h4 class="text-md font-black text-blue-800 mb-2">Mensagem para Copiar:</h4>
                 <textarea id="texto-telegram" rows="12" class="w-full bg-gray-50 border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none mb-4" readonly></textarea>
@@ -148,9 +144,7 @@
                         </label>
                     `;
                 });
-            } else {
-                container.innerHTML = '<p class="text-xs text-red-500">Erro ao carregar equipe.</p>';
-            }
+            } else { container.innerHTML = '<p class="text-xs text-red-500">Erro ao carregar equipe.</p>'; }
         }
 
         async function salvarAtualizacao(event) {
@@ -164,10 +158,7 @@
             const checkboxes = document.querySelectorAll('input[name="resp_atu"]:checked');
             const responsaveisSelecionados = Array.from(checkboxes).map(cb => cb.value).join(', ');
 
-            if(!responsaveisSelecionados) {
-                alert("Por favor, marque pelo menos um responsável!");
-                return;
-            }
+            if(!responsaveisSelecionados) return alert("Marque pelo menos um responsável!");
 
             const { error } = await _supabase.from('atualizacoes').insert([{ 
                 obra_nome: obra, 
@@ -177,9 +168,8 @@
                 confirmado: false 
             }]);
 
-            if (error) {
-                alert('Erro ao registrar: ' + error.message);
-            } else {
+            if (error) { alert('Erro: ' + error.message); } 
+            else {
                 document.getElementById('atu-caps').value = '';
                 document.getElementById('atu-aviso').value = '';
                 document.getElementById('atu-tipo').value = 'ATUALIZAÇÃO'; 
@@ -187,45 +177,25 @@
             }
         }
 
-        // FUNÇÃO TURBINADA QUE ATUALIZA A OBRA SOZINHA
         async function confirmarPostagem(id, obraNome, capitulos, tipo) {
-            
-            // 1. Confirma na lista diária
             const { error } = await _supabase.from('atualizacoes').update({ confirmado: true }).eq('id', id);
-            
-            if (error) {
-                alert('Erro ao confirmar: ' + error.message);
-                return;
+            if (error) { alert('Erro ao confirmar: ' + error.message); return; }
+
+            // Lógica inteligente para atualizar a Ficha da Obra:
+            let capsSplit = capitulos.split('—')[0].trim(); 
+            let capituloParaSalvar = capsSplit;
+
+            // Se for "45 ao 47", pega o 47 pra salvar na obra
+            if (capsSplit.toLowerCase().includes('ao')) {
+                const numeros = capsSplit.match(/\d+/g);
+                if (numeros) capituloParaSalvar = Math.max(...numeros.map(Number)).toString();
             }
 
-            // 2. Tenta descobrir quantos capítulos tem nessa atualização
-            let ultimoCapNum = 0;
-            const capsSplit = capitulos.split('—')[0].trim(); // Tira a tag, ex: "45 ao 47" vira só "45 ao 47"
-            const numMatch = capsSplit.match(/\d+/g); // Pega só os números da string
-            
-            if (numMatch && numMatch.length > 0) {
-                ultimoCapNum = Math.max(...numMatch.map(Number)); 
-            }
-
-            if (ultimoCapNum > 0) {
-                // 3. Atualiza os capítulos na obra!
-                try {
-                    const { data: obraAtual } = await _supabase.from('obras').select('capitulo_fleur').eq('nome', obraNome).single();
-                    
-                    if(obraAtual) {
-                        const updates = {};
-                        // Só atualiza se o número postado for MAIOR que o cadastrado atualmente
-                        if (ultimoCapNum > obraAtual.capitulo_fleur) {
-                            updates.capitulo_fleur = ultimoCapNum;
-                        }
-
-                        if (Object.keys(updates).length > 0) {
-                           await _supabase.from('obras').update(updates).eq('nome', obraNome);
-                        }
-                    }
-                } catch(err) {
-                    console.log("Aviso: Obra não atualizada automaticamente.", err);
-                }
+            try {
+                // Atualiza independente de ser número ou texto
+                await _supabase.from('obras').update({ capitulo_fleur: capituloParaSalvar }).eq('nome', obraNome);
+            } catch(err) {
+                console.log("Erro auto-update:", err);
             }
 
             carregarAtualizacoes();
@@ -238,10 +208,7 @@
             const listaHoje = document.getElementById('lista-hoje');
             const listaHistorico = document.getElementById('lista-historico');
             
-            if (error) {
-                listaPendentes.innerHTML = '<p class="text-red-500">Erro ao carregar dados.</p>';
-                return;
-            }
+            if (error) { listaPendentes.innerHTML = '<p class="text-red-500">Erro.</p>'; return; }
 
             listaPendentes.innerHTML = '';
             listaHoje.innerHTML = ''; 
@@ -255,8 +222,6 @@
             if(data && data.length > 0) {
                 data.forEach(item => {
                     const dataItem = new Date(item.created_at).toLocaleDateString('pt-BR');
-
-                    // Tratamento para evitar quebrar o botão se a obra tiver aspas (Ex: Monday's)
                     const obraSegura = item.obra_nome ? item.obra_nome.replace(/'/g, "\\'") : '';
                     const capsSeguros = item.capitulos ? item.capitulos.replace(/'/g, "\\'") : '';
 
@@ -318,37 +283,21 @@
         }
 
         async function gerarTelegram() {
-            if(obrasConfirmadasHoje.length === 0) {
-                alert("Nenhuma postagem confirmada hoje para gerar mensagem!");
-                return;
-            }
-
+            if(obrasConfirmadasHoje.length === 0) return alert("Nenhuma postagem confirmada hoje para gerar mensagem!");
+            
             document.getElementById('area-telegram').classList.remove('hidden');
             document.getElementById('texto-telegram').value = "Gerando mensagem e buscando layouts...";
             document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-gray-500'>Buscando imagens no banco...</p>";
 
-            const categorias = {
-                "LANÇAMENTO": [],
-                "LANÇAMENTO & FINALIZAÇÃO": [],
-                "ATUALIZAÇÃO": [],
-                "FINALIZAÇÃO": []
-            };
-
+            const categorias = { "LANÇAMENTO": [], "LANÇAMENTO & FINALIZAÇÃO": [], "ATUALIZAÇÃO": [], "FINALIZAÇÃO": [] };
             const nomesObrasParaBuscar = [];
 
             obrasConfirmadasHoje.forEach(item => {
                 const tipo = item.tipo_postagem || "ATUALIZAÇÃO";
                 const catOficial = tipo.toUpperCase().replace(" E ", " & ");
-                
-                if(categorias[catOficial]) {
-                    categorias[catOficial].push(`~ ${item.obra_nome} • ${item.capitulos}`);
-                } else {
-                    categorias["ATUALIZAÇÃO"].push(`~ ${item.obra_nome} • ${item.capitulos}`);
-                }
-                
-                if(!nomesObrasParaBuscar.includes(item.obra_nome)) {
-                    nomesObrasParaBuscar.push(item.obra_nome);
-                }
+                if(categorias[catOficial]) categorias[catOficial].push(`~ ${item.obra_nome} • ${item.capitulos}`);
+                else categorias["ATUALIZAÇÃO"].push(`~ ${item.obra_nome} • ${item.capitulos}`);
+                if(!nomesObrasParaBuscar.includes(item.obra_nome)) nomesObrasParaBuscar.push(item.obra_nome);
             });
 
             let textoFinal = "";
@@ -359,18 +308,12 @@
                     textoFinal += `\n`;
                 }
             }
-
             textoFinal += `.\n.\n.\n🔗• Link: fbsquadx.com\n\n‼️ Copiem o link e colem no navegador do celular de vocês ‼️`;
             document.getElementById('texto-telegram').value = textoFinal;
 
             try {
-                const { data: obrasDB, error } = await _supabase
-                    .from('obras')
-                    .select('nome, layout_lancamento, layout_atualizacao, layout_finalizacao, layout_lancamento_finalizacao')
-                    .in('nome', nomesObrasParaBuscar);
-
+                const { data: obrasDB, error } = await _supabase.from('obras').select('nome, layout_lancamento, layout_atualizacao, layout_finalizacao, layout_lancamento_finalizacao').in('nome', nomesObrasParaBuscar);
                 if(error) throw error;
-
                 let htmlImagens = "";
                 
                 obrasConfirmadasHoje.forEach(postagem => {
@@ -379,43 +322,29 @@
                         let urlImg = null;
                         const tipoCaps = postagem.tipo_postagem.toUpperCase().replace(" E ", " & ");
                         
-                        if(tipoCaps === "LANÇAMENTO & FINALIZAÇÃO") {
-                            urlImg = obraEncontrada.layout_lancamento_finalizacao;
-                        } else if(tipoCaps === "LANÇAMENTO") {
-                            urlImg = obraEncontrada.layout_lancamento;
-                        } else if (tipoCaps === "FINALIZAÇÃO") {
-                            urlImg = obraEncontrada.layout_finalizacao;
-                        } else {
-                            urlImg = obraEncontrada.layout_atualizacao;
-                        }
+                        if(tipoCaps === "LANÇAMENTO & FINALIZAÇÃO") urlImg = obraEncontrada.layout_lancamento_finalizacao;
+                        else if(tipoCaps === "LANÇAMENTO") urlImg = obraEncontrada.layout_lancamento;
+                        else if (tipoCaps === "FINALIZAÇÃO") urlImg = obraEncontrada.layout_finalizacao;
+                        else urlImg = obraEncontrada.layout_atualizacao;
 
                         if(urlImg) {
                             htmlImagens += `
                                 <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                                     <img src="${urlImg}" class="w-full h-auto object-cover">
-                                    <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-[10px] p-1 text-center truncate">
-                                        ${postagem.obra_nome}
-                                    </div>
+                                    <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-[10px] p-1 text-center truncate">${postagem.obra_nome}</div>
                                 </div>
                             `;
                         }
                     }
                 });
 
-                if(htmlImagens === "") {
-                    document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Nenhum layout cadastrado para essas obras.</p>";
-                } else {
-                    document.getElementById('imagens-telegram').innerHTML = htmlImagens;
-                }
+                if(htmlImagens === "") document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Nenhum layout cadastrado para essas obras.</p>";
+                else document.getElementById('imagens-telegram').innerHTML = htmlImagens;
             } catch (err) {
-                console.error(err);
                 document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Erro ao carregar imagens.</p>";
             }
         }
-
-        function toggleHistorico() {
-            document.getElementById('secao-historico').classList.toggle('hidden');
-        }
+        function toggleHistorico() { document.getElementById('secao-historico').classList.toggle('hidden'); }
     </script>
 </body>
 </html>
