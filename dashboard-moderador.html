@@ -7,9 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+<body class="bg-gray-50 text-gray-900 min-h-screen pb-10">
 
-    <!-- BARRA DE NAVEGAÇÃO IGUAL A DA ADM -->
     <nav class="bg-red-900 text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-10">
         <div class="flex items-center gap-3">
             <h1 class="text-xl font-black tracking-wider">FleurFlow <span class="text-red-300 text-sm font-normal">| Painel do Moderador</span></h1>
@@ -22,7 +21,7 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <!-- FERRAMENTAS (Design em Cards igual ADM) -->
+        <!-- FERRAMENTAS -->
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">🛠️ Ferramentas da Moderação</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -45,11 +44,60 @@
             </div>
         </section>
 
-        <!-- CAIXA DE GERENCIAMENTO (IGUAL ADM) -->
-        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-[500px]">
-            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👑 Minhas Obras (Gerenciamento & Staff)</h2>
-            <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-minhas-obras">
-                <p class="text-sm text-gray-500">Buscando suas obras...</p>
+        <!-- TAREFAS: MINHAS OBRAS (STAFF) -->
+        <section class="bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+            <h2 class="text-lg font-black text-blue-900 mb-4 flex items-center gap-2">📝 MINHAS OBRAS (STAFF) - Minhas Tarefas Ativas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- ATRASADAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-72">
+                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Em Atraso</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="staff-atraso"><p class="text-xs text-gray-400">Buscando...</p></div>
+                </div>
+                <!-- HOJE -->
+                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-72">
+                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Prazo Hoje</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="staff-hoje"><p class="text-xs text-gray-400">Buscando...</p></div>
+                </div>
+                <!-- ATIVAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-72">
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Outras Tarefas Ativas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="staff-ativas"><p class="text-xs text-gray-400">Buscando...</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAREFAS: MINHAS OBRAS (RESPONSÁVEL) -->
+        <section class="bg-amber-50/50 p-6 rounded-xl border border-amber-100">
+            <h2 class="text-lg font-black text-amber-900 mb-4 flex items-center gap-2">👑 MINHAS OBRAS (RESPONSÁVEL) - Entregas da Minha Equipe</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- ATRASADAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-72">
+                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="resp-atraso"><p class="text-xs text-gray-400">Buscando...</p></div>
+                </div>
+                <!-- HOJE -->
+                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-72">
+                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="resp-hoje"><p class="text-xs text-gray-400">Buscando...</p></div>
+                </div>
+                <!-- ATIVAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-72">
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Outras Entregas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="resp-ativas"><p class="text-xs text-gray-400">Buscando...</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OBRAS (DIVISÃO PLANILHA) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[500px]">
+                <h2 class="text-lg font-black text-blue-900 mb-4 flex items-center gap-2">👥 Obras (STAFF)</h2>
+                <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-staff"><p class="text-sm text-gray-500">Buscando...</p></div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-amber-200 p-6 flex flex-col h-[500px]">
+                <h2 class="text-lg font-black text-amber-900 mb-4 flex items-center gap-2">👑 Obras (RESPONSÁVEL)</h2>
+                <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-resp"><p class="text-sm text-gray-500">Buscando...</p></div>
             </div>
         </section>
 
@@ -64,8 +112,7 @@
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
-            
-            carregarMinhasObras(nick);
+            carregarTudo(nick);
         };
 
         function sair() {
@@ -73,47 +120,136 @@
             window.location.href = 'index.html';
         }
 
-        async function carregarMinhasObras(meuNick) {
-            // 1. Descobre o ID do Mod logado
+        async function carregarTudo(meuNick) {
             const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
 
-            // 2. Puxa todas as obras do banco
-            const { data: obras, error } = await _supabase.from('obras').select('*').order('nome');
-            const container = document.getElementById('lista-minhas-obras');
-            container.innerHTML = '';
+            const { data: obras } = await _supabase.from('obras').select('*').order('nome');
+            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Concluído').order('prazo', { ascending: true });
 
-            if (error || !obras || obras.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra cadastrada.</p>`;
+            const obrasStaff = [];
+            const obrasResp = [];
+            const nomesObrasResp = [];
+
+            if (obras) {
+                obras.forEach(o => {
+                    const souResp = o.responsavel_nick && o.responsavel_nick.includes(meuNick);
+                    const souStaff = o.staff_ids && meuId && o.staff_ids.map(String).includes(meuId);
+
+                    if (souResp) { obrasResp.push(o); nomesObrasResp.push(o.nome); }
+                    if (souStaff) obrasStaff.push(o);
+                });
+            }
+
+            const tarefasMinhas = (tarefas || []).filter(t => t.responsavel_nick === meuNick);
+            const tarefasDaMinhaEquipe = (tarefas || []).filter(t => nomesObrasResp.includes(t.obra_nome));
+
+            renderizarTarefas(tarefasMinhas, 'staff-atraso', 'staff-hoje', 'staff-ativas', true);
+            renderizarTarefas(tarefasDaMinhaEquipe, 'resp-atraso', 'resp-hoje', 'resp-ativas', false);
+            
+            renderizarObras(obrasStaff, 'lista-obras-staff', false);
+            renderizarObras(obrasResp, 'lista-obras-resp', true);
+        }
+
+        function renderizarTarefas(lista, idAtraso, idHoje, idAtivas, isMinhas) {
+            const containerAtraso = document.getElementById(idAtraso);
+            const containerHoje = document.getElementById(idHoje);
+            const containerAtivas = document.getElementById(idAtivas);
+
+            containerAtraso.innerHTML = ''; containerHoje.innerHTML = ''; containerAtivas.innerHTML = '';
+            
+            if (lista.length === 0) {
+                const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Nenhuma tarefa aqui.</p><p class="text-xl mt-1">🎉</p></div>`;
+                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio;
                 return;
             }
 
-            // 3. Filtra apenas as que o Mod é dono OU é staff
-            const minhasObras = obras.filter(obra => {
-                const souDono = obra.responsavel_nick && obra.responsavel_nick.includes(meuNick);
-                const souStaff = obra.staff_ids && meuId && obra.staff_ids.map(String).includes(meuId);
-                return souDono || souStaff;
+            const agora = new Date();
+            const hojeStr = agora.toDateString();
+            let temAtraso = false, temHoje = false, temAtiva = false;
+
+            lista.forEach(t => {
+                const corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
+                
+                let botaoAcao = '';
+                if(isMinhas) {
+                    botaoAcao = t.status === 'Pendente' 
+                        ? `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1 rounded w-full mt-2 transition">▶️ Iniciar</button>`
+                        : `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1 rounded w-full mt-2 transition">✅ Entregar</button>`;
+                } else {
+                    // Para os gerentes, botão só para concluir caso precisem forçar a entrega
+                    botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
+                }
+
+                let prazoFormatado = '';
+                if (t.prazo) {
+                    const d = new Date(t.prazo);
+                    prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`;
+                }
+
+                const cardHTML = `
+                    <div class="bg-white border border-gray-100 p-2 rounded shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="font-bold text-gray-800 text-xs leading-tight">${t.obra_nome} <span class="text-red-700">C.${t.capitulo}</span></span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[9px] uppercase font-black text-gray-500">${t.etapa}</span>
+                            <span class="px-1 py-0.5 rounded text-[9px] font-bold ${corStatus}">${t.status}</span>
+                        </div>
+                        ${!isMinhas ? `<p class="text-[9px] font-bold text-blue-700 mb-1">👤 ${t.responsavel_nick}</p>` : ''}
+                        ${t.prazo ? `<p class="text-[9px] font-bold text-gray-600 bg-gray-50 px-1 py-0.5 rounded inline-block">${prazoFormatado}</p>` : ''}
+                        ${botaoAcao}
+                    </div>
+                `;
+
+                if (!t.prazo) { containerAtivas.innerHTML += cardHTML; temAtiva = true; }
+                else {
+                    const dataPrazo = new Date(t.prazo);
+                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; temAtraso = true; } 
+                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; temHoje = true; } 
+                    else { containerAtivas.innerHTML += cardHTML; temAtiva = true; }
+                }
             });
 
-            if (minhasObras.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 italic">Você não gerencia e nem está vinculado a nenhuma obra no momento.</p>`;
+            const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p><p class="text-xl mt-1">✨</p></div>`;
+            if(!temAtraso) containerAtraso.innerHTML = msgVazio;
+            if(!temHoje) containerHoje.innerHTML = msgVazio;
+            if(!temAtiva) containerAtivas.innerHTML = msgVazio;
+        }
+
+        function renderizarObras(listaObras, idContainer, isResp) {
+            const container = document.getElementById(idContainer);
+            container.innerHTML = '';
+            
+            if (listaObras.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra encontrada nesta categoria.</p>`;
                 return;
             }
 
-            minhasObras.forEach(obra => {
+            listaObras.forEach(obra => {
                 let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
-                const papel = (obra.responsavel_nick && obra.responsavel_nick.includes(meuNick)) ? '👑 Responsável' : '👥 Staff';
+                const papel = isResp ? '👑 Responsável' : '👥 Staff';
 
                 container.innerHTML += `
-                    <div class="p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition flex justify-between items-center">
+                    <div class="p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition flex justify-between items-center bg-white shadow-sm">
                         <div>
-                            <h3 class="font-bold text-gray-800 flex items-center gap-2">${obra.nome} <span class="text-[10px] text-gray-400 bg-white border border-gray-200 px-1 rounded">${papel}</span></h3>
-                            <p class="text-xs text-gray-500 mt-1">Língua: ${obra.lingua || 'Não informada'}</p>
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm">${obra.nome} <span class="text-[9px] text-gray-400 bg-gray-50 border border-gray-200 px-1 rounded">${papel}</span></h3>
+                            <p class="text-[10px] text-gray-500 mt-1">Dono: ${obra.responsavel_nick || 'N/A'}</p>
                         </div>
-                        <span class="text-xs font-bold px-3 py-1 rounded-full ${corStatus}">${obra.status}</span>
+                        <span class="text-[10px] font-bold px-2 py-1 rounded-full ${corStatus}">${obra.status}</span>
                     </div>
                 `;
             });
+        }
+
+        async function mudarStatusTarefa(id, novoStatus) {
+            const btn = event.target;
+            const textOriginal = btn.innerHTML;
+            btn.innerHTML = '⏳';
+            btn.disabled = true;
+            const { error } = await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id);
+            if(error) { alert("Erro: " + error.message); btn.innerHTML = textOriginal; btn.disabled = false; }
+            else { carregarTudo(localStorage.getItem('usuario_nick')); }
         }
     </script>
 </body>
