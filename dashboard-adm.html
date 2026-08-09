@@ -45,7 +45,6 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <!-- RELATÓRIO DE ATRASOS -->
             <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-[500px]">
                 <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👥 Obras por Moderador (Relatório)</h2>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-4" id="lista-todas-obras">
@@ -72,7 +71,6 @@
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
-            
             carregarMinhasObras(nick);
             carregarObrasPorModerador();
         };
@@ -85,7 +83,6 @@
         async function carregarMinhasObras(meuNick) {
             const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
-
             const { data: obras, error } = await _supabase.from('obras').select('*').order('nome');
             const container = document.getElementById('lista-minhas-obras');
             container.innerHTML = '';
@@ -147,19 +144,34 @@
                         <h3 class="font-black text-red-900 mb-3 border-b border-gray-200 pb-2">👤 ${mod} <span class="text-xs font-normal text-gray-500 ml-2">(${obrasPorMod[mod].length} obras)</span></h3>
                         <ul class="space-y-2">
                 `;
+                
                 obrasPorMod[mod].forEach(obra => {
-                    
-                    const capOficial = obra.capitulo_plataforma || 0;
-                    const capFleur = obra.capitulo_fleur || 0;
-                    const atraso = capOficial - capFleur;
+                    const capOficial = obra.capitulo_plataforma || '0';
+                    const capFleur = obra.capitulo_fleur || '0';
                     
                     let statusLabel = '';
                     if (obra.status === 'Pausada' || obra.status === 'Finalizada') {
                         statusLabel = `<span class="text-[10px] text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full font-bold">${obra.status.toUpperCase()}</span>`;
-                    } else if (atraso > 0) {
-                        statusLabel = `<span class="text-[10px] text-red-700 bg-red-100 px-2 py-0.5 rounded-full font-bold">⚠️ ${atraso} cap(s) ATRASADO</span>`;
                     } else {
-                        statusLabel = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-bold">✅ EM DIA</span>`;
+                        // Tenta descobrir se os dois são números (ex: 84 e 82)
+                        const numOficial = Number(capOficial);
+                        const numFleur = Number(capFleur);
+                        
+                        if (!isNaN(numOficial) && !isNaN(numFleur)) {
+                            const atraso = numOficial - numFleur;
+                            if (atraso > 0) {
+                                statusLabel = `<span class="text-[10px] text-red-700 bg-red-100 px-2 py-0.5 rounded-full font-bold">⚠️ ${atraso} cap(s) ATRASADO</span>`;
+                            } else {
+                                statusLabel = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-bold">✅ EM DIA</span>`;
+                            }
+                        } else {
+                            // Se for texto, só vê se as palavras estão iguais
+                            if (String(capOficial).toLowerCase().trim() === String(capFleur).toLowerCase().trim()) {
+                                statusLabel = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-bold">✅ EM DIA</span>`;
+                            } else {
+                                statusLabel = `<span class="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full font-bold">⚠️ VERIFICAR</span>`;
+                            }
+                        }
                     }
 
                     htmlMod += `
