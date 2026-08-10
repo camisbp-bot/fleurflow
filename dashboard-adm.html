@@ -44,6 +44,7 @@
                     <span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span>
                 </button>
 
+                <!-- BOTÃO DE MINHAS ADVERTÊNCIAS COM BADGE -->
                 <button onclick="abrirMinhasAdv()" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group">
                     <span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span>
                     <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
@@ -191,8 +192,8 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-200">
-                <h3 class="text-lg font-bold text-orange-800 mb-4">Aplicar Nova Advertência</h3>
-                <form onsubmit="salvarAdvertencia(event)" class="space-y-4">
+                <h3 class="text-lg font-bold text-orange-800 mb-4">Adicionar / Editar Advertência</h3>
+                <form id="form-adv" onsubmit="salvarAdvertencia(event)" class="space-y-4">
                     <input type="hidden" id="adv-id">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -237,7 +238,7 @@
         </div>
     </section>
 
-    <!-- ==================== MÓDULO: RECRUTAMENTO ATUALIZADO ==================== -->
+    <!-- ==================== MÓDULO: RECRUTAMENTO ==================== -->
     <section id="painel-recrut" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-black text-teal-900 flex items-center gap-2">🎯 Processo de Recrutamento</h2>
@@ -511,7 +512,7 @@
         }
 
         // =========================================================================
-        // MÓDULO 2: ADVERTÊNCIAS (EDIÇÃO E EXCLUSÃO)
+        // MÓDULO 2: ADVERTÊNCIAS (COM TRAVA DE SEGURANÇA)
         // =========================================================================
         function limparFormAdv() {
             document.getElementById('form-adv').reset();
@@ -522,6 +523,13 @@
 
         function editarAdv(encodedObj) {
             const a = JSON.parse(decodeURIComponent(encodedObj));
+            const meuNick = localStorage.getItem('usuario_nick');
+            
+            if (a.membro_nick === meuNick) {
+                alert("🚨 Ação bloqueada: Você não pode alterar sua própria advertência!");
+                return;
+            }
+
             document.getElementById('adv-id').value = a.id;
             document.getElementById('adv-nick').value = a.membro_nick;
             document.getElementById('adv-nivel').value = a.nivel || '1ª';
@@ -533,7 +541,13 @@
             document.getElementById('painel-adv').scrollIntoView({ behavior: 'smooth' });
         }
 
-        async function excluirAdv(id) {
+        async function excluirAdv(id, nickInfrator) {
+            const meuNick = localStorage.getItem('usuario_nick');
+            if (nickInfrator === meuNick) {
+                alert("🚨 Ação bloqueada: Você não tem permissão para excluir sua própria advertência!");
+                return;
+            }
+
             if(confirm('🚨 Tem certeza que deseja APAGAR esta advertência do sistema?')) {
                 const { error } = await _supabase.from('advertencias').delete().eq('id', id);
                 if(error) { alert("Erro ao excluir: " + error.message); return; }
@@ -546,9 +560,23 @@
             const lst = document.getElementById('lista-advertencias'); lst.innerHTML = '';
             if(!data || data.length===0) { lst.innerHTML = '<p class="text-xs text-gray-400">Nenhuma advertência registrada.</p>'; return; }
 
+            const meuNick = localStorage.getItem('usuario_nick');
+
             data.forEach(a => {
                 const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
                 const jsonObj = encodeURIComponent(JSON.stringify(a)).replace(/'/g, "%27");
+                
+                // ESCONDER BOTÕES SE A ADVERTÊNCIA FOR DO PRÓPRIO ADM
+                let botoesAcao = '';
+                if (a.membro_nick !== meuNick) {
+                    botoesAcao = `
+                        <button onclick="editarAdv('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button>
+                        <button onclick="excluirAdv('${a.id}', '${a.membro_nick}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button>
+                    `;
+                } else {
+                    botoesAcao = `<span class="text-[9px] text-red-400 italic">🔒 Você não pode alterar sua própria advertência</span>`;
+                }
+
                 lst.innerHTML += `
                     <div class="bg-gray-50 border border-gray-200 p-3 rounded shadow-sm">
                         <div class="flex justify-between items-center mb-1">
@@ -557,8 +585,7 @@
                         </div>
                         <p class="text-xs text-gray-700 italic mb-2">" ${a.motivo} "</p>
                         <div class="flex justify-end gap-3 mt-2 pt-2 border-t border-gray-200">
-                            <button onclick="editarAdv('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button>
-                            <button onclick="excluirAdv('${a.id}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button>
+                            ${botoesAcao}
                         </div>
                     </div>
                 `;
@@ -595,7 +622,7 @@
         }
 
         // =========================================================================
-        // MÓDULO 3: RECRUTAMENTO (NOVO LAYOUT DE FASES SEPARADAS E ALARMES)
+        // MÓDULO 3: RECRUTAMENTO
         // =========================================================================
         function limparFormRec() {
             document.getElementById('rec-id').value = '';
@@ -780,7 +807,7 @@
                 else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
 
                 const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2" title="Atualização">🔔</span>` : '';
-                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar">✏️</button>`;
+                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100 cursor-pointer" title="Editar">✏️</button>`;
 
                 container.innerHTML += `
                     <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
