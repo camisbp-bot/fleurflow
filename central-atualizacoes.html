@@ -16,10 +16,9 @@
 
     <main class="max-w-4xl mx-auto p-6 mt-4 space-y-6">
         
-        <!-- FORMULÁRIO DE INSERÇÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
             <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização para Conferência</h2>
-            <p class="text-xs text-gray-500 mb-4">Adicione a obra que será postada. Ao clicar em "OK", os capítulos da obra serão atualizados automaticamente no sistema.</p>
+            <p class="text-xs text-gray-500 mb-4">Se for múltiplos capítulos, pode digitar "1 ao 5" que o sistema converte para "01, 02, 03..." automaticamente (exceto se for "temporada").</p>
             
             <form id="form-atualizacao" onsubmit="salvarAtualizacao(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
                 <div>
@@ -38,8 +37,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos (Ex: 84 ao 86)</label>
-                    <input type="text" id="atu-caps" placeholder="O que foi postado" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos</label>
+                    <input type="text" id="atu-caps" placeholder="Ex: 1 ao 5" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Aviso / TAG</label>
@@ -65,52 +64,35 @@
             </form>
         </div>
 
-        <!-- FILA DE ESPERA -->
         <div class="bg-amber-50 rounded-xl p-6 shadow-sm border border-amber-200">
-            <h3 class="text-md font-black text-amber-900 mb-2">⏳ Aguardando Confirmação de Postagem</h3>
-            <p class="text-xs text-amber-700 mb-4">Clique em "OK" somente após a obra estar efetivamente postada. Se deu erro e não vai postar, clique em "Cancelar".</p>
-            <div id="lista-pendentes" class="space-y-3 text-sm">
-                Carregando itens pendentes...
-            </div>
+            <h3 class="text-md font-black text-amber-900 mb-2">⏳ Aguardando Confirmação</h3>
+            <div id="lista-pendentes" class="space-y-3 text-sm">Carregando itens pendentes...</div>
         </div>
 
-        <!-- LANÇAMENTOS DO DIA -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b border-gray-100 pb-4 gap-4">
                 <h3 class="text-lg font-black text-gray-800">📌 Atualizações de Hoje (Confirmadas)</h3>
                 <div class="flex gap-3">
-                    <button id="btn-gerar-telegram" onclick="gerarTelegram()" class="hidden bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md cursor-pointer flex items-center gap-2">
-                        📲 Gerar Post do Telegram
-                    </button>
+                    <button id="btn-gerar-telegram" onclick="gerarTelegram()" class="hidden bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md cursor-pointer flex items-center gap-2">📲 Gerar Post do Telegram</button>
                     <button onclick="toggleHistorico()" class="text-sm font-bold text-gray-500 underline cursor-pointer">Ver Histórico</button>
                 </div>
             </div>
             
-            <div id="lista-hoje" class="space-y-3 text-sm text-gray-600 mb-4">
-                Nenhum lançamento confirmado hoje ainda.
-            </div>
+            <div id="lista-hoje" class="space-y-3 text-sm text-gray-600 mb-4">Nenhum lançamento confirmado hoje ainda.</div>
 
-            <!-- AREA DE TELEGRAM -->
             <div id="area-telegram" class="hidden mt-6 pt-6 border-t border-dashed border-gray-300">
                 <h4 class="text-md font-black text-blue-800 mb-2">Mensagem para Copiar:</h4>
-                <div class="relative">
-                    <textarea id="texto-telegram" rows="12" class="w-full bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none mb-2" readonly></textarea>
-                </div>
-                <button onclick="copiarTextoTelegram()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm shadow cursor-pointer transition mb-6">
-                    📋 Copiar Texto
-                </button>
+                <textarea id="texto-telegram" rows="15" class="w-full bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none mb-2" readonly></textarea>
+                <button onclick="copiarTextoTelegram()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm shadow cursor-pointer transition mb-6">📋 Copiar Texto</button>
                 
                 <h4 class="text-md font-black text-blue-800 mb-2">Imagens dos Layouts:</h4>
                 <div id="imagens-telegram" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
             </div>
         </div>
 
-        <!-- HISTÓRICO -->
         <div id="secao-historico" class="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📁 Arquivo de Atualizações Passadas</h3>
-            <div id="lista-historico" class="space-y-6 text-sm text-gray-600">
-                Nenhum histórico anterior encontrado.
-            </div>
+            <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📁 Histórico</h3>
+            <div id="lista-historico" class="space-y-6 text-sm text-gray-600"></div>
         </div>
 
     </main>
@@ -124,12 +106,8 @@
 
         window.onload = async () => {
             const cargo = localStorage.getItem('usuario_cargo');
-            if (cargo === 'Administrador' || cargo === 'Moderador') {
-                document.getElementById('btn-gerar-telegram').classList.remove('hidden');
-            }
-            carregarObrasSelect();
-            carregarEquipe();
-            carregarAtualizacoes();
+            if (cargo === 'Administrador' || cargo === 'Moderador') document.getElementById('btn-gerar-telegram').classList.remove('hidden');
+            carregarObrasSelect(); carregarEquipe(); carregarAtualizacoes();
         };
 
         async function carregarObrasSelect() {
@@ -144,26 +122,36 @@
             const container = document.getElementById('atu-responsaveis');
             container.innerHTML = '';
             const meuNick = localStorage.getItem('usuario_nick');
-            
             if(data) {
                 data.forEach(m => {
                     const marcado = (m.nick === meuNick) ? 'checked' : '';
-                    container.innerHTML += `
-                        <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer p-1 hover:bg-gray-100 rounded">
-                            <input type="checkbox" name="resp_atu" value="${m.nick}" class="rounded text-red-700" ${marcado}> ${m.nick}
-                        </label>
-                    `;
+                    container.innerHTML += `<label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer p-1 hover:bg-gray-100 rounded"><input type="checkbox" name="resp_atu" value="${m.nick}" class="rounded text-red-700" ${marcado}> ${m.nick}</label>`;
                 });
-            } else { container.innerHTML = '<p class="text-xs text-red-500">Erro ao carregar equipe.</p>'; }
+            }
+        }
+
+        function formatarCapitulosAuto(caps) {
+            if (caps.toLowerCase().includes('temporada')) return caps;
+            return caps.replace(/(\d+)\s+ao\s+(\d+)/gi, (match, p1, p2) => {
+                let start = parseInt(p1); let end = parseInt(p2);
+                if (start >= end) return match;
+                let arr = [];
+                let pad = (p1.length > 1 && p1.startsWith('0')) ? p1.length : 2;
+                for (let i = start; i <= end; i++) {
+                    arr.push(i.toString().padStart(pad, '0'));
+                }
+                return arr.join(', ');
+            });
         }
 
         async function salvarAtualizacao(event) {
             event.preventDefault();
             const obra = document.getElementById('atu-obra').value;
-            const capsBruto = document.getElementById('atu-caps').value;
+            let capsBruto = document.getElementById('atu-caps').value;
             const aviso = document.getElementById('atu-aviso').value;
             const tipo = document.getElementById('atu-tipo').value;
             
+            capsBruto = formatarCapitulosAuto(capsBruto);
             const capsFinal = aviso ? `${capsBruto} — ${aviso}` : capsBruto;
             const checkboxes = document.querySelectorAll('input[name="resp_atu"]:checked');
             const responsaveisSelecionados = Array.from(checkboxes).map(cb => cb.value).join(', ');
@@ -171,66 +159,43 @@
             if(!responsaveisSelecionados) return alert("Marque pelo menos um responsável!");
 
             const { error } = await _supabase.from('atualizacoes').insert([{ 
-                obra_nome: obra, 
-                capitulos: capsFinal, 
-                tipo_postagem: tipo,
-                responsavel: responsaveisSelecionados,
-                confirmado: false 
+                obra_nome: obra, capitulos: capsFinal, tipo_postagem: tipo, responsavel: responsaveisSelecionados, confirmado: false 
             }]);
-
-            if (error) { alert('Erro: ' + error.message); } 
+            if (error) alert('Erro: ' + error.message);
             else {
-                document.getElementById('atu-caps').value = '';
-                document.getElementById('atu-aviso').value = '';
-                document.getElementById('atu-tipo').value = 'ATUALIZAÇÃO'; 
-                carregarAtualizacoes();
+                document.getElementById('atu-caps').value = ''; document.getElementById('atu-aviso').value = ''; carregarAtualizacoes();
             }
         }
 
         async function confirmarPostagem(id, obraNome, capitulos, tipo) {
             const { error } = await _supabase.from('atualizacoes').update({ confirmado: true }).eq('id', id);
-            if (error) { alert('Erro ao confirmar: ' + error.message); return; }
-
+            if (error) return alert('Erro ao confirmar: ' + error.message);
+            
             let capsSplit = capitulos.split('—')[0].trim(); 
             let capituloParaSalvar = capsSplit;
-
             if (capsSplit.toLowerCase().includes('ao') || capsSplit.includes(',')) {
                 const numeros = capsSplit.match(/\d+/g);
                 if (numeros) capituloParaSalvar = Math.max(...numeros.map(Number)).toString();
             }
-
-            try {
-                await _supabase.from('obras').update({ capitulo_fleur: capituloParaSalvar }).eq('nome', obraNome);
-            } catch(err) { console.log("Erro auto-update:", err); }
-
+            try { await _supabase.from('obras').update({ capitulo_fleur: capituloParaSalvar }).eq('nome', obraNome); } catch(err){}
             carregarAtualizacoes();
         }
 
         async function cancelarPostagem(id) {
-            if(confirm("Tem certeza que deseja cancelar e remover essa atualização da fila?")) {
-                const { error } = await _supabase.from('atualizacoes').delete().eq('id', id);
-                if (error) { alert('Erro ao cancelar: ' + error.message); } 
-                else { carregarAtualizacoes(); }
+            if(confirm("Deseja cancelar e remover essa atualização da fila?")) {
+                await _supabase.from('atualizacoes').delete().eq('id', id);
+                carregarAtualizacoes();
             }
         }
 
         async function carregarAtualizacoes() {
             const { data, error } = await _supabase.from('atualizacoes').select('*').order('created_at', { ascending: false });
-            
-            const listaPendentes = document.getElementById('lista-pendentes');
-            const listaHoje = document.getElementById('lista-hoje');
-            const listaHistorico = document.getElementById('lista-historico');
+            const listaPendentes = document.getElementById('lista-pendentes'); const listaHoje = document.getElementById('lista-hoje'); const listaHistorico = document.getElementById('lista-historico');
             
             if (error) { listaPendentes.innerHTML = '<p class="text-red-500">Erro.</p>'; return; }
 
-            listaPendentes.innerHTML = '';
-            listaHoje.innerHTML = ''; 
-            listaHistorico.innerHTML = '';
-            obrasConfirmadasHoje = []; 
-            
-            const hojeDataStr = new Date().toLocaleDateString('pt-BR');
-            let historicoPorData = {};
-            let temPendentes = false;
+            listaPendentes.innerHTML = ''; listaHoje.innerHTML = ''; listaHistorico.innerHTML = ''; obrasConfirmadasHoje = []; 
+            const hojeDataStr = new Date().toLocaleDateString('pt-BR'); let historicoPorData = {}; let temPendentes = false;
 
             if(data && data.length > 0) {
                 data.forEach(item => {
@@ -243,160 +208,117 @@
                         listaPendentes.innerHTML += `
                             <div class="p-3 bg-white border border-amber-200 rounded-lg flex justify-between items-center shadow-xs">
                                 <div>
-                                    <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase">${item.tipo_postagem || 'ATUALIZAÇÃO'}</span>
-                                    <br>
-                                    <strong class="text-gray-800">${item.obra_nome}</strong> 
-                                    <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
-                                    <p class="text-[10px] text-gray-500 mt-1">Resp: ${item.responsavel}</p>
+                                    <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase">${item.tipo_postagem || 'ATUALIZAÇÃO'}</span><br>
+                                    <strong class="text-gray-800">${item.obra_nome}</strong> <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="cancelarPostagem('${item.id}')" class="bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-2 rounded-lg text-xs shadow-sm cursor-pointer transition" title="Cancelar Postagem">
-                                        🗑️
-                                    </button>
-                                    <button onclick="confirmarPostagem('${item.id}', '${obraSegura}', '${capsSeguros}', '${item.tipo_postagem}')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow cursor-pointer transition">
-                                        ✅ OK
-                                    </button>
+                                    <button onclick="cancelarPostagem('${item.id}')" class="bg-gray-100 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-xs shadow-sm cursor-pointer">🗑️</button>
+                                    <button onclick="confirmarPostagem('${item.id}', '${obraSegura}', '${capsSeguros}', '${item.tipo_postagem}')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow cursor-pointer">✅ OK</button>
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
                     } else {
-                        const card = `
-                            <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center">
-                                <div>
-                                    <span class="text-[10px] font-bold bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full uppercase">${item.tipo_postagem || 'ATUALIZAÇÃO'}</span>
-                                    <br>
-                                    <strong class="text-gray-800">${item.obra_nome}</strong> 
-                                    <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
-                                </div>
-                                <span class="text-xs text-gray-500">Resp: ${item.responsavel}</span>
-                            </div>
-                        `;
-
-                        if(dataItem === hojeDataStr) {
-                            listaHoje.innerHTML += card;
-                            obrasConfirmadasHoje.push(item); 
-                        } else {
-                            if(!historicoPorData[dataItem]) historicoPorData[dataItem] = [];
-                            historicoPorData[dataItem].push(card);
-                        }
+                        const card = `<div class="p-2 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center text-xs"><div><span class="font-bold bg-gray-200 px-2 py-0.5 rounded-full uppercase">${item.tipo_postagem}</span> <strong class="ml-2">${item.obra_nome}</strong> <span class="text-red-700 font-semibold">(${item.capitulos})</span></div></div>`;
+                        if(dataItem === hojeDataStr) { listaHoje.innerHTML += card; obrasConfirmadasHoje.push(item); } 
+                        else { if(!historicoPorData[dataItem]) historicoPorData[dataItem] = []; historicoPorData[dataItem].push(card); }
                     }
                 });
             }
 
-            if(!temPendentes) listaPendentes.innerHTML = '<p class="text-xs text-amber-800">Nenhuma obra aguardando confirmação no momento.</p>';
-            if(listaHoje.innerHTML === '') listaHoje.innerHTML = '<p class="text-gray-400">Nenhum lançamento confirmado hoje ainda.</p>';
+            if(!temPendentes) listaPendentes.innerHTML = '<p class="text-xs text-amber-800">Fila vazia.</p>';
+            if(listaHoje.innerHTML === '') listaHoje.innerHTML = '<p class="text-gray-400">Nenhum lançamento hoje.</p>';
             
-            if(Object.keys(historicoPorData).length === 0) {
-                listaHistorico.innerHTML = '<p class="text-gray-400">Nenhum arquivo anterior encontrado.</p>';
-            } else {
-                for (const [dataChave, cards] of Object.entries(historicoPorData)) {
-                    listaHistorico.innerHTML += `
-                        <div class="mb-4">
-                            <h4 class="font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded-md inline-block mb-2">Atualização ${dataChave}</h4>
-                            <div class="space-y-2">${cards.join('')}</div>
-                        </div>
-                    `;
-                }
+            for (const [d, cards] of Object.entries(historicoPorData)) {
+                listaHistorico.innerHTML += `<div class="mb-4"><h4 class="font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded inline-block mb-2">${d}</h4><div class="space-y-2">${cards.join('')}</div></div>`;
             }
         }
 
         async function gerarTelegram() {
-            if(obrasConfirmadasHoje.length === 0) return alert("Nenhuma postagem confirmada hoje para gerar mensagem!");
+            if(obrasConfirmadasHoje.length === 0) return alert("Nenhuma postagem confirmada hoje!");
             
             document.getElementById('area-telegram').classList.remove('hidden');
-            document.getElementById('texto-telegram').value = "Gerando mensagem e buscando layouts...";
-            document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-gray-500'>Buscando imagens no banco...</p>";
-
-            const categorias = { "LANÇAMENTO": [], "LANÇAMENTO & FINALIZAÇÃO": [], "ATUALIZAÇÃO": [], "FINALIZAÇÃO": [] };
-            const nomesObrasParaBuscar = [];
-
-            obrasConfirmadasHoje.forEach(item => {
-                const tipo = item.tipo_postagem || "ATUALIZAÇÃO";
-                const catOficial = tipo.toUpperCase().replace(" E ", " & ");
-                if(categorias[catOficial]) categorias[catOficial].push(`~ ${item.obra_nome} • ${item.capitulos}`);
-                else categorias["ATUALIZAÇÃO"].push(`~ ${item.obra_nome} • ${item.capitulos}`);
-                if(!nomesObrasParaBuscar.includes(item.obra_nome)) nomesObrasParaBuscar.push(item.obra_nome);
-            });
-
-            let textoFinal = "";
-            for (const [cat, obras] of Object.entries(categorias)) {
-                if(obras.length > 0) {
-                    textoFinal += `✨ ${cat}\n\n`;
-                    obras.forEach(o => textoFinal += `${o}\n`);
-                    textoFinal += `\n`;
-                }
-            }
-            textoFinal += `.\n.\n.\n🔗• Link: fbsquadx.com\n\n‼️ Copiem o link e colem no navegador do celular de vocês ‼️`;
-            document.getElementById('texto-telegram').value = textoFinal;
+            document.getElementById('texto-telegram').value = "Gerando mensagem...";
 
             try {
-                const { data: obrasDB, error } = await _supabase.from('obras').select('nome, layout_lancamento, layout_atualizacao, layout_finalizacao, layout_lancamento_finalizacao').in('nome', nomesObrasParaBuscar);
+                const nomesObras = obrasConfirmadasHoje.map(o => o.obra_nome);
+                const { data: obrasDB, error } = await _supabase.from('obras').select('nome, prioridade, link_scan, layout_lancamento, layout_atualizacao, layout_finalizacao, layout_lancamento_finalizacao').in('nome', nomesObras);
                 if(error) throw error;
-                let htmlImagens = "";
+
+                let textoPrioridades = "";
+                let textoNormais = "";
                 
+                const categoriasNormais = { "LANÇAMENTO": [], "LANÇAMENTO & FINALIZAÇÃO": [], "ATUALIZAÇÃO": [], "FINALIZAÇÃO": [] };
+
                 obrasConfirmadasHoje.forEach(postagem => {
-                    const obraEncontrada = obrasDB.find(o => o.nome === postagem.obra_nome);
-                    if(obraEncontrada) {
+                    const obraInfo = obrasDB.find(o => o.nome === postagem.obra_nome);
+                    const tipo = (postagem.tipo_postagem || "ATUALIZAÇÃO").toUpperCase().replace(" E ", " & ");
+                    
+                    let textoListaNormal = `~ ${postagem.obra_nome} • ${postagem.capitulos}`;
+                    
+                    // LÓGICA DE PRIORIDADE: Adiciona ao topo exclusivo E à lista geral com a tag especial!
+                    if (obraInfo && (obraInfo.prioridade === 'Máxima' || obraInfo.prioridade === 'Alta')) {
+                        textoPrioridades += `🪟ATUALIZAÇÃO \n\n~ ${postagem.obra_nome} • ${postagem.capitulos}\n.\n.\n.\n🥀• Somos o pecado, a sua decadência, e você, pobre alma, se rende ao nosso encanto profano.\n\n🔗• Leiam aqui: ${obraInfo.link_scan || 'Link Indisponível'}\n\n‼️Copiem o link e colem no navegador do celular de vocês‼️\n\n\n---------------------------\n\n\n`;
+                        
+                        textoListaNormal += " - POSTADO MAIS CEDO";
+                    }
+
+                    // TODAS as obras entram na listagem comum (as de prioridade entram com a tag)
+                    if(categoriasNormais[tipo]) categoriasNormais[tipo].push(textoListaNormal);
+                    else categoriasNormais["ATUALIZAÇÃO"].push(textoListaNormal);
+                });
+
+                for (const [cat, obrasArray] of Object.entries(categoriasNormais)) {
+                    if(obrasArray.length > 0) {
+                        textoNormais += `✨ ${cat}\n\n`;
+                        obrasArray.forEach(o => textoNormais += `${o}\n\n`);
+                    }
+                }
+                
+                if(textoNormais !== "") {
+                    textoNormais += `.\n.\n.\n🔗• Link: fbsquadx.com\n\n‼️ Copiem o link e colem no navegador do celular de vocês ‼️`;
+                }
+
+                document.getElementById('texto-telegram').value = textoPrioridades + textoNormais;
+
+                // Capas (Imagens)
+                let htmlImagens = "";
+                obrasConfirmadasHoje.forEach(postagem => {
+                    const obraInfo = obrasDB.find(o => o.nome === postagem.obra_nome);
+                    if(obraInfo) {
                         let urlImg = null;
                         const tipoCaps = postagem.tipo_postagem.toUpperCase().replace(" E ", " & ");
-                        
-                        if(tipoCaps === "LANÇAMENTO & FINALIZAÇÃO") urlImg = obraEncontrada.layout_lancamento_finalizacao;
-                        else if(tipoCaps === "LANÇAMENTO") urlImg = obraEncontrada.layout_lancamento;
-                        else if (tipoCaps === "FINALIZAÇÃO") urlImg = obraEncontrada.layout_finalizacao;
-                        else urlImg = obraEncontrada.layout_atualizacao;
+                        if(tipoCaps === "LANÇAMENTO & FINALIZAÇÃO") urlImg = obraInfo.layout_lancamento_finalizacao;
+                        else if(tipoCaps === "LANÇAMENTO") urlImg = obraInfo.layout_lancamento;
+                        else if (tipoCaps === "FINALIZAÇÃO") urlImg = obraInfo.layout_finalizacao;
+                        else urlImg = obraInfo.layout_atualizacao;
 
                         if(urlImg) {
                             htmlImagens += `
                                 <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm flex flex-col">
                                     <img src="${urlImg}" class="w-full h-auto object-cover rounded-t-lg">
                                     <div class="bg-gray-900 text-white text-[10px] p-1 text-center truncate">${postagem.obra_nome}</div>
-                                    <button onclick="baixarImagem('${urlImg}', 'Layout_${postagem.obra_nome.replace(/\s+/g, '_')}.png')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold py-1.5 w-full rounded-b-lg transition cursor-pointer">
-                                        ⬇️ Baixar Imagem
-                                    </button>
-                                </div>
-                            `;
+                                    <button onclick="baixarImagem('${urlImg}', 'Layout_${postagem.obra_nome.replace(/\s+/g, '_')}.png')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold py-1.5 w-full rounded-b-lg transition cursor-pointer">⬇️ Baixar Imagem</button>
+                                </div>`;
                         }
                     }
                 });
 
-                if(htmlImagens === "") document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Nenhum layout cadastrado para essas obras.</p>";
-                else document.getElementById('imagens-telegram').innerHTML = htmlImagens;
-            } catch (err) {
-                document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Erro ao carregar imagens.</p>";
-            }
+                document.getElementById('imagens-telegram').innerHTML = htmlImagens || "<p class='text-xs text-red-500'>Nenhum layout cadastrado.</p>";
+            } catch (err) { alert("Erro: " + err.message); }
         }
         
         function toggleHistorico() { document.getElementById('secao-historico').classList.toggle('hidden'); }
-
-        // MÁGICA DE COPIAR TEXTO PRO CELULAR
         function copiarTextoTelegram() {
             const textoArea = document.getElementById("texto-telegram");
-            textoArea.select();
-            textoArea.setSelectionRange(0, 99999); // Para mobile
-            navigator.clipboard.writeText(textoArea.value).then(() => {
-                alert("Texto copiado com sucesso! 📋✨");
-            }).catch(err => {
-                alert("Ops, seu navegador bloqueou a cópia. Tente selecionar o texto e copiar manualmente.");
-            });
+            textoArea.select(); textoArea.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(textoArea.value).then(() => alert("Copiado com sucesso! 📋✨")).catch(() => alert("Cópia bloqueada."));
         }
-
-        // MÁGICA DE BAIXAR A IMAGEM DIRETO
         async function baixarImagem(url, nomeArquivo) {
             try {
-                const response = await fetch(url);
-                const blob = await response.blob();
+                const response = await fetch(url); const blob = await response.blob();
                 const linkUrl = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = linkUrl;
-                link.download = nomeArquivo;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(linkUrl);
-            } catch (err) {
-                alert("Não foi possível forçar o download direto no seu navegador. Segure a imagem e clique em 'Salvar Imagem' ou 'Fazer Download da Imagem'.");
-                window.open(url, '_blank'); // Abre em nova aba como backup
-            }
+                const link = document.createElement('a'); link.href = linkUrl; link.download = nomeArquivo;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link); window.URL.revokeObjectURL(linkUrl);
+            } catch (err) { window.open(url, '_blank'); }
         }
     </script>
 </body>
