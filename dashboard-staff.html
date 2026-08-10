@@ -21,9 +21,15 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
 
-        <!-- BOTÃO DE INFORMAR DOWNLOAD (Inicia Escondido, só aparece pra Organizer) -->
-        <div id="box-btn-raw" class="hidden flex justify-end">
-            <button onclick="abrirModalDownload()" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2 px-4 rounded-lg shadow-md flex items-center gap-2 transition cursor-pointer">
+        <!-- BOTÕES DO TOPO -->
+        <div class="flex flex-col sm:flex-row justify-end gap-4">
+            
+            <button onclick="abrirMinhasAdv()" class="bg-orange-100 hover:bg-orange-200 text-orange-800 font-black py-2 px-4 rounded-lg shadow-md flex items-center justify-center gap-2 transition cursor-pointer relative">
+                <span id="badge-adv-staff" class="hidden absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-[11px] font-bold text-white shadow-lg animate-bounce">!</span>
+                <span class="text-lg">⚠️</span> Minhas Advertências
+            </button>
+            
+            <button id="box-btn-raw" onclick="abrirModalDownload()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-black py-2 px-4 rounded-lg shadow-md flex items-center justify-center gap-2 transition cursor-pointer">
                 <span class="text-lg">📥</span> Informar Download (Raw)
             </button>
         </div>
@@ -36,6 +42,7 @@
             </div>
         </section>
 
+        <!-- A ORDEM CORRETA: Concluídas, Atrasadas, Hoje, Ativas -->
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all">
             <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                 <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Minhas Tarefas</h2>
@@ -46,18 +53,22 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 1º CONCLUÍDAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
                     <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
                 </div>
+                <!-- 2º ATRASADAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
                     <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
                 </div>
+                <!-- 3º HOJE -->
                 <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
                     <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
                 </div>
+                <!-- 4º ATIVAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
                     <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
@@ -67,7 +78,23 @@
 
     </main>
 
-    <!-- MODAL DOWNLOAD RAW -->
+    <!-- MODAL MINHAS ADVERTÊNCIAS -->
+    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+            <div class="bg-orange-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">⚠️ Minhas Advertências</h3>
+                <button onclick="fecharMinhasAdv()" class="font-bold text-orange-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
+            </div>
+            <div class="p-6">
+                <p class="text-xs text-gray-500 mb-4">Aqui fica o registro oficial das advertências aplicadas a você pela Administração. O acúmulo de advertências pode levar ao desligamento da equipe.</p>
+                <div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                    <p class="text-sm text-gray-400">Buscando histórico...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DOWNLOAD RAW COM ALTURA -->
     <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-blue-800 p-4 flex justify-between items-center text-white">
@@ -114,16 +141,50 @@
             if(!nick) { window.location.href = 'index.html'; return; }
             document.getElementById('saudacao').textContent = `Olá, ${nick}! 🌸`;
             carregarTudo(nick);
+            carregarMinhasAdv(nick); // Carrega o histórico de advertências da staff
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
 
+        // MÓDULO DE ADVERTÊNCIAS PESSOAIS
+        async function carregarMinhasAdv(meuNick) {
+            const { data } = await _supabase.from('advertencias').select('*').eq('membro_nick', meuNick).order('created_at', {ascending: false});
+            const lista = document.getElementById('lista-minhas-adv');
+            const badge = document.getElementById('badge-adv-staff');
+            
+            if(!data || data.length === 0) {
+                lista.innerHTML = '<div class="text-center py-4"><span class="text-4xl block mb-2">🎉</span><p class="text-sm font-bold text-green-700">Ficha Limpa!</p><p class="text-xs text-gray-500">Você não possui nenhuma advertência.</p></div>';
+                return;
+            }
+
+            if(badge) { 
+                badge.classList.remove('hidden'); 
+                badge.textContent = data.length; 
+            }
+
+            lista.innerHTML = '';
+            data.forEach(a => {
+                const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
+                lista.innerHTML += `
+                    <div class="bg-red-50 border border-red-200 p-3 rounded shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-black text-red-900">${a.nivel || '1ª'} Advertência</span>
+                            <span class="text-[10px] bg-white border border-red-300 text-red-800 px-2 py-0.5 rounded font-bold">${dataFormat}</span>
+                        </div>
+                        <p class="text-xs text-gray-800 mt-2 border-l-2 border-red-400 pl-2">"${a.motivo}"</p>
+                    </div>
+                `;
+            });
+        }
+
+        function abrirMinhasAdv() { document.getElementById('modal-minhas-adv').classList.remove('hidden'); }
+        function fecharMinhasAdv() { document.getElementById('modal-minhas-adv').classList.add('hidden'); }
+
+
         async function carregarTudo(meuNick) {
-            // Agora puxamos o perfil completo para achar a palavra "Organizer" em qualquer coluna
             const { data: usuario } = await _supabase.from('equipe').select('*').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
             
-            // INTELIGÊNCIA: Verifica se a pessoa é Organizer em qualquer coluna da ficha
             const ehOrganizer = usuario && JSON.stringify(usuario).toLowerCase().includes('organizer');
             if (ehOrganizer) {
                 const boxBtn = document.getElementById('box-btn-raw');
@@ -221,7 +282,6 @@
             }
 
             const agora = new Date(); const hojeStr = agora.toDateString();
-            let cAtraso=0, cHoje=0, cAtiva=0, cConc=0;
 
             lista.forEach(t => {
                 let isConcluida = t.status === 'Concluído';
@@ -254,19 +314,20 @@
                     </div>
                 `;
 
-                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; cConc++; }
-                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; cAtiva++; }
+                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; }
+                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; }
                 else {
                     const dataPrazo = new Date(t.prazo);
-                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; cAtraso++; } 
-                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; cHoje++; } 
-                    else { containerAtivas.innerHTML += cardHTML; cAtiva++; }
+                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; } 
+                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; } 
+                    else { containerAtivas.innerHTML += cardHTML; }
                 }
             });
 
-            const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
-            if(!cAtraso) containerAtraso.innerHTML = msgVazio; if(!cHoje) containerHoje.innerHTML = msgVazio; 
-            if(!cAtiva) containerAtivas.innerHTML = msgVazio; if(!cConc) containerConcluidas.innerHTML = msgVazio;
+            if(containerAtraso.innerHTML === '') containerAtraso.innerHTML = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
+            if(containerHoje.innerHTML === '') containerHoje.innerHTML = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
+            if(containerAtivas.innerHTML === '') containerAtivas.innerHTML = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
+            if(containerConcluidas.innerHTML === '') containerConcluidas.innerHTML = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
         }
 
         async function mudarStatusTarefa(id, novoStatus) {
