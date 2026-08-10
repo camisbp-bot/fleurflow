@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
-    <nav class="bg-red-900 text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-10">
+    <nav class="bg-red-900 text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <h1 class="text-xl font-black tracking-wider">FleurFlow <span class="text-red-300 text-sm font-normal">| Painel ADM</span></h1>
         </div>
@@ -19,66 +19,66 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
+    <!-- ==================== PAINEL PRINCIPAL ==================== -->
+    <main id="main-content" class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👑 Ferramentas da Administração</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">📖</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Cadastrar Obra</span>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-4">
+                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
+                    <span class="text-3xl">📖</span><span class="text-xs font-bold text-gray-700 text-center">Cadastrar Obra</span>
                 </button>
-                <button onclick="window.location.href='listao-geral.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">📊</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Listão & Telegram</span>
+                <button onclick="window.location.href='listao-geral.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
+                    <span class="text-3xl">📊</span><span class="text-xs font-bold text-gray-700 text-center">Listão & Telegram</span>
                 </button>
-                <button onclick="window.location.href='andamento.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">⚙️</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Andamento (Staff)</span>
+                <button onclick="window.location.href='andamento.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
+                    <span class="text-3xl">⚙️</span><span class="text-xs font-bold text-gray-700 text-center">Andamento (Staff)</span>
                 </button>
-                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">🔔</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Atualizações</span>
+                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
+                    <span class="text-3xl">🔔</span><span class="text-xs font-bold text-gray-700 text-center">Atualizações</span>
                 </button>
-                <button onclick="window.location.href='relatorios.html'" class="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">📈</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-blue-700 text-center">Relatórios</span>
+                <button onclick="window.location.href='relatorios.html'" class="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
+                    <span class="text-3xl">📈</span><span class="text-xs font-bold text-gray-700 text-center">Relatórios</span>
                 </button>
-                
-                <!-- BOTÃO DE INFORMAR DOWNLOAD -->
-                <div id="box-btn-raw" class="hidden">
-                    <button onclick="abrirModalDownload()" class="w-full h-full bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                        <span class="text-3xl group-hover:scale-110 transition">📥</span>
-                        <span class="text-xs font-black text-blue-800 group-hover:text-blue-900 text-center">Informar Raw</span>
-                    </button>
-                </div>
+                <button onclick="abrirModalDownload()" class="bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
+                    <span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span>
+                </button>
+            </div>
+
+            <!-- NOVA SESSÃO: DEPARTAMENTO DE RH -->
+            <h2 class="text-lg font-black text-purple-900 mb-4 mt-8 flex items-center gap-2">🏢 Gestão de Pessoal (RH)</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button onclick="abrirAba('painel-rh')" class="bg-purple-50 border border-purple-200 hover:border-purple-500 hover:shadow-md p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer">
+                    <span class="text-2xl">👥</span><span class="text-sm font-black text-purple-800">Equipe Geral</span>
+                </button>
+                <button onclick="abrirAba('painel-adv')" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer">
+                    <span class="text-2xl">⚠️</span><span class="text-sm font-black text-orange-800">Advertências</span>
+                </button>
+                <button onclick="abrirAba('painel-recrut')" class="bg-teal-50 border border-teal-200 hover:border-teal-500 hover:shadow-md p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer">
+                    <span class="text-2xl">🎯</span><span class="text-sm font-black text-teal-800">Recrutamento</span>
+                </button>
             </div>
         </section>
 
+        <!-- (Restante do Dashboard Normal da ADM) -->
         <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm">
             <div class="flex justify-between items-center mb-4 border-b border-pink-100 pb-2">
                 <h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2>
                 <button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow transition cursor-pointer">📲 Mensagem de Hoje</button>
             </div>
-            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]">
-                <p class="text-sm text-gray-500 italic">Buscando aniversariantes...</p>
-            </div>
+            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]"></div>
             <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t border-pink-200">
-                <p class="text-xs text-pink-800 font-bold mb-1">Copie para o WhatsApp:</p>
                 <textarea id="texto-niver" rows="4" class="w-full bg-white border border-pink-300 rounded-lg p-3 text-sm font-semibold text-gray-700 focus:outline-none" readonly></textarea>
             </div>
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[400px]">
-                <h2 class="text-lg font-black text-blue-900 mb-2 flex items-center gap-2">👥 Obras (STAFF)</h2>
-                <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as SUAS tarefas.</p>
+                <h2 class="text-lg font-black text-blue-900 mb-2">👥 Obras (STAFF)</h2>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-staff"></div>
             </div>
-            
             <div class="bg-white rounded-xl shadow-sm border border-amber-200 p-6 flex flex-col h-[400px]">
-                <h2 class="text-lg font-black text-amber-900 mb-2 flex items-center gap-2">👑 Obras (RESPONSÁVEL)</h2>
-                <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as entregas da SUA EQUIPE.</p>
+                <h2 class="text-lg font-black text-amber-900 mb-2">👑 Obras (RESPONSÁVEL)</h2>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-resp"></div>
             </div>
         </section>
@@ -86,39 +86,172 @@
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all">
             <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                 <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Tarefas da Obra</h2>
-                <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 px-3 py-1 rounded transition cursor-pointer">✖ Fechar Painel</button>
+                <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:text-red-700 px-3 py-1 rounded">✖ Fechar</button>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
-                    <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
-                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
-                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
-                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
-                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80"><div class="bg-green-50 p-3 border-b"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div></div>
+                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80"><div class="bg-red-50 p-3 border-b"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div></div>
+                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80"><div class="bg-orange-50 p-3 border-b"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div></div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80"><div class="bg-gray-50 p-3 border-b"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div></div>
             </div>
         </section>
-
-        <!-- RELATÓRIO GERAL (SÓ ADM) -->
+        
         <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col mt-8">
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👥 Obras por Moderador (Visão Rápida)</h2>
-            <div class="overflow-y-auto max-h-[500px] pr-2 space-y-4" id="lista-todas-obras">
-                <p class="text-sm text-gray-500">Carregando dados...</p>
-            </div>
+            <div class="overflow-y-auto max-h-[500px] pr-2 space-y-4" id="lista-todas-obras"></div>
         </section>
-
     </main>
 
-    <!-- MODAL DOWNLOAD RAW -->
+    <!-- ==================== MÓDULO: EQUIPE GERAL (RH) ==================== -->
+    <section id="painel-rh" class="hidden max-w-6xl mx-auto p-6 mt-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black text-purple-900 flex items-center gap-2">👥 Controle da Equipe (RH)</h2>
+            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
+                <h3 class="text-lg font-bold text-purple-800 mb-4">Adicionar / Editar Membro</h3>
+                <form id="form-rh" onsubmit="salvarMembroRH(event)" class="space-y-4">
+                    <input type="hidden" id="rh-id">
+                    <div><label class="text-xs font-bold text-gray-600">Nick na SCAN</label><input type="text" id="rh-nick" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                    <div><label class="text-xs font-bold text-gray-600">Nome Real</label><input type="text" id="rh-nome" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="text-xs font-bold text-gray-600">Idade</label><input type="text" id="rh-idade" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                        <div><label class="text-xs font-bold text-gray-600">Data Nasc.</label><input type="text" id="rh-nasc" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                    </div>
+                    <div><label class="text-xs font-bold text-gray-600">Data de Entrada</label><input type="date" id="rh-entrada" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                    <div><label class="text-xs font-bold text-gray-600">Funções (Ex: Tradutor, Cleaner)</label><input type="text" id="rh-funcoes" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                    
+                    <div class="border-t border-gray-200 pt-4 mt-4">
+                        <label class="text-xs font-bold text-gray-600">Status do Membro</label>
+                        <select id="rh-status" onchange="verificarStatusRH()" class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-50 font-bold">
+                            <option value="Ativo">🟢 Ativo</option>
+                            <option value="Hiatus">🟡 Em Hiatus</option>
+                            <option value="Saiu">🔴 Saiu da SCAN</option>
+                        </select>
+                    </div>
+
+                    <div id="box-hiatus" class="hidden space-y-2 bg-yellow-50 p-3 rounded border border-yellow-200">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="text-xs font-bold">Início</label><input type="date" id="rh-hia-inicio" class="w-full border rounded p-1 text-xs"></div>
+                            <div><label class="text-xs font-bold">Fim Previsto</label><input type="date" id="rh-hia-fim" class="w-full border rounded p-1 text-xs"></div>
+                        </div>
+                        <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-hia-motivo" class="w-full border rounded p-1 text-xs"></div>
+                    </div>
+
+                    <div id="box-saida" class="hidden space-y-2 bg-red-50 p-3 rounded border border-red-200">
+                        <div><label class="text-xs font-bold">Data de Saída</label><input type="date" id="rh-sai-data" class="w-full border rounded p-1 text-xs"></div>
+                        <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-sai-motivo" class="w-full border rounded p-1 text-xs"></div>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold">Limpar</button>
+                        <button type="submit" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 rounded shadow cursor-pointer">💾 Salvar Ficha</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
+                <h3 class="text-lg font-bold text-purple-800 mb-4 border-b pb-2">📋 Lista Geral (Clique para Editar ou Avisar)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="text-xs uppercase font-black text-gray-400 border-b">
+                            <tr><th>Status</th><th>Nick (Nome)</th><th>Funções</th><th>Ações Rápidas</th></tr>
+                        </thead>
+                        <tbody id="tabela-rh" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+                <div id="area-wpp-rh" class="hidden mt-6 bg-purple-50 p-4 border border-purple-200 rounded-lg">
+                    <h4 class="text-sm font-bold text-purple-900 mb-2">📲 Mensagem para o WhatsApp (Notificar Equipe)</h4>
+                    <textarea id="texto-wpp-rh" rows="5" class="w-full bg-white border border-purple-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea>
+                    <button onclick="copiarTexto('texto-wpp-rh')" class="w-full bg-purple-600 text-white font-bold py-2 rounded">📋 Copiar e Enviar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MÓDULO: ADVERTÊNCIAS ==================== -->
+    <section id="painel-adv" class="hidden max-w-6xl mx-auto p-6 mt-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black text-orange-900 flex items-center gap-2">⚠️ Controle de Advertências</h2>
+            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-200">
+                <h3 class="text-lg font-bold text-orange-800 mb-4">Aplicar Nova Advertência</h3>
+                <form onsubmit="salvarAdvertencia(event)" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-600">Infrator (Nick)</label>
+                            <select id="adv-nick" required class="w-full border border-gray-300 rounded p-2 text-sm"></select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-600">Grau / Nível</label>
+                            <select id="adv-nivel" required class="w-full border border-gray-300 rounded p-2 text-sm font-bold text-orange-800 bg-orange-50">
+                                <option value="1ª">1ª Advertência</option>
+                                <option value="2ª">2ª Advertência</option>
+                                <option value="3ª">3ª Advertência</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-600">Data da Ocorrência</label>
+                        <input type="date" id="adv-data" required class="w-full border border-gray-300 rounded p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-600">Motivo da Advertência</label>
+                        <textarea id="adv-motivo" required rows="3" class="w-full border border-gray-300 rounded p-2 text-sm"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded shadow cursor-pointer">💾 Registrar Advertência</button>
+                </form>
+
+                <div id="area-wpp-adv" class="hidden mt-6 bg-orange-50 p-4 border border-orange-200 rounded-lg">
+                    <h4 class="text-sm font-bold text-orange-900 mb-2">📲 Enviar ao Infrator (WhatsApp)</h4>
+                    <textarea id="texto-wpp-adv" rows="7" class="w-full bg-white border border-orange-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea>
+                    <button onclick="copiarTexto('texto-wpp-adv')" class="w-full bg-orange-600 text-white font-bold py-2 rounded">📋 Copiar Mensagem</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-200">
+                <h3 class="text-lg font-bold text-orange-800 mb-4 border-b pb-2">📜 Histórico de Advertências</h3>
+                <div class="overflow-y-auto max-h-[500px] pr-2 space-y-3" id="lista-advertencias"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MÓDULO: RECRUTAMENTO ==================== -->
+    <section id="painel-recrut" class="hidden max-w-6xl mx-auto p-6 mt-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black text-teal-900 flex items-center gap-2">🎯 Processo de Recrutamento</h2>
+            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-teal-200 mb-6">
+            <h3 class="text-sm font-bold text-teal-800 mb-3">➕ Novo Candidato</h3>
+            <form onsubmit="salvarRecrutamento(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+                <div><label class="text-xs font-bold text-gray-600">Nome / Nick</label><input type="text" id="rec-nome" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                <div><label class="text-xs font-bold text-gray-600">Função Pretendida</label><input type="text" id="rec-funcao" placeholder="Ex: Tradutor" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                <div><label class="text-xs font-bold text-gray-600">Fase Atual</label>
+                    <select id="rec-fase" class="w-full border border-gray-300 rounded p-2 text-sm font-bold bg-teal-50 text-teal-800">
+                        <option value="Em Teste">⏳ Em Teste</option>
+                        <option value="Aprovado">✅ Aprovado</option>
+                        <option value="Reprovado">❌ Reprovado</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded shadow">💾 Adicionar</button>
+            </form>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl shadow-sm border border-yellow-200 p-4 flex flex-col h-96"><h3 class="font-black text-yellow-800 border-b pb-2 mb-2">⏳ Em Teste</h3><div id="rec-teste" class="overflow-y-auto flex-1 space-y-2"></div></div>
+            <div class="bg-white rounded-xl shadow-sm border border-green-200 p-4 flex flex-col h-96"><h3 class="font-black text-green-800 border-b pb-2 mb-2">✅ Aprovados</h3><div id="rec-aprovado" class="overflow-y-auto flex-1 space-y-2"></div></div>
+            <div class="bg-white rounded-xl shadow-sm border border-red-200 p-4 flex flex-col h-96"><h3 class="font-black text-red-800 border-b pb-2 mb-2">❌ Reprovados</h3><div id="rec-reprovado" class="overflow-y-auto flex-1 space-y-2"></div></div>
+        </div>
+    </section>
+
+    <!-- MODAL DOWNLOAD RAW (MANTIDO DO SISTEMA ORIGINAL) -->
     <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-blue-800 p-4 flex justify-between items-center text-white">
@@ -127,29 +260,18 @@
             </div>
             <form onsubmit="salvarDownloadRaw(event)" class="p-6 space-y-4">
                 <p class="text-xs text-gray-500 mb-2">Avise o sistema que você baixou a obra e libere a divisão para a equipe.</p>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
-                    <select id="raw-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select>
-                </div>
+                <div><label class="block text-xs font-bold text-gray-700 mb-1">Obra</label><select id="raw-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select></div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label>
-                        <input type="text" id="raw-capitulo" placeholder="Ex: 30" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label>
-                        <input type="text" id="raw-paginas" placeholder="Ex: 1-15" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Altura Base (Px)</label>
-                        <input type="text" id="raw-altura" placeholder="Ex: 15000" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    </div>
+                    <div><label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label><input type="text" id="raw-capitulo" required class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div>
+                    <div><label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label><input type="text" id="raw-paginas" required class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div>
+                    <div><label class="block text-xs font-bold text-gray-700 mb-1">Altura Base (Px)</label><input type="text" id="raw-altura" class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div>
                 </div>
                 <button type="submit" id="btn-salvar-raw" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4 cursor-pointer">✅ Confirmar Download</button>
             </form>
         </div>
     </div>
 
+    <!-- ==================== LÓGICA E SCRIPTS ==================== -->
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
@@ -158,24 +280,249 @@
         let todasTarefasGlobais = [];
         let obrasDisponiveisRaw = [];
         let obraAbertaAtual = null;
-        let modoAbertoAtual = null;
 
+        // INICIALIZAÇÃO
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
-            carregarTudo(nick);
+            carregarDashboardAntigo(nick);
             carregarAniversariantes();
             carregarObrasPorModerador();
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
+        
+        // CONTROLE DE ABAS SPA (Single Page Application)
+        function abrirAba(idAlvo) {
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('painel-rh').classList.add('hidden');
+            document.getElementById('painel-adv').classList.add('hidden');
+            document.getElementById('painel-recrut').classList.add('hidden');
+            document.getElementById(idAlvo).classList.remove('hidden');
 
+            if(idAlvo === 'painel-rh') carregarRH();
+            if(idAlvo === 'painel-adv') carregarAdvertencias();
+            if(idAlvo === 'painel-recrut') carregarRecrutamento();
+        }
+
+        function voltarAoPainelPrincipal() {
+            document.getElementById('painel-rh').classList.add('hidden');
+            document.getElementById('painel-adv').classList.add('hidden');
+            document.getElementById('painel-recrut').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+        }
+
+        function copiarTexto(idTag) {
+            const ta = document.getElementById(idTag);
+            ta.select(); ta.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(ta.value).then(() => alert("Copiado!")).catch(() => alert("Erro ao copiar."));
+        }
+
+        // =========================================================================
+        // MÓDULO 1: RH (EQUIPE GERAL)
+        // =========================================================================
+        function verificarStatusRH() {
+            const s = document.getElementById('rh-status').value;
+            document.getElementById('box-hiatus').classList.add('hidden');
+            document.getElementById('box-saida').classList.add('hidden');
+            if(s === 'Hiatus') document.getElementById('box-hiatus').classList.remove('hidden');
+            if(s === 'Saiu') document.getElementById('box-saida').classList.remove('hidden');
+        }
+
+        function limparFormRH() {
+            document.getElementById('form-rh').reset();
+            document.getElementById('rh-id').value = '';
+            verificarStatusRH();
+        }
+
+        async function carregarRH() {
+            const { data } = await _supabase.from('equipe_geral').select('*').order('nick');
+            const tb = document.getElementById('tabela-rh'); tb.innerHTML = '';
+            
+            const selAdv = document.getElementById('adv-nick'); selAdv.innerHTML = '<option value="">Selecione o Infrator...</option>';
+
+            if(!data) return;
+            data.forEach(m => {
+                selAdv.innerHTML += `<option value="${m.nick}">${m.nick}</option>`;
+                
+                let cor = 'bg-green-100 text-green-700';
+                if(m.status_membro === 'Hiatus') cor = 'bg-yellow-100 text-yellow-800';
+                if(m.status_membro === 'Saiu') cor = 'bg-red-100 text-red-800';
+
+                const jsonObj = encodeURIComponent(JSON.stringify(m));
+
+                tb.innerHTML += `
+                    <tr class="hover:bg-gray-50 border-b border-gray-100">
+                        <td class="py-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${cor}">${m.status_membro}</span></td>
+                        <td class="py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
+                        <td class="py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
+                        <td class="py-2 text-right">
+                            <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1">✏️ Editar</button>
+                            ${m.status_membro !== 'Ativo' ? `<button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold" title="Gerar Mensagem">📲 Aviso</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editarRH(encodedObj) {
+            const m = JSON.parse(decodeURIComponent(encodedObj));
+            document.getElementById('rh-id').value = m.id;
+            document.getElementById('rh-nick').value = m.nick || '';
+            document.getElementById('rh-nome').value = m.nome_real || '';
+            document.getElementById('rh-idade').value = m.idade || '';
+            document.getElementById('rh-nasc').value = m.data_nascimento || '';
+            document.getElementById('rh-entrada').value = m.data_entrada || '';
+            document.getElementById('rh-funcoes').value = m.funcoes || '';
+            document.getElementById('rh-status').value = m.status_membro || 'Ativo';
+            document.getElementById('rh-hia-inicio').value = m.hiatus_inicio || '';
+            document.getElementById('rh-hia-fim').value = m.hiatus_fim || '';
+            document.getElementById('rh-hia-motivo').value = m.hiatus_motivo || '';
+            document.getElementById('rh-sai-data').value = m.saida_data || '';
+            document.getElementById('rh-sai-motivo').value = m.saida_motivo || '';
+            verificarStatusRH();
+        }
+
+        async function salvarMembroRH(e) {
+            e.preventDefault();
+            const id = document.getElementById('rh-id').value;
+            const obj = {
+                nick: document.getElementById('rh-nick').value,
+                nome_real: document.getElementById('rh-nome').value,
+                idade: document.getElementById('rh-idade').value,
+                data_nascimento: document.getElementById('rh-nasc').value,
+                data_entrada: document.getElementById('rh-entrada').value,
+                funcoes: document.getElementById('rh-funcoes').value,
+                status_membro: document.getElementById('rh-status').value,
+                hiatus_inicio: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-inicio').value : null,
+                hiatus_fim: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-fim').value : null,
+                hiatus_motivo: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-motivo').value : null,
+                saida_data: document.getElementById('rh-status').value === 'Saiu' ? document.getElementById('rh-sai-data').value : null,
+                saida_motivo: document.getElementById('rh-status').value === 'Saiu' ? document.getElementById('rh-sai-motivo').value : null,
+            };
+
+            if(id) { await _supabase.from('equipe_geral').update(obj).eq('id', id); } 
+            else { await _supabase.from('equipe_geral').insert([obj]); }
+            
+            limparFormRH(); carregarRH(); alert("Ficha salva no RH!");
+        }
+
+        function gerarAvisoRH(encodedObj) {
+            const m = JSON.parse(decodeURIComponent(encodedObj));
+            let txt = '';
+            if(m.status_membro === 'Hiatus') {
+                txt = `⚠️ *AVISO DE HIATUS* ⚠️\n\nEquipe, informamos que @${m.nick} entrou em Hiatus.\n\n📅 Início: ${m.hiatus_inicio ? m.hiatus_inicio.split('-').reverse().join('/') : 'N/A'}\n📅 Retorno Previsto: ${m.hiatus_fim ? m.hiatus_fim.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.hiatus_motivo || 'Assuntos pessoais'}\n\nAguardamos seu retorno em breve! 💖`;
+            } else if(m.status_membro === 'Saiu') {
+                txt = `🚨 *COMUNICADO OFICIAL DA STAFF* 🚨\n\nInformamos que @${m.nick} não faz mais parte da nossa equipe.\n\n📅 Data da Saída: ${m.saida_data ? m.saida_data.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.saida_motivo || 'Decisão administrativa/pessoal'}\n\nAgradecemos pelo tempo dedicado à scan.`;
+            }
+            document.getElementById('texto-wpp-rh').value = txt;
+            document.getElementById('area-wpp-rh').classList.remove('hidden');
+        }
+
+        // =========================================================================
+        // MÓDULO 2: ADVERTÊNCIAS
+        // =========================================================================
+        async function carregarAdvertencias() {
+            const { data } = await _supabase.from('advertencias').select('*').order('created_at', {ascending: false});
+            const lst = document.getElementById('lista-advertencias'); lst.innerHTML = '';
+            if(!data || data.length===0) { lst.innerHTML = '<p class="text-xs text-gray-400">Nenhuma advertência registrada.</p>'; return; }
+
+            data.forEach(a => {
+                const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
+                lst.innerHTML += `
+                    <div class="bg-gray-50 border border-gray-200 p-3 rounded shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-black text-orange-900">👤 @${a.membro_nick} <span class="text-red-600 ml-1 text-xs">(${a.nivel || '1ª'})</span></span>
+                            <span class="text-[10px] bg-white border border-gray-300 px-2 py-0.5 rounded font-bold">${dataFormat}</span>
+                        </div>
+                        <p class="text-xs text-gray-700 italic">" ${a.motivo} "</p>
+                    </div>
+                `;
+            });
+        }
+
+        async function salvarAdvertencia(e) {
+            e.preventDefault();
+            const nick = document.getElementById('adv-nick').value;
+            const nivel = document.getElementById('adv-nivel').value;
+            const dataAdv = document.getElementById('adv-data').value;
+            const motivo = document.getElementById('adv-motivo').value;
+
+            const { error } = await _supabase.from('advertencias').insert([{membro_nick: nick, nivel: nivel, data_adv: dataAdv, motivo: motivo}]);
+            if(error) { alert("Erro: " + error.message); return; }
+
+            const dFormat = dataAdv.split('-').reverse().join('/');
+            const msg = `⚠️ *ADVERTÊNCIA OFICIAL* ⚠️\n\nMembro: @${nick}\nData da Ocorrência: ${dFormat}\nGrau: ${nivel} Advertência\n\nMotivo:\n"${motivo}"\n\nPedimos que as regras da equipe sejam respeitadas para mantermos um ambiente saudável. Qualquer dúvida, chame a administração.`;
+            
+            document.getElementById('texto-wpp-adv').value = msg;
+            document.getElementById('area-wpp-adv').classList.remove('hidden');
+            
+            document.getElementById('adv-motivo').value = ''; 
+            carregarAdvertencias();
+        }
+
+        // =========================================================================
+        // MÓDULO 3: RECRUTAMENTO
+        // =========================================================================
+        async function carregarRecrutamento() {
+            const { data } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false});
+            const divTeste = document.getElementById('rec-teste'); divTeste.innerHTML='';
+            const divAprov = document.getElementById('rec-aprovado'); divAprov.innerHTML='';
+            const divRepro = document.getElementById('rec-reprovado'); divRepro.innerHTML='';
+
+            if(!data) return;
+            data.forEach(c => {
+                const card = `
+                    <div class="bg-white border border-gray-200 p-2 rounded shadow-sm relative">
+                        <p class="font-black text-gray-800 text-sm">${c.nome}</p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase">${c.funcao || c.cargo_pretendido || ''}</p>
+                        <div class="mt-2 flex gap-1">
+                            ${c.fase !== 'Aprovado' ? `<button onclick="mudarFaseRec('${c.id}', 'Aprovado')" class="flex-1 bg-green-100 hover:bg-green-200 text-green-800 text-[9px] font-bold py-1 rounded">Aprovar</button>` : ''}
+                            ${c.fase !== 'Em Teste' ? `<button onclick="mudarFaseRec('${c.id}', 'Em Teste')" class="flex-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 text-[9px] font-bold py-1 rounded">Testar</button>` : ''}
+                            ${c.fase !== 'Reprovado' ? `<button onclick="mudarFaseRec('${c.id}', 'Reprovado')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-800 text-[9px] font-bold py-1 rounded">Reprovar</button>` : ''}
+                            <button onclick="excluirRec('${c.id}')" class="text-red-500 hover:text-red-700 font-bold px-1" title="Apagar">🗑️</button>
+                        </div>
+                    </div>
+                `;
+                if(c.fase === 'Em Teste') divTeste.innerHTML += card;
+                if(c.fase === 'Aprovado') divAprov.innerHTML += card;
+                if(c.fase === 'Reprovado') divRepro.innerHTML += card;
+            });
+        }
+
+        async function salvarRecrutamento(e) {
+            e.preventDefault();
+            const obj = {
+                nome: document.getElementById('rec-nome').value,
+                funcao: document.getElementById('rec-funcao').value,
+                fase: document.getElementById('rec-fase').value
+            };
+            await _supabase.from('recrutamento').insert([obj]);
+            document.getElementById('rec-nome').value = ''; document.getElementById('rec-funcao').value = '';
+            carregarRecrutamento();
+        }
+
+        async function mudarFaseRec(id, novaFase) {
+            await _supabase.from('recrutamento').update({fase: novaFase}).eq('id', id);
+            carregarRecrutamento();
+        }
+
+        async function excluirRec(id) {
+            if(confirm("Apagar candidato?")) {
+                await _supabase.from('recrutamento').delete().eq('id', id);
+                carregarRecrutamento();
+            }
+        }
+
+
+        // =========================================================================
+        // SCRIPTS ANTIGOS MANTIDOS (Dashboard Normal ADM)
+        // =========================================================================
         async function carregarAniversariantes() {
             const { data } = await _supabase.from('equipe').select('nick, data_nascimento');
             const lista = document.getElementById('lista-aniversariantes');
             if(!data || data.length === 0) { lista.innerHTML = '<p class="text-xs text-gray-400">Dados não encontrados.</p>'; return; }
-
             const hoje = new Date(); const mesAtual = hoje.getMonth() + 1; const diaAtual = hoje.getDate();
             let html = ''; let aniversariantesHoje = [];
 
@@ -187,44 +534,27 @@
                         if(mesNiver === mesAtual) {
                             const ehHoje = (diaNiver === diaAtual);
                             if(ehHoje) aniversariantesHoje.push(m.nick);
-                            html += `
-                                <div class="bg-white border ${ehHoje ? 'border-pink-400 bg-pink-100 shadow-sm' : 'border-pink-200'} p-3 rounded-lg flex flex-col items-center min-w-[100px]">
-                                    <span class="text-2xl">${ehHoje ? '🎂' : '🎈'}</span>
-                                    <span class="font-bold text-sm ${ehHoje ? 'text-pink-800' : 'text-gray-800'} mt-1 truncate max-w-[90px]" title="${m.nick}">${m.nick}</span>
-                                    <span class="text-xs text-gray-500">${diaNiver}/${mesNiver}</span>
-                                </div>
-                            `;
+                            html += `<div class="bg-white border ${ehHoje ? 'border-pink-400 bg-pink-100 shadow-sm' : 'border-pink-200'} p-3 rounded-lg flex flex-col items-center min-w-[100px]"><span class="text-2xl">${ehHoje ? '🎂' : '🎈'}</span><span class="font-bold text-sm ${ehHoje ? 'text-pink-800' : 'text-gray-800'} mt-1 truncate max-w-[90px]" title="${m.nick}">${m.nick}</span><span class="text-xs text-gray-500">${diaNiver}/${mesNiver}</span></div>`;
                         }
                     }
                 }
             });
-
-            if(html === '') html = '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês.</p>';
-            lista.innerHTML = html;
-            if(aniversariantesHoje.length > 0) {
-                document.getElementById('btn-gerar-niver').classList.remove('hidden');
-                window.anivHoje = aniversariantesHoje;
-            }
+            lista.innerHTML = html === '' ? '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês.</p>' : html;
+            if(aniversariantesHoje.length > 0) { document.getElementById('btn-gerar-niver').classList.remove('hidden'); window.anivHoje = aniversariantesHoje; }
         }
 
         function gerarMensagemNiver() {
             if(!window.anivHoje) return;
             const nomes = window.anivHoje.map(n => `@${n}`).join(' e ');
             const texto = `🎉 Hoje é um dia super especial! 🎉\n\nVamos desejar um feliz aniversário para ${nomes}! 🎂🎈\n\nQue o dia seja repleto de alegria, saúde, paz e muitos capítulos perfeitinhos! A equipe FleurFlow deseja tudo de bom hoje e sempre! 💖✨\n\nDeixem seus parabéns aqui embaixo! 👇`;
-            document.getElementById('area-mensagem-niver').classList.remove('hidden');
-            document.getElementById('texto-niver').value = texto;
+            document.getElementById('area-mensagem-niver').classList.remove('hidden'); document.getElementById('texto-niver').value = texto;
         }
 
-        async function carregarTudo(meuNick) {
+        async function carregarDashboardAntigo(meuNick) {
             const { data: usuario } = await _supabase.from('equipe').select('*').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
-
-            // ADM Vê sempre o botão, ou se for Organizer
-            const ehOrganizer = usuario && JSON.stringify(usuario).toLowerCase().includes('organizer');
-            if (ehOrganizer || (usuario && usuario.cargo_sistema === 'Administrador')) {
-                const boxBtn = document.getElementById('box-btn-raw');
-                if (boxBtn) boxBtn.classList.remove('hidden');
-            }
+            
+            const boxBtn = document.getElementById('box-btn-raw'); if (boxBtn) boxBtn.classList.remove('hidden');
 
             const { data: obras } = await _supabase.from('obras').select('*').order('nome');
             const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
@@ -244,14 +574,12 @@
 
             renderizarObras(obrasStaff, 'lista-obras-staff', false);
             renderizarObras(obrasResp, 'lista-obras-resp', true);
-
-            if (obraAbertaAtual && modoAbertoAtual) abrirTarefasObra(obraAbertaAtual, modoAbertoAtual);
         }
 
         function renderizarObras(listaObras, idContainer, isResp) {
             const container = document.getElementById(idContainer);
             container.innerHTML = '';
-            if (listaObras.length === 0) { container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra encontrada nesta categoria.</p>`; return; }
+            if (listaObras.length === 0) { container.innerHTML = `<p class="text-sm text-gray-400 italic">Vazio.</p>`; return; }
 
             listaObras.forEach(obra => {
                 let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
@@ -260,78 +588,46 @@
                 const nomeSeguro = obra.nome.replace(/'/g, "\\'");
                 
                 let mostrarSininho = false;
-                let titleSininho = '';
+                if(isResp) mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído');
+                else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
 
-                if(isResp) {
-                    mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído');
-                    titleSininho = 'Nova entrega concluída pela equipe!';
-                } else {
-                    mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
-                    titleSininho = 'Nova tarefa aguardando por você!';
-                }
-
-                const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2 cursor-help" title="${titleSininho}">🔔</span>` : '';
-                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar Cadastro da Obra">✏️</button>`;
+                const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2" title="Atualização">🔔</span>` : '';
+                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar">✏️</button>`;
 
                 container.innerHTML += `
                     <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
                         <div class="flex items-center">
-                            <div>
-                                <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm group-hover:text-red-900 transition">${obra.nome}</h3>
-                                <p class="text-[10px] text-gray-500 mt-1">Dono: ${obra.responsavel_nick || 'N/A'}</p>
-                            </div>
-                            ${sininho}
-                            ${lapisEdit}
+                            <div><h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm group-hover:text-red-900">${obra.nome}</h3><p class="text-[10px] text-gray-500 mt-1">Dono: ${obra.responsavel_nick || 'N/A'}</p></div>
+                            ${sininho}${lapisEdit}
                         </div>
-                        <div class="flex flex-col items-end gap-1">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${obra.status}</span>
-                            <span class="text-[9px] text-gray-400 bg-gray-100 border border-gray-200 px-1 rounded">${papel}</span>
-                        </div>
+                        <div class="flex flex-col items-end gap-1"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${obra.status}</span><span class="text-[9px] text-gray-400 bg-gray-100 border border-gray-200 px-1 rounded">${papel}</span></div>
                     </div>
                 `;
             });
         }
 
         function abrirTarefasObra(obraNome, modo) {
-            obraAbertaAtual = obraNome; modoAbertoAtual = modo;
+            obraAbertaAtual = obraNome;
             const painel = document.getElementById('painel-tarefas');
             const titulo = document.getElementById('titulo-painel-tarefas');
             const meuNick = localStorage.getItem('usuario_nick');
             
             let tarefasFiltradas = []; let isMinhas = false;
-
-            if (modo === 'staff') {
-                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick);
-                titulo.innerHTML = `📝 Minhas Tarefas (STAFF) <span class="text-gray-400 text-sm font-normal mx-2">👉</span> <span class="text-blue-700">${obraNome}</span>`;
-                isMinhas = true;
-            } else {
-                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome);
-                titulo.innerHTML = `👑 Entregas da Equipe (RESPONSÁVEL) <span class="text-gray-400 text-sm font-normal mx-2">👉</span> <span class="text-amber-700">${obraNome}</span>`;
-            }
+            if (modo === 'staff') { tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick); titulo.innerHTML = `📝 Minhas Tarefas <span class="text-gray-400 mx-2">👉</span> <span class="text-blue-700">${obraNome}</span>`; isMinhas = true; } 
+            else { tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome); titulo.innerHTML = `👑 Entregas da Equipe <span class="text-gray-400 mx-2">👉</span> <span class="text-amber-700">${obraNome}</span>`; }
 
             renderizarPainel(tarefasFiltradas, isMinhas);
-            painel.classList.remove('hidden');
-            painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            painel.classList.remove('hidden'); painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        function fecharPainelTarefas() { document.getElementById('painel-tarefas').classList.add('hidden'); obraAbertaAtual = null; modoAbertoAtual = null; }
+        function fecharPainelTarefas() { document.getElementById('painel-tarefas').classList.add('hidden'); obraAbertaAtual = null; }
 
         function renderizarPainel(lista, isMinhas) {
-            const containerAtraso = document.getElementById('detalhe-atraso');
-            const containerHoje = document.getElementById('detalhe-hoje');
-            const containerAtivas = document.getElementById('detalhe-ativas');
-            const containerConcluidas = document.getElementById('detalhe-concluidas');
-
+            const containerAtraso = document.getElementById('detalhe-atraso'); const containerHoje = document.getElementById('detalhe-hoje'); const containerAtivas = document.getElementById('detalhe-ativas'); const containerConcluidas = document.getElementById('detalhe-concluidas');
             containerAtraso.innerHTML = ''; containerHoje.innerHTML = ''; containerAtivas.innerHTML = ''; containerConcluidas.innerHTML = '';
-            
-            if (lista.length === 0) {
-                const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
-                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; containerConcluidas.innerHTML = msgVazio; return;
-            }
+            if (lista.length === 0) { const msgVazio = `<div class="text-center py-4 text-xs text-gray-400">Limpo!</div>`; containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; containerConcluidas.innerHTML = msgVazio; return; }
 
             const agora = new Date(); const hojeStr = agora.toDateString();
-            let cAtraso=0, cHoje=0, cAtiva=0, cConc=0;
-
             lista.forEach(t => {
                 let isConcluida = t.status === 'Concluído';
                 let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
@@ -339,103 +635,63 @@
                 
                 let botaoAcao = '';
                 if(isMinhas) {
-                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">▶️ Iniciar</button>`;
-                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Entregar</button>`;
-                    else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-not-allowed">⏳ Aguardando Revisão</button>`;
+                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">▶️ Iniciar</button>`;
+                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">✅ Entregar</button>`;
+                    else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2">⏳ Em Revisão</button>`;
                 } else {
-                    if(!isConcluida) {
-                        botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
-                    } else {
+                    if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2">✅ Forçar Conclusão</button>`; } 
+                    else {
                         const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`;
-                        botaoAcao = `
-                            <div class="flex gap-1 mt-2">
-                                <button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded transition shadow-sm" title="Ir para divisão de tarefas">✂️ Dividir</button>
-                                <button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded transition shadow-sm" title="Marcar como Visto e Arquivar">📦 OK</button>
-                            </div>
-                        `;
+                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded">📦 OK</button></div>`;
                     }
                 }
 
                 let prazoFormatado = '';
                 if (t.prazo) { const d = new Date(t.prazo); prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`; }
 
-                const cardHTML = `
-                    <div class="bg-white border border-gray-100 p-3 rounded shadow-sm hover:shadow-md transition">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="font-bold text-red-700 text-sm leading-tight">C.${t.capitulo}</span>
-                            <div class="flex flex-col items-end gap-1">
-                                <span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">PG: ${t.paginas || 'Todas'}</span>
-                                ${t.altura ? `<span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">↕ Alt: ${t.altura}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[10px] uppercase font-black text-gray-500">${t.etapa}</span>
-                            <span class="px-1 py-0.5 rounded text-[9px] font-bold ${corStatus}">${t.status}</span>
-                        </div>
-                        ${!isMinhas ? `<p class="text-[10px] font-bold text-blue-700 mb-1 mt-2">👤 ${t.responsavel_nick}</p>` : ''}
-                        ${t.prazo ? `<p class="text-[10px] font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded inline-block mt-1">${prazoFormatado}</p>` : ''}
-                        ${botaoAcao}
-                    </div>
-                `;
+                const cardHTML = `<div class="bg-white border border-gray-100 p-3 rounded shadow-sm hover:shadow-md transition"><div class="flex justify-between items-start mb-2"><span class="font-bold text-red-700 text-sm">C.${t.capitulo}</span><div class="flex flex-col items-end gap-1"><span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">PG: ${t.paginas || 'Todas'}</span>${t.altura ? `<span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">↕ Alt: ${t.altura}</span>` : ''}</div></div><div class="flex justify-between items-center mb-1"><span class="text-[10px] uppercase font-black text-gray-500">${t.etapa}</span><span class="px-1 py-0.5 rounded text-[9px] font-bold ${corStatus}">${t.status}</span></div>${!isMinhas ? `<p class="text-[10px] font-bold text-blue-700 mb-1 mt-2">👤 ${t.responsavel_nick}</p>` : ''}${t.prazo ? `<p class="text-[10px] font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded inline-block mt-1">${prazoFormatado}</p>` : ''}${botaoAcao}</div>`;
 
-                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; cConc++; }
-                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; cAtiva++; }
-                else {
-                    const dataPrazo = new Date(t.prazo);
-                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; cAtraso++; } 
-                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; cHoje++; } 
-                    else { containerAtivas.innerHTML += cardHTML; cAtiva++; }
-                }
+                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; }
+                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; }
+                else { const dp = new Date(t.prazo); if (dp < agora) { containerAtraso.innerHTML += cardHTML; } else if (dp.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; } else { containerAtivas.innerHTML += cardHTML; } }
             });
-
-            const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
-            if(!cAtraso) containerAtraso.innerHTML = msgVazio; if(!cHoje) containerHoje.innerHTML = msgVazio; 
-            if(!cAtiva) containerAtivas.innerHTML = msgVazio; if(!cConc) containerConcluidas.innerHTML = msgVazio;
         }
 
-        async function mudarStatusTarefa(id, novoStatus) {
-            const btn = event.target; const textOriginal = btn.innerHTML; btn.innerHTML = '⏳'; btn.disabled = true;
-            const { error } = await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id);
-            if(error) { alert("Erro: " + error.message); btn.innerHTML = textOriginal; btn.disabled = false; } 
-            else { carregarTudo(localStorage.getItem('usuario_nick')); }
+        async function mudarStatusTarefa(id, novoStatus) { await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id); carregarDashboardAntigo(localStorage.getItem('usuario_nick')); }
+
+        async function carregarObrasPorModerador() {
+            const { data } = await _supabase.from('obras').select('*').order('responsavel_nick');
+            const container = document.getElementById('lista-todas-obras'); container.innerHTML = '';
+            if (!data) return;
+            const obrasPorMod = {};
+            data.forEach(obra => { const repsArray = obra.responsavel_nick ? obra.responsavel_nick.split(', ') : ['Sem Moderador']; repsArray.forEach(mod => { if(!obrasPorMod[mod]) obrasPorMod[mod] = []; obrasPorMod[mod].push(obra); }); });
+            for (const mod in obrasPorMod) {
+                let htmlMod = `<div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4"><h3 class="font-black text-red-900 mb-3 border-b border-gray-200 pb-2">👤 ${mod} <span class="text-xs font-normal text-gray-500 ml-2">(${obrasPorMod[mod].length} obras)</span></h3><ul class="space-y-2">`;
+                obrasPorMod[mod].forEach(obra => {
+                    const cO = obra.capitulo_plataforma || '0'; const cF = obra.capitulo_fleur || '0'; let sL = '';
+                    if (obra.status === 'Pausada' || obra.status === 'Finalizada') { sL = `<span class="text-[10px] text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full font-bold">${obra.status.toUpperCase()}</span>`; } 
+                    else {
+                        const nO = Number(cO); const nF = Number(cF);
+                        if (!isNaN(nO) && !isNaN(nF)) { const at = nO - nF; if (at > 0) sL = `<span class="text-[10px] text-red-700 bg-red-100 px-2 py-0.5 rounded-full font-bold">⚠️ ${at} ATRASADO</span>`; else sL = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-bold">✅ EM DIA</span>`; } 
+                        else { if (String(cO).toLowerCase().trim() === String(cF).toLowerCase().trim()) sL = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-bold">✅ EM DIA</span>`; else sL = `<span class="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full font-bold">⚠️ VERIFICAR</span>`; }
+                    }
+                    htmlMod += `<li class="text-sm text-gray-700 flex justify-between bg-white p-2 border border-gray-100 rounded shadow-sm gap-2"><div><span class="font-bold">• ${obra.nome}</span><span class="text-[10px] text-gray-500 block">Oficial: ${cO} | Fleur: ${cF}</span></div> ${sL}</li>`;
+                });
+                container.innerHTML += htmlMod + `</ul></div>`;
+            }
         }
 
         function abrirModalDownload() {
-            const select = document.getElementById('raw-obra');
-            select.innerHTML = '<option value="">Selecione a obra...</option>';
+            const select = document.getElementById('raw-obra'); select.innerHTML = '<option value="">Selecione a obra...</option>';
             const nomesUnicos = [...new Set(obrasDisponiveisRaw.map(o => o.nome))].sort();
             nomesUnicos.forEach(nome => { select.innerHTML += `<option value="${nome}">${nome}</option>`; });
             document.getElementById('modal-download').classList.remove('hidden');
         }
-
-        function fecharModalDownload() {
-            document.getElementById('modal-download').classList.add('hidden');
-            document.getElementById('raw-capitulo').value = ''; 
-            document.getElementById('raw-paginas').value = '';
-            document.getElementById('raw-altura').value = ''; 
-        }
-
+        function fecharModalDownload() { document.getElementById('modal-download').classList.add('hidden'); }
         async function salvarDownloadRaw(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-salvar-raw');
-            btn.disabled = true; btn.textContent = 'Salvando...';
-
-            const nick = localStorage.getItem('usuario_nick');
-            const obj = {
-                obra_nome: document.getElementById('raw-obra').value,
-                capitulo: document.getElementById('raw-capitulo').value,
-                etapa: 'Organizer / Raw',
-                paginas: document.getElementById('raw-paginas').value,
-                altura: document.getElementById('raw-altura').value,
-                responsavel_nick: nick,
-                prazo: null,
-                status: 'Concluído'
-            };
-
-            const { error } = await _supabase.from('tarefas').insert([obj]);
-            if(error) { alert('Erro: ' + error.message); } 
-            else { fecharModalDownload(); carregarTudo(nick); }
-            btn.disabled = false; btn.textContent = '✅ Confirmar Download';
+            e.preventDefault(); const nick = localStorage.getItem('usuario_nick');
+            const obj = { obra_nome: document.getElementById('raw-obra').value, capitulo: document.getElementById('raw-capitulo').value, etapa: 'Organizer / Raw', paginas: document.getElementById('raw-paginas').value, altura: document.getElementById('raw-altura').value, responsavel_nick: nick, prazo: null, status: 'Concluído' };
+            await _supabase.from('tarefas').insert([obj]); fecharModalDownload(); carregarDashboardAntigo(nick); alert("Download informado!");
         }
     </script>
 </body>
