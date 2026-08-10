@@ -44,6 +44,7 @@
                     <span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span>
                 </button>
 
+                <!-- BOTÃO DE MINHAS ADVERTÊNCIAS COM BADGE -->
                 <button onclick="abrirMinhasAdv()" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group">
                     <span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span>
                     <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
@@ -51,7 +52,7 @@
                 </button>
             </div>
 
-            <!-- NOVA SESSÃO: DEPARTAMENTO DE RH -->
+            <!-- SESSÃO: DEPARTAMENTO DE RH -->
             <h2 class="text-lg font-black text-purple-900 mb-4 mt-8 flex items-center gap-2">🏢 Gestão de Pessoal (RH)</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <button onclick="abrirAba('painel-rh')" class="bg-purple-50 border border-purple-200 hover:border-purple-500 hover:shadow-md p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer">
@@ -66,7 +67,7 @@
             </div>
         </section>
 
-        <!-- (Restante do Dashboard Normal da ADM) -->
+        <!-- DASHBOARD NORMAL -->
         <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm">
             <div class="flex justify-between items-center mb-4 border-b border-pink-100 pb-2">
                 <h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2>
@@ -158,7 +159,7 @@
                         <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-sai-motivo" class="w-full border rounded p-1 text-xs"></div>
                     </div>
                     <div class="flex gap-2 pt-2">
-                        <button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold">Limpar</button>
+                        <button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold cursor-pointer">Limpar</button>
                         <button type="submit" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 rounded shadow cursor-pointer">💾 Salvar Ficha</button>
                     </div>
                 </form>
@@ -176,7 +177,7 @@
                 <div id="area-wpp-rh" class="hidden mt-6 bg-purple-50 p-4 border border-purple-200 rounded-lg">
                     <h4 class="text-sm font-bold text-purple-900 mb-2">📲 Mensagem para o WhatsApp (Notificar Equipe)</h4>
                     <textarea id="texto-wpp-rh" rows="5" class="w-full bg-white border border-purple-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea>
-                    <button onclick="copiarTexto('texto-wpp-rh')" class="w-full bg-purple-600 text-white font-bold py-2 rounded">📋 Copiar e Enviar</button>
+                    <button onclick="copiarTexto('texto-wpp-rh')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded cursor-pointer">📋 Copiar e Enviar</button>
                 </div>
             </div>
         </div>
@@ -221,7 +222,7 @@
                 <div id="area-wpp-adv" class="hidden mt-6 bg-orange-50 p-4 border border-orange-200 rounded-lg">
                     <h4 class="text-sm font-bold text-orange-900 mb-2">📲 Enviar ao Infrator (WhatsApp)</h4>
                     <textarea id="texto-wpp-adv" rows="7" class="w-full bg-white border border-orange-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea>
-                    <button onclick="copiarTexto('texto-wpp-adv')" class="w-full bg-orange-600 text-white font-bold py-2 rounded">📋 Copiar Mensagem</button>
+                    <button onclick="copiarTexto('texto-wpp-adv')" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded cursor-pointer">📋 Copiar Mensagem</button>
                 </div>
             </div>
 
@@ -240,38 +241,73 @@
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow-sm border border-teal-200 mb-6">
-            <h3 class="text-sm font-bold text-teal-800 mb-3">➕ Novo Candidato</h3>
+            <h3 class="text-sm font-bold text-teal-800 mb-3">➕ Adicionar / Editar Candidato</h3>
             <form onsubmit="salvarRecrutamento(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+                <input type="hidden" id="rec-id">
                 <div><label class="text-xs font-bold text-gray-600">Nome / Nick</label><input type="text" id="rec-nome" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
                 <div><label class="text-xs font-bold text-gray-600">Função Pretendida</label><input type="text" id="rec-funcao" placeholder="Ex: Tradutor" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
                 <div><label class="text-xs font-bold text-gray-600">Fase Atual</label>
                     <select id="rec-fase" class="w-full border border-gray-300 rounded p-2 text-sm font-bold bg-teal-50 text-teal-800 cursor-pointer">
+                        <option value="Em Teste">Em Teste</option>
                         <option value="1ª Fase">1ª Fase</option>
-                        <option value="Aprovado (1ª Fase)">Aprovado (1ª Fase)</option>
+                        <option value="Aprovados (1ª Fase)">Aprovados (1ª Fase)</option>
                         <option value="2ª Fase">2ª Fase</option>
-                        <option value="Aprovado (2ª Fase)">Aprovado (2ª Fase)</option>
+                        <option value="Aprovados (2ª Fase)">Aprovados (2ª Fase)</option>
                         <option value="3ª Fase">3ª Fase</option>
-                        <option value="Aprovado">Aprovado (Final)</option>
-                        <option value="Reprovado">Reprovado</option>
+                        <option value="Aprovados">Aprovados</option>
+                        <option value="Reprovados">Reprovados</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded shadow cursor-pointer">💾 Adicionar</button>
+                <div class="flex gap-2">
+                    <button type="button" id="btn-cancelar-rec" onclick="limparFormRec()" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-3 rounded shadow cursor-pointer">✖</button>
+                    <button type="submit" id="btn-salvar-rec" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded shadow cursor-pointer">➕ Adicionar</button>
+                </div>
             </form>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-4 flex flex-col h-96">
-                <h3 class="font-black text-blue-800 border-b pb-2 mb-2">⏳ Fases em Andamento</h3>
-                <div id="rec-teste" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+        <!-- NOVO LAYOUT KANBAN (ROLAGEM LATERAL) COM AS 8 COLUNAS -->
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x w-full">
+            
+            <div class="bg-gray-50 rounded-xl shadow-sm border border-gray-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-gray-200 pb-2 mb-3 text-gray-700">⏳ Em Teste</h3>
+                <div id="rec-col-1" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-green-200 p-4 flex flex-col h-96">
-                <h3 class="font-black text-green-800 border-b pb-2 mb-2">✅ Aprovados</h3>
-                <div id="rec-aprovado" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+
+            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 1ª Fase</h3>
+                <div id="rec-col-2" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-red-200 p-4 flex flex-col h-96">
-                <h3 class="font-black text-red-800 border-b pb-2 mb-2">❌ Reprovados</h3>
-                <div id="rec-reprovado" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+
+            <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-green-200 pb-2 mb-3 text-green-800">✅ Aprovados (1ª Fase)</h3>
+                <div id="rec-col-3" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
             </div>
+
+            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 2ª Fase</h3>
+                <div id="rec-col-4" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
+
+            <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-green-200 pb-2 mb-3 text-green-800">✅ Aprovados (2ª Fase)</h3>
+                <div id="rec-col-5" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
+
+            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 3ª Fase (Última)</h3>
+                <div id="rec-col-6" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
+
+            <div class="bg-emerald-100 rounded-xl shadow-sm border border-emerald-300 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-emerald-300 pb-2 mb-3 text-emerald-900">🏆 Aprovados</h3>
+                <div id="rec-col-7" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
+
+            <div class="bg-red-50 rounded-xl shadow-sm border border-red-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
+                <h3 class="font-black text-sm border-b border-red-200 pb-2 mb-3 text-red-800">❌ Reprovados</h3>
+                <div id="rec-col-8" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
+
         </div>
     </section>
 
@@ -539,50 +575,91 @@
         }
 
         // =========================================================================
-        // MÓDULO 3: RECRUTAMENTO (COM NOVO LAYOUT DINÂMICO DE FASES)
+        // MÓDULO 3: RECRUTAMENTO (NOVO LAYOUT DE FASES SEPARADAS)
         // =========================================================================
+        function limparFormRec() {
+            document.getElementById('rec-id').value = '';
+            document.getElementById('rec-nome').value = '';
+            document.getElementById('rec-funcao').value = '';
+            document.getElementById('rec-fase').value = 'Em Teste';
+            document.getElementById('btn-salvar-rec').innerHTML = '➕ Adicionar';
+            document.getElementById('btn-cancelar-rec').classList.add('hidden');
+        }
+
+        function editarRec(encodedObj) {
+            const c = JSON.parse(decodeURIComponent(encodedObj));
+            document.getElementById('rec-id').value = c.id;
+            document.getElementById('rec-nome').value = c.nome;
+            document.getElementById('rec-funcao').value = c.funcao || c.cargo_pretendido || '';
+            document.getElementById('rec-fase').value = c.fase || 'Em Teste';
+            
+            document.getElementById('btn-salvar-rec').innerHTML = '💾 Atualizar Cadastro';
+            document.getElementById('btn-cancelar-rec').classList.remove('hidden');
+            
+            // Rola a tela para o topo para a ADM ver o formulário
+            document.getElementById('painel-recrut').scrollIntoView({ behavior: 'smooth' });
+        }
+
         async function carregarRecrutamento() {
             const { data } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false});
-            const divTeste = document.getElementById('rec-teste'); divTeste.innerHTML='';
-            const divAprov = document.getElementById('rec-aprovado'); divAprov.innerHTML='';
-            const divRepro = document.getElementById('rec-reprovado'); divRepro.innerHTML='';
+            
+            // Limpar as 8 colunas do Kanban
+            for(let i=1; i<=8; i++) document.getElementById(`rec-col-${i}`).innerHTML = '';
 
             if(!data) return;
             data.forEach(c => {
-                // Dropdown direto no Card para facilitar a vida da ADM!
+                const jsonObj = encodeURIComponent(JSON.stringify(c));
                 const card = `
-                    <div class="bg-white border border-gray-200 p-3 rounded shadow-sm relative">
+                    <div class="bg-white border border-gray-200 p-3 rounded shadow-sm relative mb-2">
                         <div class="flex justify-between items-start mb-2">
                             <div>
                                 <p class="font-black text-gray-800 text-sm leading-tight">${c.nome}</p>
                                 <p class="text-[10px] font-bold text-gray-500 uppercase mt-0.5">${c.funcao || c.cargo_pretendido || ''}</p>
                             </div>
-                            <button onclick="excluirRec('${c.id}')" class="text-gray-400 hover:text-red-600 font-bold ml-2 cursor-pointer" title="Apagar Candidato">✖</button>
+                            <div class="flex gap-2">
+                                <button onclick="editarRec('${jsonObj}')" class="text-blue-500 hover:text-blue-700 font-bold cursor-pointer" title="Editar Candidato">✏️</button>
+                                <button onclick="excluirRec('${c.id}')" class="text-gray-400 hover:text-red-600 font-bold cursor-pointer" title="Apagar Candidato">✖</button>
+                            </div>
                         </div>
                         <select onchange="mudarFaseRec('${c.id}', this.value)" class="text-[10px] w-full p-1.5 border border-gray-300 rounded bg-gray-50 font-bold text-gray-700 cursor-pointer focus:outline-none">
-                            <option value="1ª Fase" ${c.fase === '1ª Fase' || c.fase === 'Em Teste' ? 'selected' : ''}>⏳ 1ª Fase</option>
-                            <option value="Aprovado (1ª Fase)" ${c.fase === 'Aprovado (1ª Fase)' ? 'selected' : ''}>✅ Aprovado (1ª Fase)</option>
-                            <option value="2ª Fase" ${c.fase === '2ª Fase' ? 'selected' : ''}>⏳ 2ª Fase</option>
-                            <option value="Aprovado (2ª Fase)" ${c.fase === 'Aprovado (2ª Fase)' ? 'selected' : ''}>✅ Aprovado (2ª Fase)</option>
-                            <option value="3ª Fase" ${c.fase === '3ª Fase' ? 'selected' : ''}>⏳ 3ª Fase</option>
-                            <option value="Aprovado" ${c.fase === 'Aprovado' ? 'selected' : ''}>🏆 Aprovado (Final)</option>
-                            <option value="Reprovado" ${c.fase === 'Reprovado' ? 'selected' : ''}>❌ Reprovado</option>
+                            <option value="Em Teste" ${c.fase === 'Em Teste' ? 'selected' : ''}>⏳ Em Teste</option>
+                            <option value="1ª Fase" ${c.fase === '1ª Fase' ? 'selected' : ''}>📄 1ª Fase</option>
+                            <option value="Aprovados (1ª Fase)" ${c.fase === 'Aprovados (1ª Fase)' ? 'selected' : ''}>✅ Aprovados (1ª Fase)</option>
+                            <option value="2ª Fase" ${c.fase === '2ª Fase' ? 'selected' : ''}>📄 2ª Fase</option>
+                            <option value="Aprovados (2ª Fase)" ${c.fase === 'Aprovados (2ª Fase)' ? 'selected' : ''}>✅ Aprovados (2ª Fase)</option>
+                            <option value="3ª Fase" ${c.fase === '3ª Fase' ? 'selected' : ''}>📄 3ª Fase</option>
+                            <option value="Aprovados" ${c.fase === 'Aprovados' ? 'selected' : ''}>🏆 Aprovados (Final)</option>
+                            <option value="Reprovados" ${c.fase === 'Reprovados' ? 'selected' : ''}>❌ Reprovados</option>
                         </select>
                     </div>
                 `;
 
-                // Colocando nas Colunas Certas
-                if(['1ª Fase', '2ª Fase', '3ª Fase', 'Em Teste'].includes(c.fase)) divTeste.innerHTML += card;
-                else if(['Aprovado (1ª Fase)', 'Aprovado (2ª Fase)', 'Aprovado'].includes(c.fase)) divAprov.innerHTML += card;
-                else divRepro.innerHTML += card;
+                // Distribui nas colunas baseadas na Fase do Candidato
+                if(c.fase === 'Em Teste') document.getElementById('rec-col-1').innerHTML += card;
+                else if(c.fase === '1ª Fase') document.getElementById('rec-col-2').innerHTML += card;
+                else if(c.fase === 'Aprovados (1ª Fase)') document.getElementById('rec-col-3').innerHTML += card;
+                else if(c.fase === '2ª Fase') document.getElementById('rec-col-4').innerHTML += card;
+                else if(c.fase === 'Aprovados (2ª Fase)') document.getElementById('rec-col-5').innerHTML += card;
+                else if(c.fase === '3ª Fase') document.getElementById('rec-col-6').innerHTML += card;
+                else if(c.fase === 'Aprovados') document.getElementById('rec-col-7').innerHTML += card;
+                else if(c.fase === 'Reprovados') document.getElementById('rec-col-8').innerHTML += card;
+                else document.getElementById('rec-col-1').innerHTML += card; // Fallback se não encontrar
             });
         }
 
         async function salvarRecrutamento(e) {
             e.preventDefault();
-            const obj = { nome: document.getElementById('rec-nome').value, funcao: document.getElementById('rec-funcao').value, fase: document.getElementById('rec-fase').value };
-            await _supabase.from('recrutamento').insert([obj]);
-            document.getElementById('rec-nome').value = ''; document.getElementById('rec-funcao').value = '';
+            const id = document.getElementById('rec-id').value;
+            const obj = {
+                nome: document.getElementById('rec-nome').value,
+                funcao: document.getElementById('rec-funcao').value,
+                fase: document.getElementById('rec-fase').value
+            };
+            
+            if (id) { await _supabase.from('recrutamento').update(obj).eq('id', id); } 
+            else { await _supabase.from('recrutamento').insert([obj]); }
+            
+            limparFormRec();
             carregarRecrutamento();
         }
 
@@ -592,11 +669,12 @@
         }
 
         async function excluirRec(id) {
-            if(confirm("Deseja mesmo apagar este candidato do sistema?")) {
+            if(confirm("Deseja apagar este candidato do sistema permanentemente?")) {
                 await _supabase.from('recrutamento').delete().eq('id', id);
                 carregarRecrutamento();
             }
         }
+
 
         // =========================================================================
         // SCRIPTS ANTIGOS MANTIDOS (Dashboard Normal ADM)
@@ -674,7 +752,7 @@
                 else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
 
                 const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2" title="Atualização">🔔</span>` : '';
-                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100 cursor-pointer" title="Editar">✏️</button>`;
+                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar">✏️</button>`;
 
                 container.innerHTML += `
                     <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
