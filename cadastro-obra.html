@@ -46,7 +46,7 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Língua Original</label>
-                        <select id="obra-lingua" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                        <select id="obra-lingua" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none cursor-pointer">
                             <option value="">Selecione...</option>
                             <option value="Coreano">Coreano</option>
                             <option value="Inglês">Inglês</option>
@@ -57,7 +57,7 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de Obra</label>
-                        <select id="obra-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <select id="obra-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm cursor-pointer">
                             <option value="Recorrente">Recorrente</option>
                             <option value="Curta">Curta</option>
                             <option value="Combo">Combo</option>
@@ -66,7 +66,7 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Nível de Prioridade</label>
-                        <select id="obra-prioridade" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <select id="obra-prioridade" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm cursor-pointer">
                             <option value="Máxima">🔥 Máxima</option>
                             <option value="Alta">⭐ Alta</option>
                             <option value="Média" selected>📄 Média</option>
@@ -76,7 +76,7 @@
                     
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Status da Obra</label>
-                        <select id="obra-status" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <select id="obra-status" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm cursor-pointer">
                             <option value="Ativa">🟢 Ativa (Lançando)</option>
                             <option value="Pausada">🟡 Pausada / Em Hiato</option>
                             <option value="Finalizada">🔴 Finalizada</option>
@@ -106,9 +106,22 @@
                         <input type="url" id="obra-drive" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="https://drive.google.com/drive/folders/...">
                     </div>
 
-                    <div>
+                    <div class="md:col-span-2 sm:col-span-1">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Plataforma Oficial</label>
-                        <input type="text" id="obra-plataforma" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: MangaDex">
+                        <select id="obra-plataforma" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none cursor-pointer">
+                            <option value="">Selecione...</option>
+                            <option value="Lezhin US">Lezhin US</option>
+                            <option value="Lezhin ES">Lezhin ES</option>
+                            <option value="Lezhin FR">Lezhin FR</option>
+                            <option value="Lezhin KO">Lezhin KO</option>
+                            <option value="Bomtoon KR">Bomtoon KR</option>
+                            <option value="Bomtoon FR">Bomtoon FR</option>
+                            <option value="Tapas">Tapas</option>
+                            <option value="TappyToon">TappyToon</option>
+                            <option value="Manta">Manta</option>
+                            <option value="Ridibooks">Ridibooks</option>
+                            <option value="Outra">Outra</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -234,13 +247,11 @@
             
             if(data) {
                 data.forEach(obra => { 
-                    // Se for moderador, só mostra na lista de edição as que ele é dono.
                     if (cargo === 'Moderador') {
                         if (obra.responsavel_nick && obra.responsavel_nick.includes(meuNick)) {
                             select.innerHTML += `<option value="${obra.id}">${obra.nome}</option>`;
                         }
                     } else {
-                        // ADM vê tudo
                         select.innerHTML += `<option value="${obra.id}">${obra.nome}</option>`;
                     }
                 });
@@ -272,7 +283,6 @@
             const { data: obra, error } = await _supabase.from('obras').select('*').eq('id', idSelecionado).single();
             if (error) { alert("Erro ao buscar dados da obra!"); return; }
 
-            // TRAVA DE SEGURANÇA SE ELE TENTAR BURLAR A URL
             const cargo = localStorage.getItem('usuario_cargo');
             const meuNick = localStorage.getItem('usuario_nick');
             if (cargo === 'Moderador') {
@@ -292,7 +302,23 @@
             document.getElementById('obra-prioridade').value = obra.prioridade || 'Média';
             document.getElementById('obra-status').value = obra.status || 'Ativa';
             document.getElementById('obra-drive').value = obra.drive_url || '';
-            document.getElementById('obra-plataforma').value = obra.plataforma_oficial || '';
+            
+            // Lógica ajustada para o select
+            const selectPlataforma = document.getElementById('obra-plataforma');
+            let encontrouPlataforma = false;
+            for (let i = 0; i < selectPlataforma.options.length; i++) {
+                if (selectPlataforma.options[i].value === obra.plataforma_oficial) {
+                    encontrouPlataforma = true;
+                    break;
+                }
+            }
+            // Se tiver uma plataforma salva que não está na lista, coloca como "Outra"
+            if (!encontrouPlataforma && obra.plataforma_oficial) {
+                selectPlataforma.value = 'Outra';
+            } else {
+                selectPlataforma.value = obra.plataforma_oficial || '';
+            }
+
             document.getElementById('obra-dia-oficial').value = obra.dia_oficial || '';
             document.getElementById('obra-dia-scan').value = obra.dia_scan || '';
             document.getElementById('obra-capitulo-plat').value = obra.capitulo_plataforma || '0';
