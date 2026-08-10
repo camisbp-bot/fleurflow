@@ -65,7 +65,6 @@
                     </select>
                 </div>
 
-                <!-- CAMPO NOVO DE TAGS SELECIONÁVEIS -->
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-700 mb-1">Observação / Tag</label>
                     <select id="listao-obs" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
@@ -100,18 +99,18 @@
 
             <!-- ÁREA DO TEXTO E BOTÃO COPIAR -->
             <div id="area-telegram-listao" class="hidden p-6 bg-blue-50 border-b border-blue-100">
-                <h4 class="text-md font-black text-blue-800 mb-2">Mensagem para Copiar:</h4>
+                <h4 class="text-md font-black text-blue-800 mb-2">Mensagem para Copiar (Apenas Obras Confirmadas):</h4>
                 <textarea id="texto-telegram-listao" rows="15" class="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800" readonly></textarea>
                 
                 <button onclick="copiarTextoListao()" class="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-sm shadow cursor-pointer transition">
                     📋 Copiar Texto do Listão
                 </button>
-                <button onclick="document.getElementById('area-telegram-listao').classList.add('hidden'); document.getElementById('area-capas-listao').classList.add('hidden');" class="mt-4 text-xs font-bold text-gray-500 w-full text-center cursor-pointer hover:underline">Ocultar</button>
+                <button onclick="document.getElementById('area-telegram-listao').classList.add('hidden'); document.getElementById('area-capas-listao').classList.add('hidden');" class="mt-4 text-xs font-bold text-gray-500 w-full text-center cursor-pointer hover:underline">Ocultar Painel</button>
             </div>
 
             <!-- ÁREA DAS CAPAS -->
             <div id="area-capas-listao" class="hidden p-6 bg-white border-b border-gray-100">
-                <h4 class="text-md font-black text-gray-800 mb-4">🖼️ Capas das Obras Agendadas:</h4>
+                <h4 class="text-md font-black text-gray-800 mb-4">🖼️ Capas das Obras Confirmadas:</h4>
                 <div id="grid-capas" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
             </div>
 
@@ -124,6 +123,7 @@
                             <th class="px-4 py-3">Postagem</th>
                             <th class="px-4 py-3">Caps</th>
                             <th class="px-4 py-3">Resp.</th>
+                            <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3 text-right">Ação</th>
                         </tr>
                     </thead>
@@ -169,7 +169,6 @@
             };
         }
 
-        // INTELIGÊNCIA: TRANSFORMA "1 ao 5" em "01, 02, 03, 04, 05"
         function formatarCapitulosAuto(caps) {
             if (caps.toLowerCase().includes('temporada')) return caps;
             return caps.replace(/(\d+)\s+ao\s+(\d+)/gi, (match, p1, p2) => {
@@ -208,10 +207,8 @@
             e.preventDefault();
             const { error } = await _supabase.from('listao_config').insert([{ data_listao: document.getElementById('nova-data-adm').value }]);
             
-            if (error) {
-                alert('🚨 Erro do Supabase: ' + error.message);
-                console.error(error);
-            } else { 
+            if (error) { alert('🚨 Erro do Supabase: ' + error.message); } 
+            else { 
                 document.getElementById('nova-data-adm').value = ''; 
                 carregarDatasLiberadas(); 
                 alert('Data liberada com sucesso!');
@@ -248,11 +245,9 @@
             const responsaveisSelecionados = Array.from(checkboxes).map(cb => cb.value).join(', ');
 
             if(!responsaveisSelecionados) {
-                alert("Por favor, marque pelo menos um responsável!");
-                return;
+                alert("Por favor, marque pelo menos um responsável!"); return;
             }
 
-            // Aplica a mágica de formatação (1 ao 5 vira 01, 02, 03...)
             const capsFormatados = formatarCapitulosAuto(document.getElementById('listao-caps').value);
 
             const obj = {
@@ -262,7 +257,8 @@
                 classificacao_obra: document.getElementById('listao-classificacao').value,
                 tipo_postagem: document.getElementById('listao-postagem').value,
                 observacao_telegram: document.getElementById('listao-obs').value,
-                responsavel_nick: responsaveisSelecionados
+                responsavel_nick: responsaveisSelecionados,
+                confirmado: false // Adicionado o Controle de Confirmação!
             };
             const { error } = await _supabase.from('listao_preenchimento').insert([obj]);
             if (!error) { 
@@ -273,14 +269,31 @@
             else alert('Erro: ' + error.message);
         }
 
+        async function confirmarPostagemListao(id) {
+            const { error } = await _supabase.from('listao_preenchimento').update({ confirmado: true }).eq('id', id);
+            if(error) alert("Erro ao confirmar: " + error.message);
+            else carregarListao();
+        }
+
         async function carregarListao() {
             const { data } = await _supabase.from('listao_preenchimento').select('*');
             const tb = document.getElementById('tabela-listao');
             dadosListao = data || []; tb.innerHTML = '';
             dadosListao.sort((a, b) => new Date(a.data_referencia) - new Date(b.data_referencia));
+            
             dadosListao.forEach(i => {
                 const info = formatarData(i.data_referencia);
                 const obsTag = i.observacao_telegram ? `<br><span class="text-[10px] text-blue-600 font-bold uppercase">${i.observacao_telegram}</span>` : '';
+                
+                // Botões e Badges de Status
+                const statusBadge = i.confirmado
+                    ? `<span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold shadow-sm">✅ OK</span>`
+                    : `<span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold shadow-sm">⏳ Pendente</span>`;
+
+                const btnOK = !i.confirmado
+                    ? `<button onclick="confirmarPostagemListao('${i.id}')" class="text-green-600 hover:text-green-800 font-black text-xs mr-3 cursor-pointer transition">✅ Dar OK</button>`
+                    : ``;
+
                 tb.innerHTML += `
                     <tr class="hover:bg-gray-50 border-b">
                         <td class="px-4 py-3 font-bold">${info.dataCurta}</td>
@@ -288,19 +301,28 @@
                         <td class="px-4 py-3 text-xs bg-gray-100 rounded">${i.tipo_postagem}</td>
                         <td class="px-4 py-3 text-red-700 font-bold">${i.capitulos}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">${i.responsavel_nick}</td>
-                        <td class="px-4 py-3 text-right"><button onclick="remover('${i.id}')" class="text-red-500 font-bold text-xs cursor-pointer">Excluir</button></td>
+                        <td class="px-4 py-3">${statusBadge}</td>
+                        <td class="px-4 py-3 text-right">
+                            ${btnOK}
+                            <button onclick="remover('${i.id}')" class="text-red-500 font-bold text-xs cursor-pointer hover:text-red-700">Excluir</button>
+                        </td>
                     </tr>`;
             });
         }
 
-        async function remover(id) { if(confirm('Remover?')) { await _supabase.from('listao_preenchimento').delete().eq('id', id); carregarListao(); } }
-        async function limparListao() { if(confirm('APAGAR TUDO?')) { await _supabase.from('listao_preenchimento').delete().neq('id', '0'); carregarListao(); } }
+        async function remover(id) { if(confirm('Remover obra do Listão?')) { await _supabase.from('listao_preenchimento').delete().eq('id', id); carregarListao(); } }
+        async function limparListao() { if(confirm('⚠️ ATENÇÃO: Deseja apagar o Listão Inteiro?')) { await _supabase.from('listao_preenchimento').delete().neq('id', '0'); carregarListao(); } }
 
         // =======================================================
-        // MÁGICAS DO TELEGRAM (TEXTO, PRIORIDADES E CAPAS)
+        // MÁGICAS DO TELEGRAM (SOMENTE CONFIRMADOS E PRIORIDADES)
         // =======================================================
         async function gerarTelegramListao() {
-            if(dadosListao.length === 0) return alert("Listão vazio!");
+            // FILTRO NOVO: Só gera o Listão de Obras que receberam OK!
+            const obrasConfirmadas = dadosListao.filter(item => item.confirmado === true);
+
+            if(obrasConfirmadas.length === 0) {
+                return alert("Não há nenhuma postagem confirmada (OK) para gerar o Listão!");
+            }
             
             const btn = document.getElementById('btn-gerar-telegram-listao');
             const textoOriginal = btn.innerHTML;
@@ -309,13 +331,13 @@
 
             try {
                 // 1. Puxar dados da Obras (Capas e Prioridades)
-                const nomesObras = [...new Set(dadosListao.map(i => i.obra_nome))];
+                const nomesObras = [...new Set(obrasConfirmadas.map(i => i.obra_nome))];
                 const { data: obrasDB, error } = await _supabase.from('obras').select('nome, capa_url, prioridade').in('nome', nomesObras);
                 if(error) throw error;
 
                 // 2. Organizar o Texto
                 const cronograma = {};
-                dadosListao.forEach(i => {
+                obrasConfirmadas.forEach(i => {
                     if(!i.data_referencia) return;
                     if(!cronograma[i.data_referencia]) cronograma[i.data_referencia] = [];
                     cronograma[i.data_referencia].push(i);
@@ -338,7 +360,7 @@
                                 let linha = `~ ${ob.obra_nome} • ${ob.capitulos}`;
                                 if(ob.observacao_telegram) linha += ` — ${ob.observacao_telegram}`;
                                 
-                                // MÁGICA: Tag de Prioridade
+                                // MÁGICA: Tag de Prioridade (Máxima e Alta)
                                 if (obraInfo && (obraInfo.prioridade === 'Máxima' || obraInfo.prioridade === 'Alta')) {
                                     linha += " - POSTADO MAIS CEDO";
                                 }
@@ -370,7 +392,7 @@
                         }
                     });
                 }
-                document.getElementById('grid-capas').innerHTML = htmlCapas || "<p class='text-xs text-red-500'>Nenhuma capa cadastrada nas obras.</p>";
+                document.getElementById('grid-capas').innerHTML = htmlCapas || "<p class='text-xs text-red-500'>Nenhuma capa cadastrada nas obras confirmadas.</p>";
                 document.getElementById('area-capas-listao').classList.remove('hidden');
 
             } catch (err) {
@@ -381,7 +403,6 @@
             btn.disabled = false;
         }
 
-        // Copiar o texto gerado
         function copiarTextoListao() {
             const textoArea = document.getElementById("texto-telegram-listao");
             textoArea.select();
@@ -393,7 +414,6 @@
             });
         }
 
-        // Baixar Imagem (Força o Download)
         async function baixarImagem(url, nomeArquivo) {
             try {
                 const response = await fetch(url);
