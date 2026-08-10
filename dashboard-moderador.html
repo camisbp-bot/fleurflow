@@ -23,7 +23,7 @@
         
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">🛠️ Ferramentas da Moderação</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
                 <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
                     <span class="text-3xl group-hover:scale-110 transition">📖</span>
                     <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Cadastrar Obra</span>
@@ -40,9 +40,13 @@
                     <span class="text-3xl group-hover:scale-110 transition">🔔</span>
                     <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Atualizações</span>
                 </button>
-                <button onclick="window.location.href='relatorios.html'" class="bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                <button onclick="window.location.href='relatorios.html'" class="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
                     <span class="text-3xl group-hover:scale-110 transition">📈</span>
-                    <span class="text-xs font-bold text-blue-800 group-hover:text-blue-900 text-center">Relatórios</span>
+                    <span class="text-xs font-bold text-gray-700 group-hover:text-blue-700 text-center">Relatórios</span>
+                </button>
+                <button onclick="abrirModalDownload()" class="bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">📥</span>
+                    <span class="text-xs font-black text-blue-800 group-hover:text-blue-900 text-center">Informar Raw</span>
                 </button>
             </div>
         </section>
@@ -67,6 +71,7 @@
                 <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as SUAS tarefas.</p>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-staff"></div>
             </div>
+            
             <div class="bg-white rounded-xl shadow-sm border border-amber-200 p-6 flex flex-col h-[400px]">
                 <h2 class="text-lg font-black text-amber-900 mb-2 flex items-center gap-2">👑 Obras (RESPONSÁVEL)</h2>
                 <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as entregas da SUA EQUIPE.</p>
@@ -74,29 +79,24 @@
             </div>
         </section>
 
-        <!-- A ORDEM CORRETA: Concluídas, Atrasadas, Hoje, Ativas -->
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all">
             <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                 <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Tarefas da Obra</h2>
                 <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 px-3 py-1 rounded transition cursor-pointer">✖ Fechar Painel</button>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- 1º CONCLUÍDAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
                     <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
                 </div>
-                <!-- 2º ATRASADAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
                     <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
                 </div>
-                <!-- 3º HOJE -->
                 <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
                     <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
                 </div>
-                <!-- 4º ATIVAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
                     <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
@@ -106,12 +106,41 @@
 
     </main>
 
+    <!-- MODAL DOWNLOAD RAW -->
+    <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="bg-blue-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">📥 Informar Download (Raw)</h3>
+                <button onclick="fecharModalDownload()" class="font-bold text-blue-200 hover:text-white cursor-pointer">✖</button>
+            </div>
+            <form onsubmit="salvarDownloadRaw(event)" class="p-6 space-y-4">
+                <p class="text-xs text-gray-500 mb-2">Avise a ADM que você baixou a obra e libere a divisão para a equipe. Isso enviará a tarefa como "Concluída" direto pro sistema!</p>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
+                    <select id="raw-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label>
+                        <input type="text" id="raw-capitulo" placeholder="Ex: 30" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Total de Páginas</label>
+                        <input type="text" id="raw-paginas" placeholder="Ex: 1-15" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <button type="submit" id="btn-salvar-raw" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4 cursor-pointer">✅ Confirmar Download</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let todasTarefasGlobais = [];
+        let obrasDisponiveisRaw = [];
         let obraAbertaAtual = null;
         let modoAbertoAtual = null;
 
@@ -187,6 +216,9 @@
                 });
             }
 
+            // Obras que podem receber "Informar Download"
+            obrasDisponiveisRaw = [...obrasResp, ...obrasStaff];
+
             renderizarObras(obrasStaff, 'lista-obras-staff', false);
             renderizarObras(obrasResp, 'lista-obras-resp', true);
 
@@ -204,13 +236,18 @@
                 const modoClick = isResp ? 'responsavel' : 'staff';
                 const nomeSeguro = obra.nome.replace(/'/g, "\\'");
                 
-                let temConcluida = false;
+                let mostrarSininho = false;
+                let titleSininho = '';
+
                 if(isResp) {
-                    temConcluida = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído');
+                    mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído');
+                    titleSininho = 'Nova entrega concluída pela equipe!';
                 } else {
-                    temConcluida = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
+                    mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
+                    titleSininho = 'Nova tarefa aguardando por você!';
                 }
-                const sininho = temConcluida ? `<span class="animate-bounce text-sm ml-2 cursor-help" title="Nova entrega concluída!">🔔</span>` : '';
+
+                const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2 cursor-help" title="${titleSininho}">🔔</span>` : '';
                 const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar Cadastro da Obra">✏️</button>`;
 
                 container.innerHTML += `
@@ -286,7 +323,6 @@
                     if(!isConcluida) {
                         botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
                     } else {
-                        // A MÁGICA DA DIVISÃO AQUI!
                         const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}`;
                         botaoAcao = `
                             <div class="flex gap-1 mt-2">
@@ -336,6 +372,42 @@
             const { error } = await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id);
             if(error) { alert("Erro: " + error.message); btn.innerHTML = textOriginal; btn.disabled = false; } 
             else { carregarTudo(localStorage.getItem('usuario_nick')); }
+        }
+
+        // LÓGICA DO MODAL DE RAW
+        function abrirModalDownload() {
+            const select = document.getElementById('raw-obra');
+            select.innerHTML = '<option value="">Selecione a obra...</option>';
+            const nomesUnicos = [...new Set(obrasDisponiveisRaw.map(o => o.nome))].sort();
+            nomesUnicos.forEach(nome => { select.innerHTML += `<option value="${nome}">${nome}</option>`; });
+            document.getElementById('modal-download').classList.remove('hidden');
+        }
+
+        function fecharModalDownload() {
+            document.getElementById('modal-download').classList.add('hidden');
+            document.getElementById('raw-capitulo').value = ''; document.getElementById('raw-paginas').value = '';
+        }
+
+        async function salvarDownloadRaw(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-salvar-raw');
+            btn.disabled = true; btn.textContent = 'Salvando...';
+
+            const nick = localStorage.getItem('usuario_nick');
+            const obj = {
+                obra_nome: document.getElementById('raw-obra').value,
+                capitulo: document.getElementById('raw-capitulo').value,
+                etapa: 'Organizer / Raw',
+                paginas: document.getElementById('raw-paginas').value,
+                responsavel_nick: nick,
+                prazo: null,
+                status: 'Concluído'
+            };
+
+            const { error } = await _supabase.from('tarefas').insert([obj]);
+            if(error) { alert('Erro: ' + error.message); } 
+            else { fecharModalDownload(); carregarTudo(nick); }
+            btn.disabled = false; btn.textContent = '✅ Confirmar Download';
         }
     </script>
 </body>
