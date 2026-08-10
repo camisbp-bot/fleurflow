@@ -3,122 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FleurFlow - Listão Geral</title>
+    <title>FleurFlow - O Listão Geral</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
 
     <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">📊 Listão & Telegram</h1>
-        <button onclick="window.history.back()" class="text-sm font-bold text-gray-600 hover:text-red-700 cursor-pointer">&larr; Voltar</button>
+        <h1 class="text-xl font-bold text-gray-800">📊 O Listão Geral</h1>
+        <button id="btn-voltar" class="text-sm font-bold text-gray-600 hover:text-red-700 cursor-pointer">&larr; Voltar</button>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6 mt-4 space-y-6">
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
         
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-blue-200">
-            <h2 class="text-lg font-black text-blue-900 mb-2">✨ Gerar Listão Atualizado</h2>
-            <p class="text-xs text-gray-500 mb-6">Clique no botão abaixo para o sistema varrer todas as obras cadastradas e montar o texto organizado por status.</p>
-            
-            <button id="btn-gerar" onclick="gerarListao()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-black py-4 rounded-xl text-lg shadow-md cursor-pointer transition flex justify-center items-center gap-2">
-                🚀 Gerar Listão Completo
-            </button>
+        <!-- PAINEL ADM: DATAS -->
+        <div id="painel-adm-datas" class="hidden bg-red-50 rounded-xl p-6 shadow-sm border border-red-200">
+            <h2 class="text-lg font-black text-red-900 mb-2">👑 Painel ADM: Liberar Datas</h2>
+            <form onsubmit="liberarData(event)" class="flex gap-4 items-end mb-4">
+                <div><input type="date" id="nova-data-adm" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"></div>
+                <div><button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg text-sm shadow cursor-pointer">Liberar</button></div>
+            </form>
+            <div id="lista-datas-liberadas" class="flex flex-wrap gap-2 text-sm pt-3 border-t border-red-200"></div>
         </div>
 
-        <div id="area-resultado" class="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">📝 Texto para Copiar</h3>
-            <div class="relative">
-                <textarea id="texto-listao" rows="15" class="w-full bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm font-mono text-gray-800 focus:outline-none mb-4" readonly></textarea>
+        <!-- FORMULÁRIO DO LISTÃO -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h2 class="text-lg font-black text-gray-900 mb-4">✍️ Lançar no Listão</h2>
+            <form id="form-listao" onsubmit="salvarNoListao(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Data Liberada</label>
+                    <select id="listao-data" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm"><option value="">Aguarde...</option></select>
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
+                    <select id="listao-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm"><option value="">Carregando...</option></select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos</label>
+                    <input type="text" id="listao-caps" placeholder="Ex: 1 ao 5" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Classificação da Obra</label>
+                    <select id="listao-classificacao" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="Recorrente">Recorrente</option>
+                        <option value="Curtas">Curtas</option>
+                        <option value="Combos">Combos</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de Postagem</label>
+                    <select id="listao-postagem" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="Atualização">Atualização</option>
+                        <option value="Finalização">Finalização</option>
+                        <option value="Lançamento">Lançamento</option>
+                        <option value="Lançamento e Finalização">Lançamento e Finalização</option>
+                    </select>
+                </div>
+
+                <!-- CAMPO NOVO DE TAGS SELECIONÁVEIS -->
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Observação / Tag</label>
+                    <select id="listao-obs" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Sem Tag (Deixar em branco)</option>
+                        <option value="DESCENSURA OFICIAL">DESCENSURA OFICIAL</option>
+                        <option value="DESCENSURA FLEUR">DESCENSURA FLEUR</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-4">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">👥 Responsável(is) pela Postagem</label>
+                    <div id="listao-responsaveis" class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-300 max-h-40 overflow-y-auto">
+                        <p class="text-xs text-gray-500">Carregando equipe...</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-4">
+                    <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-lg text-sm shadow cursor-pointer">+ Adicionar à Programação</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- PROGRAMAÇÃO ATUAL -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center gap-4">
+                <h3 class="text-lg font-black text-gray-800 flex items-center gap-2">📋 Programação Atual</h3>
+                <div class="flex gap-2">
+                    <button id="btn-limpar-listao" onclick="limparListao()" class="hidden bg-red-100 text-red-700 text-sm font-bold py-2 px-4 rounded-lg cursor-pointer">🗑️ Limpar Tudo</button>
+                    <button id="btn-gerar-telegram-listao" onclick="gerarTelegramListao()" class="hidden bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md cursor-pointer transition">📲 Gerar Telegram</button>
+                </div>
             </div>
-            <button onclick="copiarTextoListao()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-sm shadow cursor-pointer transition mb-2">
-                📋 Copiar Texto do Listão
-            </button>
-        </div>
 
-        <div id="area-capas" class="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🖼️ Capas das Obras</h3>
-            <div id="grid-capas" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
-        </div>
+            <!-- ÁREA DO TEXTO E BOTÃO COPIAR -->
+            <div id="area-telegram-listao" class="hidden p-6 bg-blue-50 border-b border-blue-100">
+                <h4 class="text-md font-black text-blue-800 mb-2">Mensagem para Copiar:</h4>
+                <textarea id="texto-telegram-listao" rows="15" class="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800" readonly></textarea>
+                
+                <button onclick="copiarTextoListao()" class="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-sm shadow cursor-pointer transition">
+                    📋 Copiar Texto do Listão
+                </button>
+                <button onclick="document.getElementById('area-telegram-listao').classList.add('hidden'); document.getElementById('area-capas-listao').classList.add('hidden');" class="mt-4 text-xs font-bold text-gray-500 w-full text-center cursor-pointer hover:underline">Ocultar</button>
+            </div>
 
+            <!-- ÁREA DAS CAPAS -->
+            <div id="area-capas-listao" class="hidden p-6 bg-white border-b border-gray-100">
+                <h4 class="text-md font-black text-gray-800 mb-4">🖼️ Capas das Obras Agendadas:</h4>
+                <div id="grid-capas" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-gray-50 text-xs uppercase font-black text-gray-700">
+                        <tr>
+                            <th class="px-4 py-3">Data</th>
+                            <th class="px-4 py-3">Obra</th>
+                            <th class="px-4 py-3">Postagem</th>
+                            <th class="px-4 py-3">Caps</th>
+                            <th class="px-4 py-3">Resp.</th>
+                            <th class="px-4 py-3 text-right">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-listao" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+        </div>
     </main>
 
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let dadosListao = [];
 
-        window.onload = () => { if(!localStorage.getItem('usuario_nick')) window.location.href = 'index.html'; };
+        window.onload = async () => {
+            const cargo = localStorage.getItem('usuario_cargo');
+            
+            document.getElementById('btn-voltar').onclick = () => {
+                window.location.href = cargo === 'Administrador' ? 'dashboard-adm.html' : 'dashboard-moderador.html';
+            };
 
-        async function gerarListao() {
-            const btn = document.getElementById('btn-gerar');
-            btn.innerHTML = '⏳ Buscando obras no sistema...';
+            if (cargo === 'Administrador') {
+                document.getElementById('painel-adm-datas').classList.remove('hidden');
+                document.getElementById('btn-gerar-telegram-listao').classList.remove('hidden');
+                document.getElementById('btn-limpar-listao').classList.remove('hidden');
+            }
+
+            carregarObrasSelect();
+            carregarDatasLiberadas();
+            carregarEquipe();
+            carregarListao();
+        };
+
+        function formatarData(dataIso) {
+            if(!dataIso) return { display: 'Sem data', diaSemana: 'Desconhecido', dataCurta: '--/--' };
+            const partes = dataIso.split('-'); 
+            const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
+            const dias = ['DOMINGO', 'SEGUNDA-FEIRA', 'TERÇA-FEIRA', 'QUARTA-FEIRA', 'QUINTA-FEIRA', 'SEXTA-FEIRA', 'SÁBADO'];
+            return {
+                dataCurta: `${String(partes[2]).padStart(2, '0')}/${String(partes[1]).padStart(2, '0')}`,
+                diaSemana: dias[dataObj.getDay()]
+            };
+        }
+
+        // INTELIGÊNCIA: TRANSFORMA "1 ao 5" em "01, 02, 03, 04, 05"
+        function formatarCapitulosAuto(caps) {
+            if (caps.toLowerCase().includes('temporada')) return caps;
+            return caps.replace(/(\d+)\s+ao\s+(\d+)/gi, (match, p1, p2) => {
+                let start = parseInt(p1); let end = parseInt(p2);
+                if (start >= end) return match;
+                let arr = [];
+                let pad = (p1.length > 1 && p1.startsWith('0')) ? p1.length : 2; 
+                for (let i = start; i <= end; i++) {
+                    arr.push(i.toString().padStart(pad, '0'));
+                }
+                return arr.join(', ');
+            });
+        }
+
+        async function carregarEquipe() {
+            const { data } = await _supabase.from('equipe').select('nick').order('nick');
+            const container = document.getElementById('listao-responsaveis');
+            container.innerHTML = '';
+            const meuNick = localStorage.getItem('usuario_nick');
+            
+            if(data) {
+                data.forEach(m => {
+                    const marcado = (m.nick === meuNick) ? 'checked' : '';
+                    container.innerHTML += `
+                        <label class="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer p-1 hover:bg-gray-100 rounded">
+                            <input type="checkbox" name="resp_listao" value="${m.nick}" class="rounded text-red-700" ${marcado}> ${m.nick}
+                        </label>
+                    `;
+                });
+            } else {
+                container.innerHTML = '<p class="text-xs text-red-500">Erro ao carregar equipe.</p>';
+            }
+        }
+
+       async function liberarData(e) {
+            e.preventDefault();
+            const { error } = await _supabase.from('listao_config').insert([{ data_listao: document.getElementById('nova-data-adm').value }]);
+            
+            if (error) {
+                alert('🚨 Erro do Supabase: ' + error.message);
+                console.error(error);
+            } else { 
+                document.getElementById('nova-data-adm').value = ''; 
+                carregarDatasLiberadas(); 
+                alert('Data liberada com sucesso!');
+            }
+        }
+
+        async function fecharData(id) {
+            if(confirm('Remover data?')) { await _supabase.from('listao_config').delete().eq('id', id); carregarDatasLiberadas(); }
+        }
+
+        async function carregarDatasLiberadas() {
+            const { data } = await _supabase.from('listao_config').select('*').order('data_listao', { ascending: true });
+            const tags = document.getElementById('lista-datas-liberadas');
+            const select = document.getElementById('listao-data');
+            tags.innerHTML = ''; select.innerHTML = '<option value="">Selecione a data...</option>';
+            if(data) data.forEach(i => {
+                const info = formatarData(i.data_listao);
+                const disp = `${info.dataCurta} - ${info.diaSemana}`;
+                tags.innerHTML += `<div class="bg-white border border-red-200 px-3 py-1 rounded-full"><span class="font-bold text-red-900">${disp}</span> <button onclick="fecharData('${i.id}')" class="text-red-500 font-bold ml-2">X</button></div>`;
+                select.innerHTML += `<option value="${i.data_listao}">${disp}</option>`;
+            });
+        }
+
+        async function carregarObrasSelect() {
+            const { data } = await _supabase.from('obras').select('nome').order('nome');
+            const sel = document.getElementById('listao-obra');
+            if(data) data.forEach(o => sel.innerHTML += `<option value="${o.nome}">${o.nome}</option>`);
+        }
+
+        async function salvarNoListao(e) {
+            e.preventDefault();
+            
+            const checkboxes = document.querySelectorAll('input[name="resp_listao"]:checked');
+            const responsaveisSelecionados = Array.from(checkboxes).map(cb => cb.value).join(', ');
+
+            if(!responsaveisSelecionados) {
+                alert("Por favor, marque pelo menos um responsável!");
+                return;
+            }
+
+            // Aplica a mágica de formatação (1 ao 5 vira 01, 02, 03...)
+            const capsFormatados = formatarCapitulosAuto(document.getElementById('listao-caps').value);
+
+            const obj = {
+                data_referencia: document.getElementById('listao-data').value,
+                obra_nome: document.getElementById('listao-obra').value,
+                capitulos: capsFormatados,
+                classificacao_obra: document.getElementById('listao-classificacao').value,
+                tipo_postagem: document.getElementById('listao-postagem').value,
+                observacao_telegram: document.getElementById('listao-obs').value,
+                responsavel_nick: responsaveisSelecionados
+            };
+            const { error } = await _supabase.from('listao_preenchimento').insert([obj]);
+            if (!error) { 
+                document.getElementById('listao-caps').value = '';
+                document.getElementById('listao-obs').value = '';
+                carregarListao(); 
+            }
+            else alert('Erro: ' + error.message);
+        }
+
+        async function carregarListao() {
+            const { data } = await _supabase.from('listao_preenchimento').select('*');
+            const tb = document.getElementById('tabela-listao');
+            dadosListao = data || []; tb.innerHTML = '';
+            dadosListao.sort((a, b) => new Date(a.data_referencia) - new Date(b.data_referencia));
+            dadosListao.forEach(i => {
+                const info = formatarData(i.data_referencia);
+                const obsTag = i.observacao_telegram ? `<br><span class="text-[10px] text-blue-600 font-bold uppercase">${i.observacao_telegram}</span>` : '';
+                tb.innerHTML += `
+                    <tr class="hover:bg-gray-50 border-b">
+                        <td class="px-4 py-3 font-bold">${info.dataCurta}</td>
+                        <td class="px-4 py-3 font-semibold text-gray-800">${i.obra_nome} <span class="text-[10px] text-gray-400">(${i.classificacao_obra})</span>${obsTag}</td>
+                        <td class="px-4 py-3 text-xs bg-gray-100 rounded">${i.tipo_postagem}</td>
+                        <td class="px-4 py-3 text-red-700 font-bold">${i.capitulos}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">${i.responsavel_nick}</td>
+                        <td class="px-4 py-3 text-right"><button onclick="remover('${i.id}')" class="text-red-500 font-bold text-xs cursor-pointer">Excluir</button></td>
+                    </tr>`;
+            });
+        }
+
+        async function remover(id) { if(confirm('Remover?')) { await _supabase.from('listao_preenchimento').delete().eq('id', id); carregarListao(); } }
+        async function limparListao() { if(confirm('APAGAR TUDO?')) { await _supabase.from('listao_preenchimento').delete().neq('id', '0'); carregarListao(); } }
+
+        // =======================================================
+        // MÁGICAS DO TELEGRAM (TEXTO, PRIORIDADES E CAPAS)
+        // =======================================================
+        async function gerarTelegramListao() {
+            if(dadosListao.length === 0) return alert("Listão vazio!");
+            
+            const btn = document.getElementById('btn-gerar-telegram-listao');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '⏳ Gerando...';
             btn.disabled = true;
 
             try {
-                const { data: obras, error } = await _supabase.from('obras').select('*').order('nome', { ascending: true });
-                if (error) throw error;
-                if (!obras || obras.length === 0) { alert("Nenhuma obra encontrada."); return; }
+                // 1. Puxar dados da Obras (Capas e Prioridades)
+                const nomesObras = [...new Set(dadosListao.map(i => i.obra_nome))];
+                const { data: obrasDB, error } = await _supabase.from('obras').select('nome, capa_url, prioridade').in('nome', nomesObras);
+                if(error) throw error;
 
-                const ativas = obras.filter(o => o.status === 'Ativa');
-                const pausadas = obras.filter(o => o.status === 'Pausada');
-                const finalizadas = obras.filter(o => o.status === 'Finalizada');
-
-                let texto = "✨ NOSSO LISTÃO DE OBRAS ✨\n\n";
-
-                // ADICIONADO ESPAÇO ENTRE AS OBRAS COMO SOLICITADO
-                if (ativas.length > 0) {
-                    texto += "🟢 EM ANDAMENTO:\n\n";
-                    ativas.forEach(o => {
-                        let plat = o.plataforma_oficial && o.plataforma_oficial !== 'Outra' ? ` (${o.plataforma_oficial})` : '';
-                        texto += `~ ${o.nome}${plat}\n\n`; 
-                    });
-                }
-                if (pausadas.length > 0) {
-                    texto += "🟡 PAUSADAS / EM HIATO:\n\n";
-                    pausadas.forEach(o => { texto += `~ ${o.nome}\n\n`; });
-                }
-                if (finalizadas.length > 0) {
-                    texto += "🔴 FINALIZADAS:\n\n";
-                    finalizadas.forEach(o => { texto += `~ ${o.nome}\n\n`; });
-                }
-
-                texto += ".\n.\n.\n🔗• Link: fbsquadx.com\n\n‼️ Copiem o link e colem no navegador do celular de vocês ‼️";
-                
-                document.getElementById('texto-listao').value = texto;
-                document.getElementById('area-resultado').classList.remove('hidden');
-
-                let htmlCapas = "";
-                obras.forEach(obra => {
-                    if(obra.capa_url) {
-                        htmlCapas += `
-                            <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm flex flex-col">
-                                <img src="${obra.capa_url}" class="w-full h-40 object-cover rounded-t-lg">
-                                <div class="bg-gray-900 text-white text-[10px] p-1 text-center truncate">${obra.nome}</div>
-                                <button onclick="baixarImagem('${obra.capa_url}', 'Capa_${obra.nome.replace(/\s+/g, '_')}.png')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold py-2 w-full rounded-b-lg transition cursor-pointer">⬇️ Baixar Capa</button>
-                            </div>`;
-                    }
+                // 2. Organizar o Texto
+                const cronograma = {};
+                dadosListao.forEach(i => {
+                    if(!i.data_referencia) return;
+                    if(!cronograma[i.data_referencia]) cronograma[i.data_referencia] = [];
+                    cronograma[i.data_referencia].push(i);
                 });
 
-                document.getElementById('grid-capas').innerHTML = htmlCapas || "<p class='text-xs text-red-500'>Nenhuma capa cadastrada.</p>";
-                document.getElementById('area-capas').classList.remove('hidden');
-            } catch (err) { alert("Erro ao gerar listão: " + err.message); }
+                let texto = "🗓️ PROGRAMAÇÃO DA SEMANA 🗓️\n\n";
+                Object.keys(cronograma).sort((a, b) => new Date(a) - new Date(b)).forEach(dataIso => {
+                    const info = formatarData(dataIso);
+                    texto += `📅 ${info.diaSemana} (${info.dataCurta})\n\n`;
 
-            btn.innerHTML = '🚀 Gerar Listão Completo'; btn.disabled = false;
+                    const obrasDia = cronograma[dataIso];
+                    const cats = { "Lançamento": [], "Lançamento e Finalização": [], "Atualização": [], "Finalização": [] };
+                    obrasDia.forEach(o => { if(cats[o.tipo_postagem]) cats[o.tipo_postagem].push(o); });
+
+                    ["Lançamento", "Lançamento e Finalização", "Atualização", "Finalização"].forEach(cat => {
+                        if(cats[cat].length > 0) {
+                            texto += `✨ ${cat.toUpperCase().replace(" E ", " & ")}\n\n`;
+                            cats[cat].forEach(ob => {
+                                const obraInfo = obrasDB ? obrasDB.find(o => o.nome === ob.obra_nome) : null;
+                                let linha = `~ ${ob.obra_nome} • ${ob.capitulos}`;
+                                if(ob.observacao_telegram) linha += ` — ${ob.observacao_telegram}`;
+                                
+                                // MÁGICA: Tag de Prioridade
+                                if (obraInfo && (obraInfo.prioridade === 'Máxima' || obraInfo.prioridade === 'Alta')) {
+                                    linha += " - POSTADO MAIS CEDO";
+                                }
+
+                                texto += `${linha}\n`;
+                            });
+                            texto += `\n`;
+                        }
+                    });
+                    texto += `========================\n\n`;
+                });
+
+                texto += `.\n.\n.\n🔗• Link: fbsquadx.com\n\n‼️ Copiem o link e colem no navegador do celular de vocês ‼️`;
+                document.getElementById('texto-telegram-listao').value = texto;
+                document.getElementById('area-telegram-listao').classList.remove('hidden');
+
+                // 3. Montar a Grid de Capas
+                let htmlCapas = "";
+                if (obrasDB) {
+                    obrasDB.forEach(obra => {
+                        if(obra.capa_url) {
+                            htmlCapas += `
+                                <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm flex flex-col">
+                                    <img src="${obra.capa_url}" class="w-full h-40 object-cover rounded-t-lg">
+                                    <div class="bg-gray-900 text-white text-[10px] p-1 text-center truncate">${obra.nome}</div>
+                                    <button onclick="baixarImagem('${obra.capa_url}', 'Capa_${obra.nome.replace(/\s+/g, '_')}.png')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold py-2 w-full rounded-b-lg transition cursor-pointer">⬇️ Baixar Capa</button>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+                document.getElementById('grid-capas').innerHTML = htmlCapas || "<p class='text-xs text-red-500'>Nenhuma capa cadastrada nas obras.</p>";
+                document.getElementById('area-capas-listao').classList.remove('hidden');
+
+            } catch (err) {
+                alert("Erro ao gerar Telegram: " + err.message);
+            }
+
+            btn.innerHTML = textoOriginal;
+            btn.disabled = false;
         }
 
+        // Copiar o texto gerado
         function copiarTextoListao() {
-            const textoArea = document.getElementById("texto-listao");
-            textoArea.select(); textoArea.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(textoArea.value).then(() => alert("Listão copiado com sucesso! 📋✨")).catch(() => alert("Seu navegador bloqueou a cópia. Copie manualmente."));
+            const textoArea = document.getElementById("texto-telegram-listao");
+            textoArea.select();
+            textoArea.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(textoArea.value).then(() => {
+                alert("Cronograma copiado com sucesso! 📋✨");
+            }).catch(err => {
+                alert("Seu navegador bloqueou a cópia. Tente copiar manualmente.");
+            });
         }
 
+        // Baixar Imagem (Força o Download)
         async function baixarImagem(url, nomeArquivo) {
             try {
-                const response = await fetch(url); const blob = await response.blob();
+                const response = await fetch(url);
+                const blob = await response.blob();
                 const linkUrl = window.URL.createObjectURL(blob);
-                const link = document.createElement('a'); link.href = linkUrl; link.download = nomeArquivo;
-                document.body.appendChild(link); link.click(); document.body.removeChild(link); window.URL.revokeObjectURL(linkUrl);
-            } catch (err) { window.open(url, '_blank'); }
+                const link = document.createElement('a');
+                link.href = linkUrl;
+                link.download = nomeArquivo;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(linkUrl);
+            } catch (err) {
+                window.open(url, '_blank');
+            }
         }
     </script>
 </body>
