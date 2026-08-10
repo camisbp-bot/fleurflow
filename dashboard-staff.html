@@ -21,7 +21,6 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
 
-        <!-- LISTA DE OBRAS (MASTER VIEW) -->
         <section class="bg-white rounded-xl shadow-sm border border-pink-200 p-6 flex flex-col h-[400px]">
             <h2 class="text-lg font-black text-pink-900 mb-2 flex items-center gap-2">💖 Obras que Faço Parte</h2>
             <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as suas tarefas.</p>
@@ -30,8 +29,8 @@
             </div>
         </section>
 
-        <!-- PAINEL DINÂMICO DE TAREFAS (DETAIL VIEW) -->
-        <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 mt-8 transition-all">
+        <!-- A ORDEM CORRETA: Concluídas, Atrasadas, Hoje, Ativas -->
+        <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all">
             <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                 <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Minhas Tarefas</h2>
                 <div class="flex gap-3">
@@ -41,25 +40,25 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- ATRASADAS -->
-                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
-                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Em Atraso</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
-                </div>
-                <!-- HOJE -->
-                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
-                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Prazo Hoje</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
-                </div>
-                <!-- ATIVAS -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
-                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Outras Tarefas Ativas</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
-                </div>
-                <!-- CONCLUÍDAS -->
+                <!-- 1º CONCLUÍDAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
                     <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
+                </div>
+                <!-- 2º ATRASADAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
+                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
+                </div>
+                <!-- 3º HOJE -->
+                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
+                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
+                </div>
+                <!-- 4º ATIVAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
                 </div>
             </div>
         </section>
@@ -87,11 +86,8 @@
         async function carregarTudo(meuNick) {
             const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
-
             const { data: obras } = await _supabase.from('obras').select('*').order('nome');
             todasObrasGlobais = obras || [];
-
-            // A MÁGICA DE NÃO SUMIR: Agora o sistema puxa tarefas concluídas (mas exclui as "Arquivadas")
             const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
             todasTarefasGlobais = tarefas || [];
 
@@ -102,7 +98,6 @@
                     if (souStaff) minhasObras.push(o);
                 });
             }
-
             renderizarObrasStaff(minhasObras);
             if (obraAbertaAtual) abrirTarefasObra(obraAbertaAtual);
         }
@@ -110,11 +105,7 @@
         function renderizarObrasStaff(listaObras) {
             const container = document.getElementById('lista-obras-staff');
             container.innerHTML = '';
-            
-            if (listaObras.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 italic">Você não foi vinculado(a) a nenhuma obra.</p>`;
-                return;
-            }
+            if (listaObras.length === 0) { container.innerHTML = `<p class="text-sm text-gray-400 italic">Você não foi vinculado(a) a nenhuma obra.</p>`; return; }
 
             listaObras.forEach(obra => {
                 let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
@@ -140,12 +131,8 @@
             const btnDrive = document.getElementById('btn-drive-obra');
             
             const obraInfo = todasObrasGlobais.find(o => o.nome === obraNome);
-            if (obraInfo && obraInfo.drive_url) {
-                btnDrive.href = obraInfo.drive_url;
-                btnDrive.classList.remove('hidden');
-            } else {
-                btnDrive.classList.add('hidden');
-            }
+            if (obraInfo && obraInfo.drive_url) { btnDrive.href = obraInfo.drive_url; btnDrive.classList.remove('hidden'); } 
+            else { btnDrive.classList.add('hidden'); }
 
             const tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick);
             titulo.innerHTML = `📝 Minhas Tarefas (STAFF) <span class="text-gray-400 text-sm font-normal mx-2">👉</span> <span class="text-pink-700">${obraNome}</span>`;
@@ -167,8 +154,7 @@
             
             if (lista.length === 0) {
                 const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Nenhuma tarefa.</p></div>`;
-                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; containerConcluidas.innerHTML = msgVazio;
-                return;
+                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; containerConcluidas.innerHTML = msgVazio; return;
             }
 
             const agora = new Date(); const hojeStr = agora.toDateString();
