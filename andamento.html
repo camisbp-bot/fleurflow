@@ -33,12 +33,10 @@
                 </div>
             </div>
 
-            <!-- FORMULÁRIO DE TAREFAS -->
             <form id="form-tarefa" onsubmit="adicionarTarefa(event)" class="hidden bg-gray-50 border border-gray-200 p-5 rounded-xl shadow-inner">
                 <p class="text-xs text-gray-500 mb-4">Dica: Atribua o Organizer primeiro. Após ele dar OK e você verificar as páginas, volte aqui para atribuir o restante.</p>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
-                    
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Etapa / Função</label>
                         <select id="tarefa-etapa" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
@@ -51,23 +49,19 @@
                             <option value="Quality Check">Quality Check</option>
                         </select>
                     </div>
-
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label>
                         <input type="text" id="tarefa-paginas" placeholder="Ex: 1-3 ou Todas" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
                     </div>
-
                     <div>
                         <label class="block text-xs font-bold text-red-700 mb-1">Responsável</label>
                         <select id="tarefa-responsavel" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
                         </select>
                     </div>
-
                     <div>
                         <label class="block text-xs font-bold text-red-700 mb-1">Prazo (Data e Hora)</label>
                         <input type="datetime-local" id="tarefa-prazo" required class="w-full bg-white border border-red-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none cursor-pointer">
                     </div>
-
                     <div>
                         <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 rounded-lg text-sm shadow cursor-pointer transition">
                             ➕ Atribuir Tarefa
@@ -109,7 +103,6 @@
                 <h3 class="text-lg font-black text-gray-800">📋 Controle de Entregas (Visão Geral)</h3>
                 <button onclick="carregarTarefas()" class="text-xs font-bold text-blue-600 hover:underline">🔄 Atualizar Lista</button>
             </div>
-
             <div class="overflow-x-auto p-4">
                 <table class="w-full text-left text-sm text-gray-600">
                     <thead class="text-xs uppercase font-black text-gray-400 border-b border-gray-200">
@@ -172,6 +165,18 @@
                     selectObra.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
                     selectWhats.innerHTML += `<option value="${o.nome}">${o.nome}</option>`;
                 });
+
+                // LÊ A MÁGICA DA URL (Se veio pelo botão de dividir)
+                const params = new URLSearchParams(window.location.search);
+                const pObra = params.get('obra');
+                const pCap = params.get('capitulo');
+                if (pObra) {
+                    selectObra.value = pObra;
+                    aoSelecionarObra(); 
+                    if (pCap) {
+                        document.getElementById('tarefa-capitulo').value = pCap;
+                    }
+                }
             } catch (err) { console.error("Erro:", err); }
         }
 
@@ -212,7 +217,7 @@
                 obra_nome: document.getElementById('tarefa-obra').value,
                 capitulo: capitulo,
                 etapa: document.getElementById('tarefa-etapa').value,
-                paginas: document.getElementById('tarefa-paginas').value, // SALVA AS PÁGINAS
+                paginas: document.getElementById('tarefa-paginas').value,
                 responsavel_nick: responsavel,
                 prazo: document.getElementById('tarefa-prazo').value,
                 status: 'Pendente'
@@ -224,7 +229,6 @@
             else {
                 document.getElementById('tarefa-paginas').value = '';
                 document.getElementById('tarefa-prazo').value = '';
-                // Não limpa o capítulo para facilitar atribuir várias tarefas ao mesmo cap.
                 carregarTarefas();
             }
 
@@ -237,14 +241,12 @@
             tb.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-400 text-xs">Carregando andamento...</td></tr>';
 
             const { data, error } = await _supabase.from('tarefas').select('*').order('prazo', { ascending: true });
-
             if (error) { tb.innerHTML = `<tr><td colspan="7" class="text-red-500 text-center py-4">${error.message}</td></tr>`; return; }
 
-            todasTarefasGlobais = data || []; // Salva pro gerador de WhatsApp usar
+            todasTarefasGlobais = data || []; 
             tb.innerHTML = '';
             
-            // Aqui mostramos todas, para o ADM saber se o Organizer já deu OK
-            const ativasEConcluidasRecentes = data.slice(0, 50); // Mostra as últimas 50 para não pesar
+            const ativasEConcluidasRecentes = data.slice(0, 50);
 
             if (ativasEConcluidasRecentes.length === 0) { tb.innerHTML = `<tr><td colspan="7" class="text-gray-400 text-center py-8">Nenhuma tarefa registrada! 🎉</td></tr>`; return; }
 
@@ -296,7 +298,6 @@
             }
         }
 
-        // --- A MÁGICA DO WHATSAPP ---
         function gerarWhatsApp() {
             const obraSelecionada = document.getElementById('whats-obra').value;
             const capituloSelecionado = document.getElementById('whats-capitulo').value.trim();
@@ -307,26 +308,18 @@
                 return;
             }
 
-            // Filtra as tarefas dessa obra e desse capitulo
             const tarefasDoCapitulo = todasTarefasGlobais.filter(t => 
                 t.obra_nome === obraSelecionada && 
                 t.capitulo === capituloSelecionado &&
-                t.etapa !== 'Organizer / Raw' // Não precisa mandar a organizer no whatsapp da equipe
+                t.etapa !== 'Organizer / Raw' 
             );
 
             if(tarefasDoCapitulo.length === 0) {
-                textArea.value = "Nenhuma tarefa de edição/tradução encontrada para este capítulo no sistema. Lembre-se de atribuir as etapas primeiro!";
+                textArea.value = "Nenhuma tarefa de edição/tradução encontrada para este capítulo.";
                 return;
             }
 
-            // Agrupa por etapa
-            const agrupado = {
-                "TRADUÇÃO": [],
-                "LIMPEZA": [],
-                "EDIÇÃO": [],
-                "REVISÃO": [],
-                "OUTROS": []
-            };
+            const agrupado = { "TRADUÇÃO": [], "LIMPEZA": [], "EDIÇÃO": [], "REVISÃO": [], "OUTROS": [] };
 
             tarefasDoCapitulo.forEach(t => {
                 let cat = "OUTROS";
@@ -343,25 +336,16 @@
                     dataFormatada = d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'});
                 }
 
-                agrupado[cat].push({
-                    paginas: t.paginas || 'Todas',
-                    responsavel: t.responsavel_nick,
-                    prazo: dataFormatada
-                });
+                agrupado[cat].push({ paginas: t.paginas || 'Todas', responsavel: t.responsavel_nick, prazo: dataFormatada });
             });
 
-            // Monta o texto no seu padrão!
             let txt = `> CAPÍTULO ${capituloSelecionado}\n\n`;
 
             for (const [etapa, lista] of Object.entries(agrupado)) {
                 if (lista.length > 0) {
-                    // Pega o prazo da primeira pessoa dessa etapa como referência pro cabeçalho
                     const prazoReferencia = lista[0].prazo;
                     txt += `\n> ${etapa} - (${prazoReferencia})\n\n`;
-                    
-                    lista.forEach(item => {
-                        txt += `PG ${item.paginas}: @${item.responsavel}\n`;
-                    });
+                    lista.forEach(item => { txt += `PG ${item.paginas}: @${item.responsavel}\n`; });
                 }
             }
 
