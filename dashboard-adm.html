@@ -61,7 +61,6 @@
             </div>
         </section>
 
-        <!-- OBRAS COM LÁPIS E SININHO -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[400px]">
                 <h2 class="text-lg font-black text-blue-900 mb-2 flex items-center gap-2">👥 Obras (STAFF)</h2>
@@ -76,28 +75,32 @@
             </div>
         </section>
 
-        <!-- PAINEL COM 4 CAIXINHAS -->
+        <!-- A ORDEM CORRETA: Concluídas, Atrasadas, Hoje, Ativas -->
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all">
             <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                 <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Tarefas da Obra</h2>
                 <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 px-3 py-1 rounded transition cursor-pointer">✖ Fechar Painel</button>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 1º CONCLUÍDAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
+                    <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
+                </div>
+                <!-- 2º ATRASADAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
                     <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
                 </div>
+                <!-- 3º HOJE -->
                 <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
                     <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
                 </div>
+                <!-- 4º ATIVAS -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
-                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Outras Ativas</h3></div>
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
-                    <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Concluídas (Novas)</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
                 </div>
             </div>
         </section>
@@ -211,7 +214,6 @@
                 const modoClick = isResp ? 'responsavel' : 'staff';
                 const nomeSeguro = obra.nome.replace(/'/g, "\\'");
                 
-                // NOTIFICAÇÃO 🔔: Verifica se essa obra tem tarefa com status Concluído
                 let temConcluida = false;
                 if(isResp) {
                     temConcluida = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído');
@@ -219,8 +221,6 @@
                     temConcluida = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
                 }
                 const sininho = temConcluida ? `<span class="animate-bounce text-sm ml-2 cursor-help" title="Nova entrega concluída!">🔔</span>` : '';
-                
-                // LÁPIS DE EDIÇÃO ✏️
                 const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar Cadastro da Obra">✏️</button>`;
 
                 container.innerHTML += `
@@ -293,8 +293,18 @@
                     else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Entregar</button>`;
                     else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-not-allowed">⏳ Aguardando Revisão</button>`;
                 } else {
-                    if(!isConcluida) botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
-                    else botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition" title="Limpa o sininho e arquiva a tarefa">✅ Marcar como Visto (Arquivar)</button>`;
+                    if(!isConcluida) {
+                        botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
+                    } else {
+                        // A MÁGICA DA DIVISÃO AQUI!
+                        const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}`;
+                        botaoAcao = `
+                            <div class="flex gap-1 mt-2">
+                                <button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded transition shadow-sm" title="Ir para divisão de tarefas">✂️ Dividir</button>
+                                <button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded transition shadow-sm" title="Marcar como Visto e Arquivar">📦 OK</button>
+                            </div>
+                        `;
+                    }
                 }
 
                 let prazoFormatado = '';
