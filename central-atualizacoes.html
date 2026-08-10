@@ -90,11 +90,17 @@
                 Nenhum lançamento confirmado hoje ainda.
             </div>
 
+            <!-- AREA DE TELEGRAM -->
             <div id="area-telegram" class="hidden mt-6 pt-6 border-t border-dashed border-gray-300">
                 <h4 class="text-md font-black text-blue-800 mb-2">Mensagem para Copiar:</h4>
-                <textarea id="texto-telegram" rows="12" class="w-full bg-gray-50 border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none mb-4" readonly></textarea>
+                <div class="relative">
+                    <textarea id="texto-telegram" rows="12" class="w-full bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm font-mono text-gray-800 focus:outline-none mb-2" readonly></textarea>
+                </div>
+                <button onclick="copiarTextoTelegram()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm shadow cursor-pointer transition mb-6">
+                    📋 Copiar Texto
+                </button>
                 
-                <h4 class="text-md font-black text-blue-800 mb-2">Imagens dos Layouts (Para Salvar/Enviar):</h4>
+                <h4 class="text-md font-black text-blue-800 mb-2">Imagens dos Layouts:</h4>
                 <div id="imagens-telegram" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
             </div>
         </div>
@@ -118,7 +124,6 @@
 
         window.onload = async () => {
             const cargo = localStorage.getItem('usuario_cargo');
-            // Libera o telegram pra Mod e ADM
             if (cargo === 'Administrador' || cargo === 'Moderador') {
                 document.getElementById('btn-gerar-telegram').classList.remove('hidden');
             }
@@ -201,7 +206,6 @@
             carregarAtualizacoes();
         }
 
-        // NOVO: FUNÇÃO DE CANCELAR POSTAGEM DA FILA
         async function cancelarPostagem(id) {
             if(confirm("Tem certeza que deseja cancelar e remover essa atualização da fila?")) {
                 const { error } = await _supabase.from('atualizacoes').delete().eq('id', id);
@@ -343,9 +347,12 @@
 
                         if(urlImg) {
                             htmlImagens += `
-                                <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                                    <img src="${urlImg}" class="w-full h-auto object-cover">
-                                    <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-[10px] p-1 text-center truncate">${postagem.obra_nome}</div>
+                                <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm flex flex-col">
+                                    <img src="${urlImg}" class="w-full h-auto object-cover rounded-t-lg">
+                                    <div class="bg-gray-900 text-white text-[10px] p-1 text-center truncate">${postagem.obra_nome}</div>
+                                    <button onclick="baixarImagem('${urlImg}', 'Layout_${postagem.obra_nome.replace(/\s+/g, '_')}.png')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold py-1.5 w-full rounded-b-lg transition cursor-pointer">
+                                        ⬇️ Baixar Imagem
+                                    </button>
                                 </div>
                             `;
                         }
@@ -358,7 +365,39 @@
                 document.getElementById('imagens-telegram').innerHTML = "<p class='text-xs text-red-500'>Erro ao carregar imagens.</p>";
             }
         }
+        
         function toggleHistorico() { document.getElementById('secao-historico').classList.toggle('hidden'); }
+
+        // MÁGICA DE COPIAR TEXTO PRO CELULAR
+        function copiarTextoTelegram() {
+            const textoArea = document.getElementById("texto-telegram");
+            textoArea.select();
+            textoArea.setSelectionRange(0, 99999); // Para mobile
+            navigator.clipboard.writeText(textoArea.value).then(() => {
+                alert("Texto copiado com sucesso! 📋✨");
+            }).catch(err => {
+                alert("Ops, seu navegador bloqueou a cópia. Tente selecionar o texto e copiar manualmente.");
+            });
+        }
+
+        // MÁGICA DE BAIXAR A IMAGEM DIRETO
+        async function baixarImagem(url, nomeArquivo) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const linkUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = linkUrl;
+                link.download = nomeArquivo;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(linkUrl);
+            } catch (err) {
+                alert("Não foi possível forçar o download direto no seu navegador. Segure a imagem e clique em 'Salvar Imagem' ou 'Fazer Download da Imagem'.");
+                window.open(url, '_blank'); // Abre em nova aba como backup
+            }
+        }
     </script>
 </body>
 </html>
