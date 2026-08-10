@@ -575,7 +575,7 @@
         }
 
         // =========================================================================
-        // MÓDULO 3: RECRUTAMENTO (NOVO LAYOUT DE FASES SEPARADAS)
+        // MÓDULO 3: RECRUTAMENTO (NOVO LAYOUT DE FASES SEPARADAS) + ALARMES DE ERRO
         // =========================================================================
         function limparFormRec() {
             document.getElementById('rec-id').value = '';
@@ -596,14 +596,17 @@
             document.getElementById('btn-salvar-rec').innerHTML = '💾 Atualizar Cadastro';
             document.getElementById('btn-cancelar-rec').classList.remove('hidden');
             
-            // Rola a tela para o topo para a ADM ver o formulário
             document.getElementById('painel-recrut').scrollIntoView({ behavior: 'smooth' });
         }
 
         async function carregarRecrutamento() {
-            const { data } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false});
+            const { data, error } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false});
             
-            // Limpar as 8 colunas do Kanban
+            if(error) {
+                alert("🚨 ERRO AO CARREGAR RECRUTAMENTO: " + error.message);
+                return;
+            }
+
             for(let i=1; i<=8; i++) document.getElementById(`rec-col-${i}`).innerHTML = '';
 
             if(!data) return;
@@ -634,7 +637,6 @@
                     </div>
                 `;
 
-                // Distribui nas colunas baseadas na Fase do Candidato
                 if(c.fase === 'Em Teste') document.getElementById('rec-col-1').innerHTML += card;
                 else if(c.fase === '1ª Fase') document.getElementById('rec-col-2').innerHTML += card;
                 else if(c.fase === 'Aprovados (1ª Fase)') document.getElementById('rec-col-3').innerHTML += card;
@@ -643,7 +645,7 @@
                 else if(c.fase === '3ª Fase') document.getElementById('rec-col-6').innerHTML += card;
                 else if(c.fase === 'Aprovados') document.getElementById('rec-col-7').innerHTML += card;
                 else if(c.fase === 'Reprovados') document.getElementById('rec-col-8').innerHTML += card;
-                else document.getElementById('rec-col-1').innerHTML += card; // Fallback se não encontrar
+                else document.getElementById('rec-col-1').innerHTML += card; 
             });
         }
 
@@ -656,25 +658,33 @@
                 fase: document.getElementById('rec-fase').value
             };
             
-            if (id) { await _supabase.from('recrutamento').update(obj).eq('id', id); } 
-            else { await _supabase.from('recrutamento').insert([obj]); }
+            if (id) { 
+                const { error } = await _supabase.from('recrutamento').update(obj).eq('id', id); 
+                if (error) { alert("🚨 ERRO AO ATUALIZAR: " + error.message); return; }
+            } 
+            else { 
+                const { error } = await _supabase.from('recrutamento').insert([obj]); 
+                if (error) { alert("🚨 ERRO AO INSERIR: " + error.message); return; }
+            }
             
             limparFormRec();
             carregarRecrutamento();
+            alert("✅ Candidato salvo com sucesso!");
         }
 
         async function mudarFaseRec(id, novaFase) {
-            await _supabase.from('recrutamento').update({fase: novaFase}).eq('id', id);
+            const { error } = await _supabase.from('recrutamento').update({fase: novaFase}).eq('id', id);
+            if (error) { alert("🚨 ERRO AO MOVER FASE: " + error.message); return; }
             carregarRecrutamento();
         }
 
         async function excluirRec(id) {
-            if(confirm("Deseja apagar este candidato do sistema permanentemente?")) {
-                await _supabase.from('recrutamento').delete().eq('id', id);
+            if(confirm("Deseja mesmo apagar este candidato do sistema permanentemente?")) {
+                const { error } = await _supabase.from('recrutamento').delete().eq('id', id);
+                if (error) { alert("🚨 ERRO AO EXCLUIR: " + error.message); return; }
                 carregarRecrutamento();
             }
         }
-
 
         // =========================================================================
         // SCRIPTS ANTIGOS MANTIDOS (Dashboard Normal ADM)
@@ -795,14 +805,14 @@
                 
                 let botaoAcao = '';
                 if(isMinhas) {
-                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">▶️ Iniciar</button>`;
-                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">✅ Entregar</button>`;
+                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">▶️ Iniciar</button>`;
+                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">✅ Entregar</button>`;
                     else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2">⏳ Em Revisão</button>`;
                 } else {
-                    if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">✅ Forçar Conclusão</button>`; } 
+                    if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2">✅ Forçar Conclusão</button>`; } 
                     else {
                         const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`;
-                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">📦 OK</button></div>`;
+                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded">📦 OK</button></div>`;
                     }
                 }
 
