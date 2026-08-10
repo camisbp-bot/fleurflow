@@ -44,7 +44,6 @@
                     <span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span>
                 </button>
 
-                <!-- BOTÃO DE MINHAS ADVERTÊNCIAS COM BADGE -->
                 <button onclick="abrirMinhasAdv()" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group">
                     <span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span>
                     <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
@@ -194,6 +193,7 @@
             <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-200">
                 <h3 class="text-lg font-bold text-orange-800 mb-4">Aplicar Nova Advertência</h3>
                 <form onsubmit="salvarAdvertencia(event)" class="space-y-4">
+                    <input type="hidden" id="adv-id">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="text-xs font-bold text-gray-600">Infrator (Nick)</label>
@@ -216,7 +216,11 @@
                         <label class="text-xs font-bold text-gray-600">Motivo da Advertência</label>
                         <textarea id="adv-motivo" required rows="3" class="w-full border border-gray-300 rounded p-2 text-sm"></textarea>
                     </div>
-                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded shadow cursor-pointer">💾 Registrar Advertência</button>
+                    
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" id="btn-cancelar-adv" onclick="limparFormAdv()" class="hidden bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold cursor-pointer">✖</button>
+                        <button type="submit" id="btn-salvar-adv" class="flex-1 w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded shadow cursor-pointer">💾 Registrar Advertência</button>
+                    </div>
                 </form>
 
                 <div id="area-wpp-adv" class="hidden mt-6 bg-orange-50 p-4 border border-orange-200 rounded-lg">
@@ -265,49 +269,15 @@
             </form>
         </div>
 
-        <!-- NOVO LAYOUT KANBAN (ROLAGEM LATERAL) COM AS 8 COLUNAS -->
         <div class="flex gap-4 overflow-x-auto pb-4 snap-x w-full">
-            
-            <div class="bg-gray-50 rounded-xl shadow-sm border border-gray-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-gray-200 pb-2 mb-3 text-gray-700">⏳ Em Teste</h3>
-                <div id="rec-col-1" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
-            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 1ª Fase</h3>
-                <div id="rec-col-2" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
-            <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-green-200 pb-2 mb-3 text-green-800">✅ Aprovados (1ª Fase)</h3>
-                <div id="rec-col-3" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
-            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 2ª Fase</h3>
-                <div id="rec-col-4" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
-            <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-green-200 pb-2 mb-3 text-green-800">✅ Aprovados (2ª Fase)</h3>
-                <div id="rec-col-5" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
-            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 3ª Fase (Última)</h3>
-                <div id="rec-col-6" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
-            <div class="bg-emerald-100 rounded-xl shadow-sm border border-emerald-300 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-emerald-300 pb-2 mb-3 text-emerald-900">🏆 Aprovados</h3>
-                <div id="rec-col-7" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
-            <div class="bg-red-50 rounded-xl shadow-sm border border-red-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start">
-                <h3 class="font-black text-sm border-b border-red-200 pb-2 mb-3 text-red-800">❌ Reprovados</h3>
-                <div id="rec-col-8" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
-            </div>
-
+            <div class="bg-gray-50 rounded-xl shadow-sm border border-gray-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-gray-200 pb-2 mb-3 text-gray-700">⏳ Em Teste</h3><div id="rec-col-1" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
+            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 1ª Fase</h3><div id="rec-col-2" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
+            <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-green-200 pb-2 mb-3 text-green-800">✅ Aprovados (1ª Fase)</h3><div id="rec-col-3" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
+            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 2ª Fase</h3><div id="rec-col-4" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
+            <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-green-200 pb-2 mb-3 text-green-800">✅ Aprovados (2ª Fase)</h3><div id="rec-col-5" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
+            <div class="bg-blue-50 rounded-xl shadow-sm border border-blue-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-blue-200 pb-2 mb-3 text-blue-800">📄 3ª Fase (Última)</h3><div id="rec-col-6" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
+            <div class="bg-emerald-100 rounded-xl shadow-sm border border-emerald-300 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-emerald-300 pb-2 mb-3 text-emerald-900">🏆 Aprovados</h3><div id="rec-col-7" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
+            <div class="bg-red-50 rounded-xl shadow-sm border border-red-200 p-3 min-w-[260px] flex flex-col h-[500px] snap-start"><h3 class="font-black text-sm border-b border-red-200 pb-2 mb-3 text-red-800">❌ Reprovados</h3><div id="rec-col-8" class="overflow-y-auto flex-1 space-y-2 pr-1"></div></div>
         </div>
     </section>
 
@@ -331,7 +301,7 @@
         </div>
     </div>
 
-    <!-- MODAL MINHAS ADVERTÊNCIAS (Para a ADM ver as próprias) -->
+    <!-- MODAL MINHAS ADVERTÊNCIAS -->
     <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-orange-800 p-4 flex justify-between items-center text-white">
@@ -479,7 +449,7 @@
                 if(m.status_membro === 'Hiatus') cor = 'bg-yellow-100 text-yellow-800';
                 if(m.status_membro === 'Saiu') cor = 'bg-red-100 text-red-800';
 
-                const jsonObj = encodeURIComponent(JSON.stringify(m));
+                const jsonObj = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
 
                 tb.innerHTML += `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
@@ -540,6 +510,37 @@
             document.getElementById('texto-wpp-rh').value = txt; document.getElementById('area-wpp-rh').classList.remove('hidden');
         }
 
+        // =========================================================================
+        // MÓDULO 2: ADVERTÊNCIAS (EDIÇÃO E EXCLUSÃO)
+        // =========================================================================
+        function limparFormAdv() {
+            document.getElementById('form-adv').reset();
+            document.getElementById('adv-id').value = '';
+            document.getElementById('btn-salvar-adv').innerHTML = '💾 Registrar Advertência';
+            document.getElementById('btn-cancelar-adv').classList.add('hidden');
+        }
+
+        function editarAdv(encodedObj) {
+            const a = JSON.parse(decodeURIComponent(encodedObj));
+            document.getElementById('adv-id').value = a.id;
+            document.getElementById('adv-nick').value = a.membro_nick;
+            document.getElementById('adv-nivel').value = a.nivel || '1ª';
+            document.getElementById('adv-data').value = a.data_adv || '';
+            document.getElementById('adv-motivo').value = a.motivo || '';
+            
+            document.getElementById('btn-salvar-adv').innerHTML = '💾 Atualizar Advertência';
+            document.getElementById('btn-cancelar-adv').classList.remove('hidden');
+            document.getElementById('painel-adv').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function excluirAdv(id) {
+            if(confirm('🚨 Tem certeza que deseja APAGAR esta advertência do sistema?')) {
+                const { error } = await _supabase.from('advertencias').delete().eq('id', id);
+                if(error) { alert("Erro ao excluir: " + error.message); return; }
+                carregarAdvertencias();
+            }
+        }
+
         async function carregarAdvertencias() {
             const { data } = await _supabase.from('advertencias').select('*').order('created_at', {ascending: false});
             const lst = document.getElementById('lista-advertencias'); lst.innerHTML = '';
@@ -547,13 +548,18 @@
 
             data.forEach(a => {
                 const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
+                const jsonObj = encodeURIComponent(JSON.stringify(a)).replace(/'/g, "%27");
                 lst.innerHTML += `
                     <div class="bg-gray-50 border border-gray-200 p-3 rounded shadow-sm">
                         <div class="flex justify-between items-center mb-1">
                             <span class="font-black text-orange-900">👤 @${a.membro_nick} <span class="text-red-600 ml-1 text-xs">(${a.nivel || '1ª'})</span></span>
                             <span class="text-[10px] bg-white border border-gray-300 px-2 py-0.5 rounded font-bold">${dataFormat}</span>
                         </div>
-                        <p class="text-xs text-gray-700 italic">" ${a.motivo} "</p>
+                        <p class="text-xs text-gray-700 italic mb-2">" ${a.motivo} "</p>
+                        <div class="flex justify-end gap-3 mt-2 pt-2 border-t border-gray-200">
+                            <button onclick="editarAdv('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button>
+                            <button onclick="excluirAdv('${a.id}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button>
+                        </div>
                     </div>
                 `;
             });
@@ -561,21 +567,35 @@
 
         async function salvarAdvertencia(e) {
             e.preventDefault();
-            const nick = document.getElementById('adv-nick').value; const nivel = document.getElementById('adv-nivel').value;
-            const dataAdv = document.getElementById('adv-data').value; const motivo = document.getElementById('adv-motivo').value;
+            const id = document.getElementById('adv-id').value;
+            const nick = document.getElementById('adv-nick').value; 
+            const nivel = document.getElementById('adv-nivel').value;
+            const dataAdv = document.getElementById('adv-data').value; 
+            const motivo = document.getElementById('adv-motivo').value;
 
-            const { error } = await _supabase.from('advertencias').insert([{membro_nick: nick, nivel: nivel, data_adv: dataAdv, motivo: motivo}]);
-            if(error) { alert("Erro: " + error.message); return; }
+            const obj = {membro_nick: nick, nivel: nivel, data_adv: dataAdv, motivo: motivo};
+
+            if (id) {
+                const { error } = await _supabase.from('advertencias').update(obj).eq('id', id);
+                if(error) { alert("🚨 ERRO AO ATUALIZAR: " + error.message); return; }
+                alert("✅ Advertência atualizada!");
+            } else {
+                const { error } = await _supabase.from('advertencias').insert([obj]);
+                if(error) { alert("🚨 ERRO AO INSERIR: " + error.message); return; }
+            }
 
             const dFormat = dataAdv.split('-').reverse().join('/');
             const msg = `⚠️ *ADVERTÊNCIA OFICIAL* ⚠️\n\nMembro: @${nick}\nData da Ocorrência: ${dFormat}\nGrau: ${nivel} Advertência\n\nMotivo:\n"${motivo}"\n\nPedimos que as regras da equipe sejam respeitadas para mantermos um ambiente saudável. Qualquer dúvida, chame a administração.`;
             
-            document.getElementById('texto-wpp-adv').value = msg; document.getElementById('area-wpp-adv').classList.remove('hidden');
-            document.getElementById('adv-motivo').value = ''; carregarAdvertencias();
+            document.getElementById('texto-wpp-adv').value = msg; 
+            document.getElementById('area-wpp-adv').classList.remove('hidden');
+            
+            limparFormAdv(); 
+            carregarAdvertencias();
         }
 
         // =========================================================================
-        // MÓDULO 3: RECRUTAMENTO (NOVO LAYOUT DE FASES SEPARADAS) + ALARMES DE ERRO
+        // MÓDULO 3: RECRUTAMENTO (NOVO LAYOUT DE FASES SEPARADAS E ALARMES)
         // =========================================================================
         function limparFormRec() {
             document.getElementById('rec-id').value = '';
@@ -601,30 +621,23 @@
 
         async function carregarRecrutamento() {
             const { data, error } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false});
-            
-            if(error) {
-                alert("🚨 ERRO AO CARREGAR RECRUTAMENTO: " + error.message);
-                return;
-            }
+            if(error) { alert("🚨 ERRO AO CARREGAR RECRUTAMENTO: " + error.message); return; }
 
             for(let i=1; i<=8; i++) document.getElementById(`rec-col-${i}`).innerHTML = '';
 
             if(!data) return;
             data.forEach(c => {
-                const jsonObj = encodeURIComponent(JSON.stringify(c));
+                const jsonObj = encodeURIComponent(JSON.stringify(c)).replace(/'/g, "%27");
+                
                 const card = `
                     <div class="bg-white border border-gray-200 p-3 rounded shadow-sm relative mb-2">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <p class="font-black text-gray-800 text-sm leading-tight">${c.nome}</p>
-                                <p class="text-[10px] font-bold text-gray-500 uppercase mt-0.5">${c.funcao || c.cargo_pretendido || ''}</p>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="editarRec('${jsonObj}')" class="text-blue-500 hover:text-blue-700 font-bold cursor-pointer" title="Editar Candidato">✏️</button>
-                                <button onclick="excluirRec('${c.id}')" class="text-gray-400 hover:text-red-600 font-bold cursor-pointer" title="Apagar Candidato">✖</button>
-                            </div>
+                        <div class="mb-3">
+                            <p class="font-black text-gray-800 text-sm leading-tight">${c.nome}</p>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase mt-0.5">${c.funcao || c.cargo_pretendido || ''}</p>
                         </div>
-                        <select onchange="mudarFaseRec('${c.id}', this.value)" class="text-[10px] w-full p-1.5 border border-gray-300 rounded bg-gray-50 font-bold text-gray-700 cursor-pointer focus:outline-none">
+                        
+                        <label class="text-[9px] font-bold text-gray-500">Mudar Fase:</label>
+                        <select onchange="mudarFaseRec('${c.id}', this.value)" class="text-[10px] w-full p-1 border border-gray-300 rounded bg-gray-50 font-bold text-gray-700 cursor-pointer focus:outline-none mb-2">
                             <option value="Em Teste" ${c.fase === 'Em Teste' ? 'selected' : ''}>⏳ Em Teste</option>
                             <option value="1ª Fase" ${c.fase === '1ª Fase' ? 'selected' : ''}>📄 1ª Fase</option>
                             <option value="Aprovados (1ª Fase)" ${c.fase === 'Aprovados (1ª Fase)' ? 'selected' : ''}>✅ Aprovados (1ª Fase)</option>
@@ -634,6 +647,11 @@
                             <option value="Aprovados" ${c.fase === 'Aprovados' ? 'selected' : ''}>🏆 Aprovados (Final)</option>
                             <option value="Reprovados" ${c.fase === 'Reprovados' ? 'selected' : ''}>❌ Reprovados</option>
                         </select>
+
+                        <div class="flex justify-between gap-3 pt-2 border-t border-gray-200 mt-2">
+                            <button onclick="editarRec('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button>
+                            <button onclick="excluirRec('${c.id}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button>
+                        </div>
                     </div>
                 `;
 
@@ -805,14 +823,14 @@
                 
                 let botaoAcao = '';
                 if(isMinhas) {
-                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">▶️ Iniciar</button>`;
-                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">✅ Entregar</button>`;
+                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">▶️ Iniciar</button>`;
+                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">✅ Entregar</button>`;
                     else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2">⏳ Em Revisão</button>`;
                 } else {
-                    if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2">✅ Forçar Conclusão</button>`; } 
+                    if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">✅ Forçar Conclusão</button>`; } 
                     else {
                         const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`;
-                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded">📦 OK</button></div>`;
+                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">📦 OK</button></div>`;
                     }
                 }
 
