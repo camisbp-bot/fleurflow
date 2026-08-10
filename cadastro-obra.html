@@ -99,7 +99,6 @@
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Capa Oficial (Upload de Imagem)</label>
                         <input type="file" id="obra-capa" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 cursor-pointer">
-                        <p class="text-[10px] text-gray-400 mt-1">Ao editar, envie uma nova imagem apenas se quiser trocar a atual.</p>
                     </div>
 
                     <div class="md:col-span-2">
@@ -127,7 +126,6 @@
                         <input type="text" id="obra-dia-scan" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: Quarta-feira">
                     </div>
                     
-                    <!-- AGORA É TIPO TEXTO PRA ACEITAR EPÍLOGO -->
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Último Capítulo na Plataforma Oficial</label>
                         <input type="text" id="obra-capitulo-plat" value="0" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-700 focus:outline-none" placeholder="Ex: 84 ou Epílogo">
@@ -141,7 +139,6 @@
 
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <h3 class="text-lg font-black text-gray-800 border-b border-gray-100 pb-2 mb-4">🎨 Layouts da Obra (Upload)</h3>
-                <p class="text-[10px] text-gray-400 mb-3">Na edição, faça upload apenas dos layouts que quiser substituir.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <label class="block text-xs font-bold text-gray-700 mb-1">Layout de Lançamento</label>
@@ -188,6 +185,14 @@
         window.onload = async () => {
             await carregarEquipe();
             await carregarListaObrasParaEdicao();
+
+            // MÁGICA DO LÁPIS: Lê a URL e já carrega a obra se tiver ?edit=ID
+            const params = new URLSearchParams(window.location.search);
+            const idEdit = params.get('edit');
+            if (idEdit) {
+                document.getElementById('select-editar-obra').value = idEdit;
+                carregarDadosEdicao();
+            }
         };
 
         async function carregarEquipe() {
@@ -197,9 +202,7 @@
 
                 const containerResp = document.getElementById('lista-responsaveis');
                 const containerStaff = document.getElementById('lista-membros-staff');
-                
-                containerResp.innerHTML = '';
-                containerStaff.innerHTML = '';
+                containerResp.innerHTML = ''; containerStaff.innerHTML = '';
 
                 if (equipe) {
                     const meuNick = localStorage.getItem('usuario_nick');
@@ -264,13 +267,10 @@
             document.getElementById('obra-tipo').value = obra.tipo || 'Recorrente';
             document.getElementById('obra-prioridade').value = obra.prioridade || 'Média';
             document.getElementById('obra-status').value = obra.status || 'Ativa';
-            
             document.getElementById('obra-drive').value = obra.drive_url || '';
             document.getElementById('obra-plataforma').value = obra.plataforma_oficial || '';
             document.getElementById('obra-dia-oficial').value = obra.dia_oficial || '';
             document.getElementById('obra-dia-scan').value = obra.dia_scan || '';
-            
-            // Aceita textos como "Epílogo"
             document.getElementById('obra-capitulo-plat').value = obra.capitulo_plataforma || '0';
             document.getElementById('obra-capitulo-fleur').value = obra.capitulo_fleur || '0';
 
@@ -310,15 +310,12 @@
         async function fazerUpload(inputId, pasta, urlAtualDaObra) {
             const input = document.getElementById(inputId);
             if (!input.files || input.files.length === 0) return urlAtualDaObra;
-            
             const file = input.files[0];
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
             const filePath = `${pasta}/${fileName}`;
-
             const { error: uploadError } = await _supabase.storage.from('fleurflow-bucket').upload(filePath, file);
             if (uploadError) throw new Error(`Erro ao enviar arquivo de ${inputId}: ` + uploadError.message);
-
             const { data } = _supabase.storage.from('fleurflow-bucket').getPublicUrl(filePath);
             return data.publicUrl;
         }
@@ -330,11 +327,9 @@
             
             const cbResp = document.querySelectorAll('input[name="resp_obra"]:checked');
             const responsaveisSelecionados = Array.from(cbResp).map(cb => cb.value).join(', ');
-
             if(!responsaveisSelecionados) { alert("Selecione pelo menos um Responsável!"); return; }
 
-            btn.disabled = true;
-            btn.textContent = 'Enviando imagens e processando...';
+            btn.disabled = true; btn.textContent = 'Enviando imagens e processando...';
 
             try {
                 const capaUrl = await fazerUpload('obra-capa', 'capas', imagensAtuais.capa);
@@ -344,48 +339,32 @@
                 const layoutLancFin = await fazerUpload('obra-layout-lanc-fin', 'layouts', imagensAtuais.lancFin);
 
                 const checkboxesStaff = document.querySelectorAll('input[name="staff_membros"]:checked');
-                // Envia como inteiro
                 const staff_ids = Array.from(checkboxesStaff).map(cb => parseInt(cb.value));
 
                 const dadosObra = {
-                    nome: document.getElementById('obra-nome').value,
-                    lingua: document.getElementById('obra-lingua').value,
-                    sinopse: document.getElementById('obra-sinopse').value,
-                    tipo: document.getElementById('obra-tipo').value,
-                    responsavel_nick: responsaveisSelecionados, 
-                    plataforma_oficial: document.getElementById('obra-plataforma').value,
-                    dia_oficial: document.getElementById('obra-dia-oficial').value,
-                    dia_scan: document.getElementById('obra-dia-scan').value,
-                    prioridade: document.getElementById('obra-prioridade').value,
-                    drive_url: document.getElementById('obra-drive').value,
-                    capa_url: capaUrl,
-                    layout_lancamento: layoutLanc,
-                    layout_atualizacao: layoutAtu,
-                    layout_finalizacao: layoutFin,
-                    layout_lancamento_finalizacao: layoutLancFin, 
+                    nome: document.getElementById('obra-nome').value, lingua: document.getElementById('obra-lingua').value,
+                    sinopse: document.getElementById('obra-sinopse').value, tipo: document.getElementById('obra-tipo').value,
+                    responsavel_nick: responsaveisSelecionados, plataforma_oficial: document.getElementById('obra-plataforma').value,
+                    dia_oficial: document.getElementById('obra-dia-oficial').value, dia_scan: document.getElementById('obra-dia-scan').value,
+                    prioridade: document.getElementById('obra-prioridade').value, drive_url: document.getElementById('obra-drive').value,
+                    capa_url: capaUrl, layout_lancamento: layoutLanc, layout_atualizacao: layoutAtu,
+                    layout_finalizacao: layoutFin, layout_lancamento_finalizacao: layoutLancFin, 
                     capitulo_plataforma: document.getElementById('obra-capitulo-plat').value || '0',
                     capitulo_fleur: document.getElementById('obra-capitulo-fleur').value || '0',
-                    status: document.getElementById('obra-status').value,
-                    staff_ids: staff_ids
+                    status: document.getElementById('obra-status').value, staff_ids: staff_ids
                 };
 
                 if (idObraEditando) {
                     const { error } = await _supabase.from('obras').update(dadosObra).eq('id', idObraEditando);
-                    if (error) throw error;
-                    alert("Obra atualizada com sucesso!");
+                    if (error) throw error; alert("Obra atualizada com sucesso!");
                 } else {
                     const { error } = await _supabase.from('obras').insert([dadosObra]);
-                    if (error) throw error;
-                    alert("Obra cadastrada com sucesso!");
+                    if (error) throw error; alert("Obra cadastrada com sucesso!");
                 }
-                
                 voltar();
-
             } catch (error) {
-                console.error('Erro ao salvar:', error.message);
                 alert('Erro ao processar: ' + error.message);
-                btn.disabled = false;
-                btn.textContent = textoOriginal;
+                btn.disabled = false; btn.textContent = textoOriginal;
             }
         }
     </script>
