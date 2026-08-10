@@ -24,7 +24,7 @@
         
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👑 Ferramentas da Administração</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4 mb-4">
                 <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
                     <span class="text-3xl">📖</span><span class="text-xs font-bold text-gray-700 text-center">Cadastrar Obra</span>
                 </button>
@@ -43,6 +43,12 @@
                 <button onclick="abrirModalDownload()" class="bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer">
                     <span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span>
                 </button>
+
+                <button onclick="abrirMinhasAdv()" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group">
+                    <span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span>
+                    <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
+                    <span class="text-xs font-black text-orange-800 group-hover:text-orange-900 text-center">Minhas Adv.</span>
+                </button>
             </div>
 
             <!-- NOVA SESSÃO: DEPARTAMENTO DE RH -->
@@ -52,7 +58,7 @@
                     <span class="text-2xl">👥</span><span class="text-sm font-black text-purple-800">Equipe Geral</span>
                 </button>
                 <button onclick="abrirAba('painel-adv')" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer">
-                    <span class="text-2xl">⚠️</span><span class="text-sm font-black text-orange-800">Advertências</span>
+                    <span class="text-2xl">⚠️</span><span class="text-sm font-black text-orange-800">Advertências (Dar Adv)</span>
                 </button>
                 <button onclick="abrirAba('painel-recrut')" class="bg-teal-50 border border-teal-200 hover:border-teal-500 hover:shadow-md p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer">
                     <span class="text-2xl">🎯</span><span class="text-sm font-black text-teal-800">Recrutamento</span>
@@ -110,21 +116,16 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Formulário de RH -->
             <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
                 <h3 class="text-lg font-bold text-purple-800 mb-4">Adicionar / Editar Membro</h3>
                 <form id="form-rh" onsubmit="salvarMembroRH(event)" class="space-y-4">
                     <input type="hidden" id="rh-id">
-                    
-                    <!-- CAMPO COMBO MÁGICO DO NICK -->
                     <div>
                         <label class="text-xs font-bold text-gray-600">Nick na SCAN</label>
                         <input type="text" id="rh-nick" list="nicks-equipe" onchange="autoPreencherDadosBasicos()" autocomplete="off" required class="w-full border border-gray-300 rounded p-2 text-sm" placeholder="Digite ou selecione da lista...">
                         <datalist id="nicks-equipe"></datalist>
                     </div>
-
                     <div><label class="text-xs font-bold text-gray-600">Nome Real</label><input type="text" id="rh-nome" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
-                    
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="text-xs font-bold text-gray-600">Data Nasc.</label>
@@ -135,10 +136,8 @@
                             <input type="number" id="rh-idade" readonly class="w-full bg-gray-100 border border-gray-300 rounded p-2 text-sm text-gray-500 cursor-not-allowed" placeholder="Automático">
                         </div>
                     </div>
-                    
                     <div><label class="text-xs font-bold text-gray-600">Data de Entrada</label><input type="date" id="rh-entrada" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
                     <div><label class="text-xs font-bold text-gray-600">Funções (Ex: Tradutor, Cleaner)</label><input type="text" id="rh-funcoes" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
-                    
                     <div class="border-t border-gray-200 pt-4 mt-4">
                         <label class="text-xs font-bold text-gray-600">Status do Membro</label>
                         <select id="rh-status" onchange="verificarStatusRH()" class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-50 font-bold">
@@ -147,8 +146,6 @@
                             <option value="Saiu">🔴 Saiu da SCAN</option>
                         </select>
                     </div>
-
-                    <!-- Campos Condicionais de Hiatus -->
                     <div id="box-hiatus" class="hidden space-y-2 bg-yellow-50 p-3 rounded border border-yellow-200">
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="text-xs font-bold">Início</label><input type="date" id="rh-hia-inicio" class="w-full border rounded p-1 text-xs"></div>
@@ -156,21 +153,16 @@
                         </div>
                         <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-hia-motivo" class="w-full border rounded p-1 text-xs"></div>
                     </div>
-
-                    <!-- Campos Condicionais de Saída -->
                     <div id="box-saida" class="hidden space-y-2 bg-red-50 p-3 rounded border border-red-200">
                         <div><label class="text-xs font-bold">Data de Saída</label><input type="date" id="rh-sai-data" class="w-full border rounded p-1 text-xs"></div>
                         <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-sai-motivo" class="w-full border rounded p-1 text-xs"></div>
                     </div>
-
                     <div class="flex gap-2 pt-2">
                         <button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold">Limpar</button>
                         <button type="submit" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 rounded shadow cursor-pointer">💾 Salvar Ficha</button>
                     </div>
                 </form>
             </div>
-
-            <!-- Lista de Membros -->
             <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
                 <h3 class="text-lg font-bold text-purple-800 mb-4 border-b pb-2">📋 Lista Geral (Clique para Editar ou Avisar)</h3>
                 <div class="overflow-x-auto">
@@ -181,7 +173,6 @@
                         <tbody id="tabela-rh" class="divide-y divide-gray-100"></tbody>
                     </table>
                 </div>
-                <!-- Box WhatsApp -->
                 <div id="area-wpp-rh" class="hidden mt-6 bg-purple-50 p-4 border border-purple-200 rounded-lg">
                     <h4 class="text-sm font-bold text-purple-900 mb-2">📲 Mensagem para o WhatsApp (Notificar Equipe)</h4>
                     <textarea id="texto-wpp-rh" rows="5" class="w-full bg-white border border-purple-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea>
@@ -191,7 +182,7 @@
         </div>
     </section>
 
-    <!-- ==================== MÓDULO: ADVERTÊNCIAS ==================== -->
+    <!-- ==================== MÓDULO: ADVERTÊNCIAS (Para Aplicar) ==================== -->
     <section id="painel-adv" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-black text-orange-900 flex items-center gap-2">⚠️ Controle de Advertências</h2>
@@ -241,7 +232,7 @@
         </div>
     </section>
 
-    <!-- ==================== MÓDULO: RECRUTAMENTO ==================== -->
+    <!-- ==================== MÓDULO: RECRUTAMENTO ATUALIZADO ==================== -->
     <section id="painel-recrut" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-black text-teal-900 flex items-center gap-2">🎯 Processo de Recrutamento</h2>
@@ -254,24 +245,37 @@
                 <div><label class="text-xs font-bold text-gray-600">Nome / Nick</label><input type="text" id="rec-nome" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
                 <div><label class="text-xs font-bold text-gray-600">Função Pretendida</label><input type="text" id="rec-funcao" placeholder="Ex: Tradutor" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
                 <div><label class="text-xs font-bold text-gray-600">Fase Atual</label>
-                    <select id="rec-fase" class="w-full border border-gray-300 rounded p-2 text-sm font-bold bg-teal-50 text-teal-800">
-                        <option value="Em Teste">⏳ Em Teste</option>
-                        <option value="Aprovado">✅ Aprovado</option>
-                        <option value="Reprovado">❌ Reprovado</option>
+                    <select id="rec-fase" class="w-full border border-gray-300 rounded p-2 text-sm font-bold bg-teal-50 text-teal-800 cursor-pointer">
+                        <option value="1ª Fase">1ª Fase</option>
+                        <option value="Aprovado (1ª Fase)">Aprovado (1ª Fase)</option>
+                        <option value="2ª Fase">2ª Fase</option>
+                        <option value="Aprovado (2ª Fase)">Aprovado (2ª Fase)</option>
+                        <option value="3ª Fase">3ª Fase</option>
+                        <option value="Aprovado">Aprovado (Final)</option>
+                        <option value="Reprovado">Reprovado</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded shadow">💾 Adicionar</button>
+                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded shadow cursor-pointer">💾 Adicionar</button>
             </form>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div class="bg-white rounded-xl shadow-sm border border-yellow-200 p-4 flex flex-col h-96"><h3 class="font-black text-yellow-800 border-b pb-2 mb-2">⏳ Em Teste</h3><div id="rec-teste" class="overflow-y-auto flex-1 space-y-2"></div></div>
-            <div class="bg-white rounded-xl shadow-sm border border-green-200 p-4 flex flex-col h-96"><h3 class="font-black text-green-800 border-b pb-2 mb-2">✅ Aprovados</h3><div id="rec-aprovado" class="overflow-y-auto flex-1 space-y-2"></div></div>
-            <div class="bg-white rounded-xl shadow-sm border border-red-200 p-4 flex flex-col h-96"><h3 class="font-black text-red-800 border-b pb-2 mb-2">❌ Reprovados</h3><div id="rec-reprovado" class="overflow-y-auto flex-1 space-y-2"></div></div>
+            <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-4 flex flex-col h-96">
+                <h3 class="font-black text-blue-800 border-b pb-2 mb-2">⏳ Fases em Andamento</h3>
+                <div id="rec-teste" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-green-200 p-4 flex flex-col h-96">
+                <h3 class="font-black text-green-800 border-b pb-2 mb-2">✅ Aprovados</h3>
+                <div id="rec-aprovado" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-red-200 p-4 flex flex-col h-96">
+                <h3 class="font-black text-red-800 border-b pb-2 mb-2">❌ Reprovados</h3>
+                <div id="rec-reprovado" class="overflow-y-auto flex-1 space-y-2 pr-1"></div>
+            </div>
         </div>
     </section>
 
-    <!-- MODAL DOWNLOAD RAW (MANTIDO DO SISTEMA ORIGINAL) -->
+    <!-- MODAL DOWNLOAD RAW -->
     <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-blue-800 p-4 flex justify-between items-center text-white">
@@ -291,6 +295,22 @@
         </div>
     </div>
 
+    <!-- MODAL MINHAS ADVERTÊNCIAS (Para a ADM ver as próprias) -->
+    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+            <div class="bg-orange-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">⚠️ Minhas Advertências</h3>
+                <button onclick="fecharMinhasAdv()" class="font-bold text-orange-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
+            </div>
+            <div class="p-6">
+                <p class="text-xs text-gray-500 mb-4">Aqui fica o registro oficial das advertências aplicadas a você. O acúmulo de advertências pode levar ao desligamento da equipe.</p>
+                <div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                    <p class="text-sm text-gray-400">Buscando histórico...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== LÓGICA E SCRIPTS ==================== -->
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
@@ -300,9 +320,8 @@
         let todasTarefasGlobais = [];
         let obrasDisponiveisRaw = [];
         let obraAbertaAtual = null;
-        let equipeBaseGlobal = []; // Array que armazena os membros para o autocompletar do RH
+        let equipeBaseGlobal = [];
 
-        // INICIALIZAÇÃO
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
@@ -310,11 +329,41 @@
             carregarDashboardAntigo(nick);
             carregarAniversariantes();
             carregarObrasPorModerador();
+            carregarMinhasAdv(nick); 
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
+
+        async function carregarMinhasAdv(meuNick) {
+            const { data } = await _supabase.from('advertencias').select('*').eq('membro_nick', meuNick).order('created_at', {ascending: false});
+            const lista = document.getElementById('lista-minhas-adv');
+            const badge = document.getElementById('badge-adv-adm');
+            
+            if(!data || data.length === 0) {
+                lista.innerHTML = '<div class="text-center py-4"><span class="text-4xl block mb-2">🎉</span><p class="text-sm font-bold text-green-700">Ficha Limpa!</p><p class="text-xs text-gray-500">Você não possui nenhuma advertência.</p></div>';
+                return;
+            }
+
+            if(badge) { badge.classList.remove('hidden'); badge.textContent = data.length; }
+
+            lista.innerHTML = '';
+            data.forEach(a => {
+                const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
+                lista.innerHTML += `
+                    <div class="bg-red-50 border border-red-200 p-3 rounded shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-black text-red-900">${a.nivel || '1ª'} Advertência</span>
+                            <span class="text-[10px] bg-white border border-red-300 text-red-800 px-2 py-0.5 rounded font-bold">${dataFormat}</span>
+                        </div>
+                        <p class="text-xs text-gray-800 mt-2 border-l-2 border-red-400 pl-2">"${a.motivo}"</p>
+                    </div>
+                `;
+            });
+        }
+
+        function abrirMinhasAdv() { document.getElementById('modal-minhas-adv').classList.remove('hidden'); }
+        function fecharMinhasAdv() { document.getElementById('modal-minhas-adv').classList.add('hidden'); }
         
-        // CONTROLE DE ABAS SPA (Single Page Application)
         function abrirAba(idAlvo) {
             document.getElementById('main-content').classList.add('hidden');
             document.getElementById('painel-rh').classList.add('hidden');
@@ -340,39 +389,25 @@
             navigator.clipboard.writeText(ta.value).then(() => alert("Copiado!")).catch(() => alert("Erro ao copiar."));
         }
 
-        // =========================================================================
-        // MÓDULO 1: RH (EQUIPE GERAL)
-        // =========================================================================
-        
-        // AUTOCOMPLETAR MÁGICO: Procura se a pessoa já tem cadastro básico
         function autoPreencherDadosBasicos() {
             const nickDigitado = document.getElementById('rh-nick').value;
             const membroBase = equipeBaseGlobal.find(m => m.nick === nickDigitado);
-            
             if (membroBase) {
                 const campoNasc = document.getElementById('rh-nasc');
-                // Preenche a data de nascimento apenas se ela existir no cadastro e se o campo estiver vazio
                 if (membroBase.data_nascimento && !campoNasc.value) {
                     campoNasc.value = membroBase.data_nascimento;
-                    calcularIdade(); // Já calcula a idade na hora!
+                    calcularIdade();
                 }
             }
         }
 
-        // Lógica de cálculo automático da Idade
         function calcularIdade() {
             const dataNasc = document.getElementById('rh-nasc').value;
-            if (!dataNasc) {
-                document.getElementById('rh-idade').value = '';
-                return;
-            }
-            const hoje = new Date();
-            const nasc = new Date(dataNasc);
+            if (!dataNasc) { document.getElementById('rh-idade').value = ''; return; }
+            const hoje = new Date(); const nasc = new Date(dataNasc);
             let idade = hoje.getFullYear() - nasc.getFullYear();
             const mes = hoje.getMonth() - nasc.getMonth();
-            if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
-                idade--;
-            }
+            if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) { idade--; }
             document.getElementById('rh-idade').value = idade;
         }
 
@@ -391,26 +426,19 @@
         }
 
         async function carregarRH() {
-            // 1. Puxa os dados da tabela Equipe (Base) para o Autocompletar
             const { data: equipeBase } = await _supabase.from('equipe').select('*');
             equipeBaseGlobal = equipeBase || [];
             
-            const datalistNicks = document.getElementById('nicks-equipe');
-            datalistNicks.innerHTML = '';
-            equipeBaseGlobal.forEach(m => {
-                datalistNicks.innerHTML += `<option value="${m.nick}">`;
-            });
+            const datalistNicks = document.getElementById('nicks-equipe'); datalistNicks.innerHTML = '';
+            equipeBaseGlobal.forEach(m => { datalistNicks.innerHTML += `<option value="${m.nick}">`; });
 
-            // 2. Puxa os dados do próprio RH (Equipe Geral)
             const { data } = await _supabase.from('equipe_geral').select('*').order('nick');
             const tb = document.getElementById('tabela-rh'); tb.innerHTML = '';
-            
             const selAdv = document.getElementById('adv-nick'); selAdv.innerHTML = '<option value="">Selecione o Infrator...</option>';
 
             if(!data) return;
             data.forEach(m => {
                 selAdv.innerHTML += `<option value="${m.nick}">${m.nick}</option>`;
-                
                 let cor = 'bg-green-100 text-green-700';
                 if(m.status_membro === 'Hiatus') cor = 'bg-yellow-100 text-yellow-800';
                 if(m.status_membro === 'Saiu') cor = 'bg-red-100 text-red-800';
@@ -423,8 +451,8 @@
                         <td class="py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
                         <td class="py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
                         <td class="py-2 text-right">
-                            <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1">✏️ Editar</button>
-                            ${m.status_membro !== 'Ativo' ? `<button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold" title="Gerar Mensagem">📲 Aviso</button>` : ''}
+                            <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button>
+                            ${m.status_membro !== 'Ativo' ? `<button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer" title="Gerar Mensagem">📲 Aviso</button>` : ''}
                         </td>
                     </tr>
                 `;
@@ -453,12 +481,9 @@
             e.preventDefault();
             const id = document.getElementById('rh-id').value;
             const obj = {
-                nick: document.getElementById('rh-nick').value,
-                nome_real: document.getElementById('rh-nome').value,
-                idade: document.getElementById('rh-idade').value,
-                data_nascimento: document.getElementById('rh-nasc').value,
-                data_entrada: document.getElementById('rh-entrada').value,
-                funcoes: document.getElementById('rh-funcoes').value,
+                nick: document.getElementById('rh-nick').value, nome_real: document.getElementById('rh-nome').value,
+                idade: document.getElementById('rh-idade').value, data_nascimento: document.getElementById('rh-nasc').value,
+                data_entrada: document.getElementById('rh-entrada').value, funcoes: document.getElementById('rh-funcoes').value,
                 status_membro: document.getElementById('rh-status').value,
                 hiatus_inicio: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-inicio').value : null,
                 hiatus_fim: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-fim').value : null,
@@ -467,27 +492,18 @@
                 saida_motivo: document.getElementById('rh-status').value === 'Saiu' ? document.getElementById('rh-sai-motivo').value : null,
             };
 
-            if(id) { await _supabase.from('equipe_geral').update(obj).eq('id', id); } 
-            else { await _supabase.from('equipe_geral').insert([obj]); }
-            
+            if(id) { await _supabase.from('equipe_geral').update(obj).eq('id', id); } else { await _supabase.from('equipe_geral').insert([obj]); }
             limparFormRH(); carregarRH(); alert("Ficha salva no RH!");
         }
 
         function gerarAvisoRH(encodedObj) {
             const m = JSON.parse(decodeURIComponent(encodedObj));
             let txt = '';
-            if(m.status_membro === 'Hiatus') {
-                txt = `⚠️ *AVISO DE HIATUS* ⚠️\n\nEquipe, informamos que @${m.nick} entrou em Hiatus.\n\n📅 Início: ${m.hiatus_inicio ? m.hiatus_inicio.split('-').reverse().join('/') : 'N/A'}\n📅 Retorno Previsto: ${m.hiatus_fim ? m.hiatus_fim.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.hiatus_motivo || 'Assuntos pessoais'}\n\nAguardamos seu retorno em breve! 💖`;
-            } else if(m.status_membro === 'Saiu') {
-                txt = `🚨 *COMUNICADO OFICIAL DA STAFF* 🚨\n\nInformamos que @${m.nick} não faz mais parte da nossa equipe.\n\n📅 Data da Saída: ${m.saida_data ? m.saida_data.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.saida_motivo || 'Decisão administrativa/pessoal'}\n\nAgradecemos pelo tempo dedicado à scan.`;
-            }
-            document.getElementById('texto-wpp-rh').value = txt;
-            document.getElementById('area-wpp-rh').classList.remove('hidden');
+            if(m.status_membro === 'Hiatus') { txt = `⚠️ *AVISO DE HIATUS* ⚠️\n\nEquipe, informamos que @${m.nick} entrou em Hiatus.\n\n📅 Início: ${m.hiatus_inicio ? m.hiatus_inicio.split('-').reverse().join('/') : 'N/A'}\n📅 Retorno Previsto: ${m.hiatus_fim ? m.hiatus_fim.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.hiatus_motivo || 'Assuntos pessoais'}\n\nAguardamos seu retorno em breve! 💖`; } 
+            else if(m.status_membro === 'Saiu') { txt = `🚨 *COMUNICADO OFICIAL DA STAFF* 🚨\n\nInformamos que @${m.nick} não faz mais parte da nossa equipe.\n\n📅 Data da Saída: ${m.saida_data ? m.saida_data.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.saida_motivo || 'Decisão administrativa/pessoal'}\n\nAgradecemos pelo tempo dedicado à scan.`; }
+            document.getElementById('texto-wpp-rh').value = txt; document.getElementById('area-wpp-rh').classList.remove('hidden');
         }
 
-        // =========================================================================
-        // MÓDULO 2: ADVERTÊNCIAS
-        // =========================================================================
         async function carregarAdvertencias() {
             const { data } = await _supabase.from('advertencias').select('*').order('created_at', {ascending: false});
             const lst = document.getElementById('lista-advertencias'); lst.innerHTML = '';
@@ -509,10 +525,8 @@
 
         async function salvarAdvertencia(e) {
             e.preventDefault();
-            const nick = document.getElementById('adv-nick').value;
-            const nivel = document.getElementById('adv-nivel').value;
-            const dataAdv = document.getElementById('adv-data').value;
-            const motivo = document.getElementById('adv-motivo').value;
+            const nick = document.getElementById('adv-nick').value; const nivel = document.getElementById('adv-nivel').value;
+            const dataAdv = document.getElementById('adv-data').value; const motivo = document.getElementById('adv-motivo').value;
 
             const { error } = await _supabase.from('advertencias').insert([{membro_nick: nick, nivel: nivel, data_adv: dataAdv, motivo: motivo}]);
             if(error) { alert("Erro: " + error.message); return; }
@@ -520,15 +534,12 @@
             const dFormat = dataAdv.split('-').reverse().join('/');
             const msg = `⚠️ *ADVERTÊNCIA OFICIAL* ⚠️\n\nMembro: @${nick}\nData da Ocorrência: ${dFormat}\nGrau: ${nivel} Advertência\n\nMotivo:\n"${motivo}"\n\nPedimos que as regras da equipe sejam respeitadas para mantermos um ambiente saudável. Qualquer dúvida, chame a administração.`;
             
-            document.getElementById('texto-wpp-adv').value = msg;
-            document.getElementById('area-wpp-adv').classList.remove('hidden');
-            
-            document.getElementById('adv-motivo').value = ''; 
-            carregarAdvertencias();
+            document.getElementById('texto-wpp-adv').value = msg; document.getElementById('area-wpp-adv').classList.remove('hidden');
+            document.getElementById('adv-motivo').value = ''; carregarAdvertencias();
         }
 
         // =========================================================================
-        // MÓDULO 3: RECRUTAMENTO
+        // MÓDULO 3: RECRUTAMENTO (COM NOVO LAYOUT DINÂMICO DE FASES)
         // =========================================================================
         async function carregarRecrutamento() {
             const { data } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false});
@@ -538,31 +549,38 @@
 
             if(!data) return;
             data.forEach(c => {
+                // Dropdown direto no Card para facilitar a vida da ADM!
                 const card = `
-                    <div class="bg-white border border-gray-200 p-2 rounded shadow-sm relative">
-                        <p class="font-black text-gray-800 text-sm">${c.nome}</p>
-                        <p class="text-[10px] font-bold text-gray-500 uppercase">${c.funcao || c.cargo_pretendido || ''}</p>
-                        <div class="mt-2 flex gap-1">
-                            ${c.fase !== 'Aprovado' ? `<button onclick="mudarFaseRec('${c.id}', 'Aprovado')" class="flex-1 bg-green-100 hover:bg-green-200 text-green-800 text-[9px] font-bold py-1 rounded">Aprovar</button>` : ''}
-                            ${c.fase !== 'Em Teste' ? `<button onclick="mudarFaseRec('${c.id}', 'Em Teste')" class="flex-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 text-[9px] font-bold py-1 rounded">Testar</button>` : ''}
-                            ${c.fase !== 'Reprovado' ? `<button onclick="mudarFaseRec('${c.id}', 'Reprovado')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-800 text-[9px] font-bold py-1 rounded">Reprovar</button>` : ''}
-                            <button onclick="excluirRec('${c.id}')" class="text-red-500 hover:text-red-700 font-bold px-1" title="Apagar">🗑️</button>
+                    <div class="bg-white border border-gray-200 p-3 rounded shadow-sm relative">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <p class="font-black text-gray-800 text-sm leading-tight">${c.nome}</p>
+                                <p class="text-[10px] font-bold text-gray-500 uppercase mt-0.5">${c.funcao || c.cargo_pretendido || ''}</p>
+                            </div>
+                            <button onclick="excluirRec('${c.id}')" class="text-gray-400 hover:text-red-600 font-bold ml-2 cursor-pointer" title="Apagar Candidato">✖</button>
                         </div>
+                        <select onchange="mudarFaseRec('${c.id}', this.value)" class="text-[10px] w-full p-1.5 border border-gray-300 rounded bg-gray-50 font-bold text-gray-700 cursor-pointer focus:outline-none">
+                            <option value="1ª Fase" ${c.fase === '1ª Fase' || c.fase === 'Em Teste' ? 'selected' : ''}>⏳ 1ª Fase</option>
+                            <option value="Aprovado (1ª Fase)" ${c.fase === 'Aprovado (1ª Fase)' ? 'selected' : ''}>✅ Aprovado (1ª Fase)</option>
+                            <option value="2ª Fase" ${c.fase === '2ª Fase' ? 'selected' : ''}>⏳ 2ª Fase</option>
+                            <option value="Aprovado (2ª Fase)" ${c.fase === 'Aprovado (2ª Fase)' ? 'selected' : ''}>✅ Aprovado (2ª Fase)</option>
+                            <option value="3ª Fase" ${c.fase === '3ª Fase' ? 'selected' : ''}>⏳ 3ª Fase</option>
+                            <option value="Aprovado" ${c.fase === 'Aprovado' ? 'selected' : ''}>🏆 Aprovado (Final)</option>
+                            <option value="Reprovado" ${c.fase === 'Reprovado' ? 'selected' : ''}>❌ Reprovado</option>
+                        </select>
                     </div>
                 `;
-                if(c.fase === 'Em Teste') divTeste.innerHTML += card;
-                if(c.fase === 'Aprovado') divAprov.innerHTML += card;
-                if(c.fase === 'Reprovado') divRepro.innerHTML += card;
+
+                // Colocando nas Colunas Certas
+                if(['1ª Fase', '2ª Fase', '3ª Fase', 'Em Teste'].includes(c.fase)) divTeste.innerHTML += card;
+                else if(['Aprovado (1ª Fase)', 'Aprovado (2ª Fase)', 'Aprovado'].includes(c.fase)) divAprov.innerHTML += card;
+                else divRepro.innerHTML += card;
             });
         }
 
         async function salvarRecrutamento(e) {
             e.preventDefault();
-            const obj = {
-                nome: document.getElementById('rec-nome').value,
-                funcao: document.getElementById('rec-funcao').value,
-                fase: document.getElementById('rec-fase').value
-            };
+            const obj = { nome: document.getElementById('rec-nome').value, funcao: document.getElementById('rec-funcao').value, fase: document.getElementById('rec-fase').value };
             await _supabase.from('recrutamento').insert([obj]);
             document.getElementById('rec-nome').value = ''; document.getElementById('rec-funcao').value = '';
             carregarRecrutamento();
@@ -574,12 +592,11 @@
         }
 
         async function excluirRec(id) {
-            if(confirm("Apagar candidato?")) {
+            if(confirm("Deseja mesmo apagar este candidato do sistema?")) {
                 await _supabase.from('recrutamento').delete().eq('id', id);
                 carregarRecrutamento();
             }
         }
-
 
         // =========================================================================
         // SCRIPTS ANTIGOS MANTIDOS (Dashboard Normal ADM)
@@ -657,7 +674,7 @@
                 else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
 
                 const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2" title="Atualização">🔔</span>` : '';
-                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar">✏️</button>`;
+                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100 cursor-pointer" title="Editar">✏️</button>`;
 
                 container.innerHTML += `
                     <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
@@ -700,14 +717,14 @@
                 
                 let botaoAcao = '';
                 if(isMinhas) {
-                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">▶️ Iniciar</button>`;
-                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2">✅ Entregar</button>`;
+                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">▶️ Iniciar</button>`;
+                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">✅ Entregar</button>`;
                     else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2">⏳ Em Revisão</button>`;
                 } else {
-                    if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2">✅ Forçar Conclusão</button>`; } 
+                    if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">✅ Forçar Conclusão</button>`; } 
                     else {
                         const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`;
-                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded">📦 OK</button></div>`;
+                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">📦 OK</button></div>`;
                     }
                 }
 
