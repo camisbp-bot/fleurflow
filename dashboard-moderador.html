@@ -21,7 +21,6 @@
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
-        <!-- FERRAMENTAS -->
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">🛠️ Ferramentas da Moderação</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
@@ -48,7 +47,6 @@
             </div>
         </section>
 
-        <!-- ANIVERSARIANTES -->
         <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm">
             <div class="flex justify-between items-center mb-4 border-b border-pink-100 pb-2">
                 <h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2>
@@ -63,7 +61,7 @@
             </div>
         </section>
 
-        <!-- OBRAS (DIVISÃO PLANILHA) -->
+        <!-- OBRAS COM LÁPIS E SININHO -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[400px]">
                 <h2 class="text-lg font-black text-blue-900 mb-2 flex items-center gap-2">👥 Obras (STAFF)</h2>
@@ -78,24 +76,28 @@
             </div>
         </section>
 
-        <!-- PAINEL DINÂMICO DE TAREFAS -->
+        <!-- PAINEL COM 4 CAIXINHAS -->
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all">
             <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                 <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Tarefas da Obra</h2>
                 <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 px-3 py-1 rounded transition cursor-pointer">✖ Fechar Painel</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
-                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
+                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Em Atraso</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
-                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
+                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Prazo Hoje</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
-                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Outras Entregas</h3></div>
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Outras Ativas</h3></div>
                     <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
+                    <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Concluídas (Novas)</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
                 </div>
             </div>
         </section>
@@ -126,24 +128,17 @@
             const lista = document.getElementById('lista-aniversariantes');
             if(!data || data.length === 0) { lista.innerHTML = '<p class="text-xs text-gray-400">Dados não encontrados.</p>'; return; }
 
-            const hoje = new Date();
-            const mesAtual = hoje.getMonth() + 1;
-            const diaAtual = hoje.getDate();
-            
-            let html = '';
-            let aniversariantesHoje = [];
+            const hoje = new Date(); const mesAtual = hoje.getMonth() + 1; const diaAtual = hoje.getDate();
+            let html = ''; let aniversariantesHoje = [];
 
             data.forEach(m => {
                 if(m.data_nascimento) {
                     const partes = m.data_nascimento.split('-');
                     if(partes.length >= 3) {
-                        const mesNiver = parseInt(partes[1]);
-                        const diaNiver = parseInt(partes[2]);
-
+                        const mesNiver = parseInt(partes[1]); const diaNiver = parseInt(partes[2]);
                         if(mesNiver === mesAtual) {
                             const ehHoje = (diaNiver === diaAtual);
                             if(ehHoje) aniversariantesHoje.push(m.nick);
-
                             html += `
                                 <div class="bg-white border ${ehHoje ? 'border-pink-400 bg-pink-100 shadow-sm' : 'border-pink-200'} p-3 rounded-lg flex flex-col items-center min-w-[100px]">
                                     <span class="text-2xl">${ehHoje ? '🎂' : '🎈'}</span>
@@ -156,9 +151,8 @@
                 }
             });
 
-            if(html === '') html = '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês (ou datas não cadastradas).</p>';
+            if(html === '') html = '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês.</p>';
             lista.innerHTML = html;
-
             if(aniversariantesHoje.length > 0) {
                 document.getElementById('btn-gerar-niver').classList.remove('hidden');
                 window.anivHoje = aniversariantesHoje;
@@ -177,7 +171,7 @@
             const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
             const { data: obras } = await _supabase.from('obras').select('*').order('nome');
-            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Concluído').order('prazo', { ascending: true });
+            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
 
             todasTarefasGlobais = tarefas || [];
             const obrasStaff = [], obrasResp = [];
@@ -207,12 +201,28 @@
                 const papel = isResp ? '👑 Responsável' : '👥 Staff';
                 const modoClick = isResp ? 'responsavel' : 'staff';
                 const nomeSeguro = obra.nome.replace(/'/g, "\\'");
+                
+                // NOTIFICAÇÃO 🔔: Verifica se essa obra tem tarefa com status Concluído
+                let temConcluida = false;
+                if(isResp) {
+                    temConcluida = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído');
+                } else {
+                    temConcluida = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
+                }
+                const sininho = temConcluida ? `<span class="animate-bounce text-sm ml-2 cursor-help" title="Nova entrega concluída!">🔔</span>` : '';
+                
+                // LÁPIS DE EDIÇÃO ✏️
+                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar Cadastro da Obra">✏️</button>`;
 
                 container.innerHTML += `
                     <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
-                        <div>
-                            <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm group-hover:text-red-900 transition">${obra.nome}</h3>
-                            <p class="text-[10px] text-gray-500 mt-1">Dono: ${obra.responsavel_nick || 'N/A'}</p>
+                        <div class="flex items-center">
+                            <div>
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm group-hover:text-red-900 transition">${obra.nome}</h3>
+                                <p class="text-[10px] text-gray-500 mt-1">Dono: ${obra.responsavel_nick || 'N/A'}</p>
+                            </div>
+                            ${sininho}
+                            ${lapisEdit}
                         </div>
                         <div class="flex flex-col items-end gap-1">
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${obra.status}</span>
@@ -251,21 +261,32 @@
             const containerAtraso = document.getElementById('detalhe-atraso');
             const containerHoje = document.getElementById('detalhe-hoje');
             const containerAtivas = document.getElementById('detalhe-ativas');
-            containerAtraso.innerHTML = ''; containerHoje.innerHTML = ''; containerAtivas.innerHTML = '';
+            const containerConcluidas = document.getElementById('detalhe-concluidas');
+
+            containerAtraso.innerHTML = ''; containerHoje.innerHTML = ''; containerAtivas.innerHTML = ''; containerConcluidas.innerHTML = '';
             
             if (lista.length === 0) {
-                const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Nenhuma tarefa encontrada.</p><p class="text-2xl mt-2">🎉</p></div>`;
-                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; return;
+                const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
+                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; containerConcluidas.innerHTML = msgVazio; return;
             }
 
             const agora = new Date(); const hojeStr = agora.toDateString();
-            let temAtraso = false, temHoje = false, temAtiva = false;
+            let cAtraso=0, cHoje=0, cAtiva=0, cConc=0;
 
             lista.forEach(t => {
-                const corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
-                let botaoAcao = isMinhas 
-                    ? (t.status === 'Pendente' ? `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">▶️ Iniciar</button>` : `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Entregar</button>`)
-                    : `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
+                let isConcluida = t.status === 'Concluído';
+                let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
+                if(isConcluida) corStatus = 'bg-green-100 text-green-700';
+                
+                let botaoAcao = '';
+                if(isMinhas) {
+                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">▶️ Iniciar</button>`;
+                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Entregar</button>`;
+                    else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-not-allowed">⏳ Aguardando Revisão</button>`;
+                } else {
+                    if(!isConcluida) botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
+                    else botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition" title="Limpa o sininho e arquiva a tarefa">✅ Marcar como Visto (Arquivar)</button>`;
+                }
 
                 let prazoFormatado = '';
                 if (t.prazo) { const d = new Date(t.prazo); prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`; }
@@ -286,17 +307,19 @@
                     </div>
                 `;
 
-                if (!t.prazo) { containerAtivas.innerHTML += cardHTML; temAtiva = true; }
+                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; cConc++; }
+                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; cAtiva++; }
                 else {
                     const dataPrazo = new Date(t.prazo);
-                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; temAtraso = true; } 
-                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; temHoje = true; } 
-                    else { containerAtivas.innerHTML += cardHTML; temAtiva = true; }
+                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; cAtraso++; } 
+                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; cHoje++; } 
+                    else { containerAtivas.innerHTML += cardHTML; cAtiva++; }
                 }
             });
 
-            const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p><p class="text-2xl mt-2">✨</p></div>`;
-            if(!temAtraso) containerAtraso.innerHTML = msgVazio; if(!temHoje) containerHoje.innerHTML = msgVazio; if(!temAtiva) containerAtivas.innerHTML = msgVazio;
+            const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
+            if(!cAtraso) containerAtraso.innerHTML = msgVazio; if(!cHoje) containerHoje.innerHTML = msgVazio; 
+            if(!cAtiva) containerAtivas.innerHTML = msgVazio; if(!cConc) containerConcluidas.innerHTML = msgVazio;
         }
 
         async function mudarStatusTarefa(id, novoStatus) {
