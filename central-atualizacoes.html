@@ -16,6 +16,7 @@
 
     <main class="max-w-4xl mx-auto p-6 mt-4 space-y-6">
         
+        <!-- FORMULÁRIO DE INSERÇÃO -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
             <h2 class="text-lg font-black text-gray-900 mb-2">➕ Inserir Atualização para Conferência</h2>
             <p class="text-xs text-gray-500 mb-4">Adicione a obra que será postada. Ao clicar em "OK", os capítulos da obra serão atualizados automaticamente no sistema.</p>
@@ -37,7 +38,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos (Ex: 84, 84 ao 86, Epílogo)</label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Capítulos (Ex: 84 ao 86)</label>
                     <input type="text" id="atu-caps" placeholder="O que foi postado" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
                 <div>
@@ -64,14 +65,16 @@
             </form>
         </div>
 
+        <!-- FILA DE ESPERA -->
         <div class="bg-amber-50 rounded-xl p-6 shadow-sm border border-amber-200">
             <h3 class="text-md font-black text-amber-900 mb-2">⏳ Aguardando Confirmação de Postagem</h3>
-            <p class="text-xs text-amber-700 mb-4">Clique em "OK" somente após a obra estar efetivamente postada.</p>
+            <p class="text-xs text-amber-700 mb-4">Clique em "OK" somente após a obra estar efetivamente postada. Se deu erro e não vai postar, clique em "Cancelar".</p>
             <div id="lista-pendentes" class="space-y-3 text-sm">
                 Carregando itens pendentes...
             </div>
         </div>
 
+        <!-- LANÇAMENTOS DO DIA -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b border-gray-100 pb-4 gap-4">
                 <h3 class="text-lg font-black text-gray-800">📌 Atualizações de Hoje (Confirmadas)</h3>
@@ -96,6 +99,7 @@
             </div>
         </div>
 
+        <!-- HISTÓRICO -->
         <div id="secao-historico" class="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <h3 class="text-lg font-black text-gray-800 mb-4 border-b border-gray-100 pb-2">📁 Arquivo de Atualizações Passadas</h3>
             <div id="lista-historico" class="space-y-6 text-sm text-gray-600">
@@ -114,7 +118,8 @@
 
         window.onload = async () => {
             const cargo = localStorage.getItem('usuario_cargo');
-            if (cargo === 'Administrador') {
+            // Libera o telegram pra Mod e ADM
+            if (cargo === 'Administrador' || cargo === 'Moderador') {
                 document.getElementById('btn-gerar-telegram').classList.remove('hidden');
             }
             carregarObrasSelect();
@@ -181,24 +186,28 @@
             const { error } = await _supabase.from('atualizacoes').update({ confirmado: true }).eq('id', id);
             if (error) { alert('Erro ao confirmar: ' + error.message); return; }
 
-            // Lógica inteligente para atualizar a Ficha da Obra:
             let capsSplit = capitulos.split('—')[0].trim(); 
             let capituloParaSalvar = capsSplit;
 
-            // Se for "45 ao 47", pega o 47 pra salvar na obra
-            if (capsSplit.toLowerCase().includes('ao')) {
+            if (capsSplit.toLowerCase().includes('ao') || capsSplit.includes(',')) {
                 const numeros = capsSplit.match(/\d+/g);
                 if (numeros) capituloParaSalvar = Math.max(...numeros.map(Number)).toString();
             }
 
             try {
-                // Atualiza independente de ser número ou texto
                 await _supabase.from('obras').update({ capitulo_fleur: capituloParaSalvar }).eq('nome', obraNome);
-            } catch(err) {
-                console.log("Erro auto-update:", err);
-            }
+            } catch(err) { console.log("Erro auto-update:", err); }
 
             carregarAtualizacoes();
+        }
+
+        // NOVO: FUNÇÃO DE CANCELAR POSTAGEM DA FILA
+        async function cancelarPostagem(id) {
+            if(confirm("Tem certeza que deseja cancelar e remover essa atualização da fila?")) {
+                const { error } = await _supabase.from('atualizacoes').delete().eq('id', id);
+                if (error) { alert('Erro ao cancelar: ' + error.message); } 
+                else { carregarAtualizacoes(); }
+            }
         }
 
         async function carregarAtualizacoes() {
@@ -236,9 +245,14 @@
                                     <span class="text-red-700 font-semibold ml-2">(${item.capitulos})</span>
                                     <p class="text-[10px] text-gray-500 mt-1">Resp: ${item.responsavel}</p>
                                 </div>
-                                <button onclick="confirmarPostagem('${item.id}', '${obraSegura}', '${capsSeguros}', '${item.tipo_postagem}')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow cursor-pointer">
-                                    ✅ OK
-                                </button>
+                                <div class="flex gap-2">
+                                    <button onclick="cancelarPostagem('${item.id}')" class="bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-2 rounded-lg text-xs shadow-sm cursor-pointer transition" title="Cancelar Postagem">
+                                        🗑️
+                                    </button>
+                                    <button onclick="confirmarPostagem('${item.id}', '${obraSegura}', '${capsSeguros}', '${item.tipo_postagem}')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow cursor-pointer transition">
+                                        ✅ OK
+                                    </button>
+                                </div>
                             </div>
                         `;
                     } else {
