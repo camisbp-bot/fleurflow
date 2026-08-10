@@ -22,7 +22,7 @@
         
         <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl shadow-sm mb-6">
             <label class="block text-sm font-black text-blue-900 mb-1">✏️ Editar Obra Existente</label>
-            <p class="text-xs text-blue-700 mb-3">Para mudar status, prioridade ou atualizar dados, selecione a obra abaixo. Para uma obra nova, deixe em "Criar Nova Obra".</p>
+            <p class="text-xs text-blue-700 mb-3">Selecione uma obra abaixo. <span class="font-bold">Moderadores só podem visualizar e editar as obras em que são responsáveis.</span></p>
             <select id="select-editar-obra" onchange="carregarDadosEdicao()" class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
                 <option value="">✨ + Criar Nova Obra do Zero</option>
             </select>
@@ -186,7 +186,6 @@
             await carregarEquipe();
             await carregarListaObrasParaEdicao();
 
-            // MÁGICA DO LÁPIS: Lê a URL e já carrega a obra se tiver ?edit=ID
             const params = new URLSearchParams(window.location.search);
             const idEdit = params.get('edit');
             if (idEdit) {
@@ -227,10 +226,24 @@
         }
 
         async function carregarListaObrasParaEdicao() {
-            const { data } = await _supabase.from('obras').select('id, nome').order('nome');
+            const cargo = localStorage.getItem('usuario_cargo');
+            const meuNick = localStorage.getItem('usuario_nick');
+            
+            const { data } = await _supabase.from('obras').select('id, nome, responsavel_nick').order('nome');
             const select = document.getElementById('select-editar-obra');
+            
             if(data) {
-                data.forEach(obra => { select.innerHTML += `<option value="${obra.id}">${obra.nome}</option>`; });
+                data.forEach(obra => { 
+                    // Se for moderador, só mostra na lista de edição as que ele é dono.
+                    if (cargo === 'Moderador') {
+                        if (obra.responsavel_nick && obra.responsavel_nick.includes(meuNick)) {
+                            select.innerHTML += `<option value="${obra.id}">${obra.nome}</option>`;
+                        }
+                    } else {
+                        // ADM vê tudo
+                        select.innerHTML += `<option value="${obra.id}">${obra.nome}</option>`;
+                    }
+                });
             }
         }
 
@@ -258,6 +271,17 @@
 
             const { data: obra, error } = await _supabase.from('obras').select('*').eq('id', idSelecionado).single();
             if (error) { alert("Erro ao buscar dados da obra!"); return; }
+
+            // TRAVA DE SEGURANÇA SE ELE TENTAR BURLAR A URL
+            const cargo = localStorage.getItem('usuario_cargo');
+            const meuNick = localStorage.getItem('usuario_nick');
+            if (cargo === 'Moderador') {
+                if (!obra.responsavel_nick || !obra.responsavel_nick.includes(meuNick)) {
+                    alert("Acesso Negado: Você só pode editar as obras sob sua responsabilidade.");
+                    window.location.href = 'dashboard-moderador.html';
+                    return;
+                }
+            }
 
             idObraEditando = obra.id;
             
