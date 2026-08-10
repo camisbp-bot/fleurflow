@@ -115,10 +115,16 @@
                 <h3 class="text-lg font-bold text-purple-800 mb-4">Adicionar / Editar Membro</h3>
                 <form id="form-rh" onsubmit="salvarMembroRH(event)" class="space-y-4">
                     <input type="hidden" id="rh-id">
-                    <div><label class="text-xs font-bold text-gray-600">Nick na SCAN</label><input type="text" id="rh-nick" required class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                    
+                    <!-- CAMPO COMBO MÁGICO DO NICK -->
+                    <div>
+                        <label class="text-xs font-bold text-gray-600">Nick na SCAN</label>
+                        <input type="text" id="rh-nick" list="nicks-equipe" onchange="autoPreencherDadosBasicos()" autocomplete="off" required class="w-full border border-gray-300 rounded p-2 text-sm" placeholder="Digite ou selecione da lista...">
+                        <datalist id="nicks-equipe"></datalist>
+                    </div>
+
                     <div><label class="text-xs font-bold text-gray-600">Nome Real</label><input type="text" id="rh-nome" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
                     
-                    <!-- MÁGICA DA IDADE AUTOMÁTICA AQUI -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="text-xs font-bold text-gray-600">Data Nasc.</label>
@@ -294,6 +300,7 @@
         let todasTarefasGlobais = [];
         let obrasDisponiveisRaw = [];
         let obraAbertaAtual = null;
+        let equipeBaseGlobal = []; // Array que armazena os membros para o autocompletar do RH
 
         // INICIALIZAÇÃO
         window.onload = async () => {
@@ -337,6 +344,21 @@
         // MÓDULO 1: RH (EQUIPE GERAL)
         // =========================================================================
         
+        // AUTOCOMPLETAR MÁGICO: Procura se a pessoa já tem cadastro básico
+        function autoPreencherDadosBasicos() {
+            const nickDigitado = document.getElementById('rh-nick').value;
+            const membroBase = equipeBaseGlobal.find(m => m.nick === nickDigitado);
+            
+            if (membroBase) {
+                const campoNasc = document.getElementById('rh-nasc');
+                // Preenche a data de nascimento apenas se ela existir no cadastro e se o campo estiver vazio
+                if (membroBase.data_nascimento && !campoNasc.value) {
+                    campoNasc.value = membroBase.data_nascimento;
+                    calcularIdade(); // Já calcula a idade na hora!
+                }
+            }
+        }
+
         // Lógica de cálculo automático da Idade
         function calcularIdade() {
             const dataNasc = document.getElementById('rh-nasc').value;
@@ -369,6 +391,17 @@
         }
 
         async function carregarRH() {
+            // 1. Puxa os dados da tabela Equipe (Base) para o Autocompletar
+            const { data: equipeBase } = await _supabase.from('equipe').select('*');
+            equipeBaseGlobal = equipeBase || [];
+            
+            const datalistNicks = document.getElementById('nicks-equipe');
+            datalistNicks.innerHTML = '';
+            equipeBaseGlobal.forEach(m => {
+                datalistNicks.innerHTML += `<option value="${m.nick}">`;
+            });
+
+            // 2. Puxa os dados do próprio RH (Equipe Geral)
             const { data } = await _supabase.from('equipe_geral').select('*').order('nick');
             const tb = document.getElementById('tabela-rh'); tb.innerHTML = '';
             
