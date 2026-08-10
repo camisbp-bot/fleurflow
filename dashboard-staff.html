@@ -20,51 +20,47 @@
     </nav>
 
     <main class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
-        
-        <section>
-            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">📝 Seu Quadro de Tarefas</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <!-- ATRASADAS -->
-                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
-                    <div class="bg-red-50 p-4 border-b border-red-100 rounded-t-xl">
-                        <h3 class="font-black text-red-800 flex items-center gap-2">🚨 Em Atraso</h3>
-                    </div>
-                    <div class="overflow-y-auto flex-1 p-4 space-y-3" id="lista-atrasadas">
-                        <p class="text-sm text-gray-400">Buscando...</p>
-                    </div>
-                </div>
 
-                <!-- HOJE -->
-                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
-                    <div class="bg-orange-50 p-4 border-b border-orange-100 rounded-t-xl">
-                        <h3 class="font-black text-orange-800 flex items-center gap-2">🗓️ Prazo Hoje</h3>
-                    </div>
-                    <div class="overflow-y-auto flex-1 p-4 space-y-3" id="lista-hoje">
-                        <p class="text-sm text-gray-400">Buscando...</p>
-                    </div>
-                </div>
-
-                <!-- ATIVAS (FUTURAS) -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
-                    <div class="bg-gray-50 p-4 border-b border-gray-200 rounded-t-xl">
-                        <h3 class="font-black text-gray-800 flex items-center gap-2">📋 Outras Tarefas Ativas</h3>
-                    </div>
-                    <div class="overflow-y-auto flex-1 p-4 space-y-3" id="lista-ativas">
-                        <p class="text-sm text-gray-400">Buscando...</p>
-                    </div>
-                </div>
-
+        <!-- LISTA DE OBRAS (MASTER VIEW) -->
+        <section class="bg-white rounded-xl shadow-sm border border-pink-200 p-6 flex flex-col h-[400px]">
+            <h2 class="text-lg font-black text-pink-900 mb-2 flex items-center gap-2">💖 Obras que Faço Parte</h2>
+            <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as suas tarefas.</p>
+            <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-staff">
+                <p class="text-sm text-gray-400 italic">Buscando suas obras...</p>
             </div>
         </section>
 
-        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-8">
-            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">💖 Obras que Faço Parte</h2>
-            <p class="text-xs text-gray-500 mb-4">Acesse os links oficiais e os drives dos projetos em que você trabalha.</p>
+        <!-- PAINEL DINÂMICO DE TAREFAS (DETAIL VIEW) -->
+        <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 mt-8 transition-all">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
+                <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Minhas Tarefas</h2>
+                <div class="flex gap-3">
+                    <a id="btn-drive-obra" href="#" target="_blank" class="hidden text-xs font-bold bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded transition cursor-pointer">📁 Acessar Drive</a>
+                    <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 px-3 py-1.5 rounded transition cursor-pointer">✖ Fechar Painel</button>
+                </div>
+            </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="lista-minhas-obras">
-                <p class="text-sm text-gray-400 italic">Buscando suas obras...</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- ATRASADAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
+                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Em Atraso</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
+                </div>
+                <!-- HOJE -->
+                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
+                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Prazo Hoje</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
+                </div>
+                <!-- ATIVAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Outras Tarefas Ativas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
+                </div>
+                <!-- CONCLUÍDAS -->
+                <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
+                    <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div>
+                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
+                </div>
             </div>
         </section>
 
@@ -75,149 +71,157 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let todasTarefasGlobais = [];
+        let todasObrasGlobais = [];
+        let obraAbertaAtual = null;
+
         window.onload = () => {
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
             document.getElementById('saudacao').textContent = `Olá, ${nick}! 🌸`;
-            
-            carregarTarefasStaff(nick);
-            carregarObrasStaff(nick);
+            carregarTudo(nick);
         };
 
-        function sair() {
-            localStorage.clear();
-            window.location.href = 'index.html';
+        function sair() { localStorage.clear(); window.location.href = 'index.html'; }
+
+        async function carregarTudo(meuNick) {
+            const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
+            const meuId = usuario ? String(usuario.id) : null;
+
+            const { data: obras } = await _supabase.from('obras').select('*').order('nome');
+            todasObrasGlobais = obras || [];
+
+            // A MÁGICA DE NÃO SUMIR: Agora o sistema puxa tarefas concluídas (mas exclui as "Arquivadas")
+            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
+            todasTarefasGlobais = tarefas || [];
+
+            const minhasObras = [];
+            if (obras) {
+                obras.forEach(o => {
+                    const souStaff = o.staff_ids && meuId && o.staff_ids.map(String).includes(meuId);
+                    if (souStaff) minhasObras.push(o);
+                });
+            }
+
+            renderizarObrasStaff(minhasObras);
+            if (obraAbertaAtual) abrirTarefasObra(obraAbertaAtual);
         }
 
-        async function carregarTarefasStaff(meuNick) {
-            const listaAtrasadas = document.getElementById('lista-atrasadas');
-            const listaHoje = document.getElementById('lista-hoje');
-            const listaAtivas = document.getElementById('lista-ativas');
-
-            listaAtrasadas.innerHTML = '';
-            listaHoje.innerHTML = '';
-            listaAtivas.innerHTML = '';
-
-            const { data, error } = await _supabase.from('tarefas')
-                .select('*')
-                .eq('responsavel_nick', meuNick)
-                .neq('status', 'Concluído')
-                .order('prazo', { ascending: true });
-
-            if (error || !data || data.length === 0) {
-                const msgVazio = `<div class="text-center py-6"><p class="text-sm text-gray-400">Nenhuma tarefa aqui.</p><p class="text-2xl mt-2">🎉</p></div>`;
-                listaAtrasadas.innerHTML = msgVazio;
-                listaHoje.innerHTML = msgVazio;
-                listaAtivas.innerHTML = msgVazio;
+        function renderizarObrasStaff(listaObras) {
+            const container = document.getElementById('lista-obras-staff');
+            container.innerHTML = '';
+            
+            if (listaObras.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 italic">Você não foi vinculado(a) a nenhuma obra.</p>`;
                 return;
             }
 
-            const agora = new Date();
-            const hojeStr = agora.toDateString();
+            listaObras.forEach(obra => {
+                let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
+                const nomeSeguro = obra.nome.replace(/'/g, "\\'");
 
-            let temAtraso = false, temHoje = false, temAtiva = false;
+                container.innerHTML += `
+                    <div onclick="abrirTarefasObra('${nomeSeguro}')" class="p-3 rounded-lg border border-gray-200 hover:border-pink-400 hover:bg-pink-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
+                        <div>
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm group-hover:text-pink-900 transition">${obra.nome}</h3>
+                            <p class="text-[10px] text-gray-500 mt-1">Língua: ${obra.lingua || 'N/A'}</p>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${obra.status}</span>
+                    </div>
+                `;
+            });
+        }
 
-            data.forEach(t => {
-                const corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
-                const botaoAcao = t.status === 'Pendente' 
-                    ? `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded w-full mt-2 transition shadow-sm">▶️ Iniciar Tarefa</button>`
-                    : `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-xs bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1.5 rounded w-full mt-2 transition shadow-sm">✅ Entregar</button>`;
+        function abrirTarefasObra(obraNome) {
+            obraAbertaAtual = obraNome;
+            const painel = document.getElementById('painel-tarefas');
+            const titulo = document.getElementById('titulo-painel-tarefas');
+            const meuNick = localStorage.getItem('usuario_nick');
+            const btnDrive = document.getElementById('btn-drive-obra');
+            
+            const obraInfo = todasObrasGlobais.find(o => o.nome === obraNome);
+            if (obraInfo && obraInfo.drive_url) {
+                btnDrive.href = obraInfo.drive_url;
+                btnDrive.classList.remove('hidden');
+            } else {
+                btnDrive.classList.add('hidden');
+            }
+
+            const tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick);
+            titulo.innerHTML = `📝 Minhas Tarefas (STAFF) <span class="text-gray-400 text-sm font-normal mx-2">👉</span> <span class="text-pink-700">${obraNome}</span>`;
+
+            renderizarPainel(tarefasFiltradas);
+            painel.classList.remove('hidden');
+            painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function fecharPainelTarefas() { document.getElementById('painel-tarefas').classList.add('hidden'); obraAbertaAtual = null; }
+
+        function renderizarPainel(lista) {
+            const containerAtraso = document.getElementById('detalhe-atraso');
+            const containerHoje = document.getElementById('detalhe-hoje');
+            const containerAtivas = document.getElementById('detalhe-ativas');
+            const containerConcluidas = document.getElementById('detalhe-concluidas');
+
+            containerAtraso.innerHTML = ''; containerHoje.innerHTML = ''; containerAtivas.innerHTML = ''; containerConcluidas.innerHTML = '';
+            
+            if (lista.length === 0) {
+                const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Nenhuma tarefa.</p></div>`;
+                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; containerConcluidas.innerHTML = msgVazio;
+                return;
+            }
+
+            const agora = new Date(); const hojeStr = agora.toDateString();
+            let cAtraso=0, cHoje=0, cAtiva=0, cConc=0;
+
+            lista.forEach(t => {
+                let isConcluida = t.status === 'Concluído';
+                let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
+                if(isConcluida) corStatus = 'bg-green-100 text-green-700';
+
+                let botaoAcao = '';
+                if (t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">▶️ Iniciar</button>`;
+                else if (t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Entregar</button>`;
+                else if (t.status === 'Concluído') botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-not-allowed">⏳ Aguardando Revisão</button>`;
 
                 let prazoFormatado = '';
-                if (t.prazo) {
-                    const d = new Date(t.prazo);
-                    prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`;
-                }
+                if (t.prazo) { const d = new Date(t.prazo); prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`; }
 
                 const cardHTML = `
-                    <div class="bg-white border border-gray-100 p-3 rounded-lg shadow-sm hover:shadow-md transition">
+                    <div class="bg-white border border-gray-100 p-3 rounded shadow-sm hover:shadow-md transition">
                         <div class="flex justify-between items-start mb-2">
-                            <span class="font-bold text-gray-800 text-sm leading-tight">${t.obra_nome}</span>
-                            <span class="text-xs font-black text-red-700 whitespace-nowrap ml-2">C. ${t.capitulo}</span>
+                            <span class="font-bold text-red-700 text-sm leading-tight">C.${t.capitulo}</span>
+                            <span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">PG: ${t.paginas || 'Todas'}</span>
                         </div>
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-[10px] uppercase font-black text-gray-500">${t.etapa}</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${corStatus}">${t.status}</span>
+                            <span class="px-1 py-0.5 rounded text-[9px] font-bold ${corStatus}">${t.status}</span>
                         </div>
-                        ${t.prazo ? `<p class="text-[10px] font-bold text-gray-600 mt-2 bg-gray-50 px-2 py-1 rounded inline-block">${prazoFormatado}</p>` : ''}
+                        ${t.prazo ? `<p class="text-[10px] font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded inline-block mt-1">${prazoFormatado}</p>` : ''}
                         ${botaoAcao}
                     </div>
                 `;
 
-                if (!t.prazo) {
-                    listaAtivas.innerHTML += cardHTML;
-                    temAtiva = true;
-                } else {
+                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; cConc++; }
+                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; cAtiva++; }
+                else {
                     const dataPrazo = new Date(t.prazo);
-                    
-                    if (dataPrazo < agora) {
-                        listaAtrasadas.innerHTML += cardHTML;
-                        temAtraso = true;
-                    } else if (dataPrazo.toDateString() === hojeStr) {
-                        listaHoje.innerHTML += cardHTML;
-                        temHoje = true;
-                    } else {
-                        listaAtivas.innerHTML += cardHTML;
-                        temAtiva = true;
-                    }
+                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; cAtraso++; } 
+                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; cHoje++; } 
+                    else { containerAtivas.innerHTML += cardHTML; cAtiva++; }
                 }
             });
 
-            const msgVazio = `<div class="text-center py-6"><p class="text-sm text-gray-400">Tudo limpo por aqui!</p><p class="text-2xl mt-2">✨</p></div>`;
-            if(!temAtraso) listaAtrasadas.innerHTML = msgVazio;
-            if(!temHoje) listaHoje.innerHTML = msgVazio;
-            if(!temAtiva) listaAtivas.innerHTML = msgVazio;
-        }
-
-        async function carregarObrasStaff(meuNick) {
-            const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
-            const meuId = usuario ? String(usuario.id) : null;
-
-            const { data: obras, error } = await _supabase.from('obras').select('*').order('nome');
-            const container = document.getElementById('lista-minhas-obras');
-            container.innerHTML = '';
-
-            if (error || !obras || obras.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra cadastrada no sistema.</p>`;
-                return;
-            }
-
-            const minhasObras = obras.filter(obra => obra.staff_ids && meuId && obra.staff_ids.map(String).includes(meuId));
-
-            if (minhasObras.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 italic w-full col-span-3">Você ainda não foi vinculado(a) a nenhuma obra pela moderação.</p>`;
-                return;
-            }
-
-            minhasObras.forEach(obra => {
-                let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
-                let btnDrive = obra.drive_url ? `<a href="${obra.drive_url}" target="_blank" class="block w-full text-center mt-3 text-xs bg-gray-900 hover:bg-black text-white font-bold py-2 rounded-md transition shadow-sm cursor-pointer">📁 Acessar Pasta (Drive)</a>` : '';
-
-                container.innerHTML += `
-                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl hover:border-red-300 transition flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-gray-800 leading-tight">${obra.nome}</h3>
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus} ml-2 whitespace-nowrap">${obra.status}</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mb-1">Língua: ${obra.lingua || 'N/A'}</p>
-                            <p class="text-[10px] text-red-700 font-semibold mt-2">Dono(a): ${obra.responsavel_nick || 'Não definido'}</p>
-                        </div>
-                        ${btnDrive}
-                    </div>
-                `;
-            });
+            const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
+            if(!cAtraso) containerAtraso.innerHTML = msgVazio; if(!cHoje) containerHoje.innerHTML = msgVazio; 
+            if(!cAtiva) containerAtivas.innerHTML = msgVazio; if(!cConc) containerConcluidas.innerHTML = msgVazio;
         }
 
         async function mudarStatusTarefa(id, novoStatus) {
-            const btn = event.target;
-            const textOriginal = btn.innerHTML;
-            btn.innerHTML = '⏳';
-            btn.disabled = true;
-
+            const btn = event.target; const textOriginal = btn.innerHTML; btn.innerHTML = '⏳'; btn.disabled = true;
             const { error } = await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id);
-            if(error) { alert("Erro: " + error.message); btn.innerHTML = textOriginal; btn.disabled = false; }
-            else { carregarTarefasStaff(localStorage.getItem('usuario_nick')); }
+            if(error) { alert("Erro: " + error.message); btn.innerHTML = textOriginal; btn.disabled = false; } 
+            else { carregarTudo(localStorage.getItem('usuario_nick')); }
         }
     </script>
 </body>
