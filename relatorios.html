@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleurFlow - Relatórios Avançados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-10">
+
+    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
+        <h1 class="text-xl font-bold text-gray-800">📈 Relatórios Avançados</h1>
+        <button onclick="voltar()" class="text-sm font-bold text-gray-600 hover:text-red-700 cursor-pointer">&larr; Voltar ao Painel</button>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6 mt-4 space-y-6">
+        
+        <!-- FILTROS -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h2 class="text-lg font-black text-gray-900 mb-4">🔍 Filtros de Busca</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Língua</label>
+                    <select id="filtro-lingua" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Todas</option>
+                        <option value="Coreano">Coreano</option>
+                        <option value="Inglês">Inglês</option>
+                        <option value="Espanhol">Espanhol</option>
+                        <option value="Francês">Francês</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de Obra</label>
+                    <select id="filtro-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Todos</option>
+                        <option value="Recorrente">Recorrente</option>
+                        <option value="Curta">Curta</option>
+                        <option value="Combo">Combo</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Plataforma</label>
+                    <select id="filtro-plataforma" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+
+                <div id="caixa-filtro-mod">
+                    <label class="block text-xs font-bold text-red-700 mb-1">Moderador / Responsável</label>
+                    <select id="filtro-mod" class="w-full bg-red-50 border border-red-300 rounded-lg px-3 py-2 text-sm text-red-900 font-semibold">
+                        <option value="">Todos (Geral)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="gerarRelatorio()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg text-sm shadow cursor-pointer transition">
+                    ▶️ Gerar Relatório
+                </button>
+            </div>
+        </div>
+
+        <!-- ESTATÍSTICAS -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center">
+                <span class="text-xs text-gray-500 font-bold uppercase">Total Filtrado</span>
+                <span id="stat-total" class="text-3xl font-black text-gray-800">0</span>
+            </div>
+            <div class="bg-green-50 p-4 rounded-xl border border-green-200 shadow-sm flex flex-col items-center justify-center">
+                <span class="text-xs text-green-700 font-bold uppercase">Obras em Dia</span>
+                <span id="stat-emdia" class="text-3xl font-black text-green-700">0</span>
+            </div>
+            <div class="bg-red-50 p-4 rounded-xl border border-red-200 shadow-sm flex flex-col items-center justify-center">
+                <span class="text-xs text-red-700 font-bold uppercase">Obras Atrasadas</span>
+                <span id="stat-atrasadas" class="text-3xl font-black text-red-700">0</span>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-300 shadow-sm flex flex-col items-center justify-center">
+                <span class="text-xs text-gray-600 font-bold uppercase">Pausadas/Finalizadas</span>
+                <span id="stat-inativas" class="text-3xl font-black text-gray-600">0</span>
+            </div>
+        </div>
+
+        <!-- LISTA DE RESULTADOS -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4 border-b border-gray-100 bg-gray-50">
+                <h3 class="font-black text-gray-800 text-sm">📋 Resultados do Relatório</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="text-[10px] uppercase font-black text-gray-400 border-b border-gray-200 bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3">Obra</th>
+                            <th class="px-4 py-3">Língua / Tipo</th>
+                            <th class="px-4 py-3">Plataforma</th>
+                            <th class="px-4 py-3">Responsável</th>
+                            <th class="px-4 py-3">Status / Atraso</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-resultados" class="divide-y divide-gray-100">
+                        <tr><td colspan="5" class="p-6 text-center text-gray-400 italic">Clique em "Gerar Relatório" para ver os dados.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let todasObrasGlobais = [];
+
+        window.onload = async () => {
+            const cargo = localStorage.getItem('usuario_cargo');
+            if (cargo !== 'Administrador' && cargo !== 'Moderador') { window.location.href = 'index.html'; return; }
+
+            await carregarDadosIniciais(cargo);
+        };
+
+        function voltar() {
+            const cargo = localStorage.getItem('usuario_cargo');
+            if (cargo === 'Administrador') window.location.href = 'dashboard-adm.html';
+            else window.location.href = 'dashboard-moderador.html';
+        }
+
+        async function carregarDadosIniciais(cargo) {
+            const { data: obras } = await _supabase.from('obras').select('*').order('nome');
+            todasObrasGlobais = obras || [];
+
+            // Preenche Plataformas únicas
+            const selectPlat = document.getElementById('filtro-plataforma');
+            selectPlat.innerHTML = '<option value="">Todas</option>';
+            const plataformas = [...new Set(todasObrasGlobais.map(o => o.plataforma_oficial).filter(p => p))];
+            plataformas.forEach(p => selectPlat.innerHTML += `<option value="${p}">${p}</option>`);
+
+            // Controle de Moderador vs ADM
+            const selectMod = document.getElementById('filtro-mod');
+            if (cargo === 'Moderador') {
+                const meuNick = localStorage.getItem('usuario_nick');
+                selectMod.innerHTML = `<option value="${meuNick}">${meuNick}</option>`;
+                selectMod.disabled = true; // Moderador só vê ele mesmo
+            } else {
+                const { data: equipe } = await _supabase.from('equipe').select('nick').order('nick');
+                if (equipe) equipe.forEach(e => selectMod.innerHTML += `<option value="${e.nick}">${e.nick}</option>`);
+            }
+        }
+
+        function gerarRelatorio() {
+            const filtroLingua = document.getElementById('filtro-lingua').value.toLowerCase();
+            const filtroTipo = document.getElementById('filtro-tipo').value.toLowerCase();
+            const filtroPlataforma = document.getElementById('filtro-plataforma').value.toLowerCase();
+            const filtroMod = document.getElementById('filtro-mod').value.toLowerCase();
+
+            let obrasFiltradas = todasObrasGlobais.filter(obra => {
+                const fLingua = !filtroLingua || (obra.lingua && obra.lingua.toLowerCase() === filtroLingua);
+                const fTipo = !filtroTipo || (obra.tipo && obra.tipo.toLowerCase() === filtroTipo);
+                const fPlat = !filtroPlataforma || (obra.plataforma_oficial && obra.plataforma_oficial.toLowerCase() === filtroPlataforma);
+                const fMod = !filtroMod || (obra.responsavel_nick && obra.responsavel_nick.toLowerCase().includes(filtroMod));
+                return fLingua && fTipo && fPlat && fMod;
+            });
+
+            renderizarTabelaEEstatisticas(obrasFiltradas);
+        }
+
+        function renderizarTabelaEEstatisticas(obras) {
+            const tbody = document.getElementById('tabela-resultados');
+            tbody.innerHTML = '';
+
+            let countEmDia = 0;
+            let countAtrasadas = 0;
+            let countInativas = 0;
+
+            if(obras.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-gray-400 italic">Nenhuma obra encontrada com esses filtros.</td></tr>';
+            }
+
+            obras.forEach(obra => {
+                let statusLabel = '';
+                let emAtraso = false;
+
+                if (obra.status === 'Pausada' || obra.status === 'Finalizada') {
+                    countInativas++;
+                    statusLabel = `<span class="text-[10px] text-gray-500 bg-gray-200 px-2 py-0.5 rounded font-bold">${obra.status.toUpperCase()}</span>`;
+                } else {
+                    const capOficial = obra.capitulo_plataforma || '0';
+                    const capFleur = obra.capitulo_fleur || '0';
+                    const numOficial = Number(capOficial);
+                    const numFleur = Number(capFleur);
+                    
+                    if (!isNaN(numOficial) && !isNaN(numFleur)) {
+                        const atraso = numOficial - numFleur;
+                        if (atraso > 0) { emAtraso = true; statusLabel = `<span class="text-[10px] text-red-700 bg-red-100 px-2 py-0.5 rounded font-bold">⚠️ ATRASADA (${atraso})</span>`; } 
+                        else { statusLabel = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded font-bold">✅ EM DIA</span>`; }
+                    } else {
+                        if (String(capOficial).toLowerCase().trim() === String(capFleur).toLowerCase().trim()) {
+                            statusLabel = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded font-bold">✅ EM DIA</span>`;
+                        } else {
+                            emAtraso = true;
+                            statusLabel = `<span class="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded font-bold">⚠️ VERIFICAR</span>`;
+                        }
+                    }
+
+                    if(emAtraso) countAtrasadas++; else countEmDia++;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-4 py-3 font-bold text-gray-800 text-sm">${obra.nome}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">${obra.lingua || 'N/A'} <br> <span class="font-semibold text-gray-700">${obra.tipo || 'Recorrente'}</span></td>
+                        <td class="px-4 py-3 text-xs text-gray-700">${obra.plataforma_oficial || 'N/A'}</td>
+                        <td class="px-4 py-3 text-xs font-semibold text-blue-700">${obra.responsavel_nick || 'N/A'}</td>
+                        <td class="px-4 py-3">${statusLabel}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('stat-total').textContent = obras.length;
+            document.getElementById('stat-emdia').textContent = countEmDia;
+            document.getElementById('stat-atrasadas').textContent = countAtrasadas;
+            document.getElementById('stat-inativas').textContent = countInativas;
+        }
+    </script>
+</body>
+</html>
