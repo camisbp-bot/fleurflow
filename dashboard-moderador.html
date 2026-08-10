@@ -44,10 +44,14 @@
                     <span class="text-3xl group-hover:scale-110 transition">📈</span>
                     <span class="text-xs font-bold text-gray-700 group-hover:text-blue-700 text-center">Relatórios</span>
                 </button>
-                <button onclick="abrirModalDownload()" class="bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">📥</span>
-                    <span class="text-xs font-black text-blue-800 group-hover:text-blue-900 text-center">Informar Raw</span>
-                </button>
+                
+                <!-- BOTÃO DE INFORMAR DOWNLOAD (Inicia Escondido, só aparece pra Organizer) -->
+                <div id="box-btn-raw" class="hidden">
+                    <button onclick="abrirModalDownload()" class="w-full h-full bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                        <span class="text-3xl group-hover:scale-110 transition">📥</span>
+                        <span class="text-xs font-black text-blue-800 group-hover:text-blue-900 text-center">Informar Raw</span>
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -108,25 +112,29 @@
 
     <!-- MODAL DOWNLOAD RAW -->
     <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-blue-800 p-4 flex justify-between items-center text-white">
                 <h3 class="font-black flex items-center gap-2">📥 Informar Download (Raw)</h3>
                 <button onclick="fecharModalDownload()" class="font-bold text-blue-200 hover:text-white cursor-pointer">✖</button>
             </div>
             <form onsubmit="salvarDownloadRaw(event)" class="p-6 space-y-4">
-                <p class="text-xs text-gray-500 mb-2">Avise a ADM que você baixou a obra e libere a divisão para a equipe. Isso enviará a tarefa como "Concluída" direto pro sistema!</p>
+                <p class="text-xs text-gray-500 mb-2">Avise o sistema que você baixou a obra e libere a divisão para a equipe.</p>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
                     <select id="raw-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label>
                         <input type="text" id="raw-capitulo" placeholder="Ex: 30" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Total de Páginas</label>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label>
                         <input type="text" id="raw-paginas" placeholder="Ex: 1-15" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Altura Base (Px)</label>
+                        <input type="text" id="raw-altura" placeholder="Ex: 15000" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
                 <button type="submit" id="btn-salvar-raw" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4 cursor-pointer">✅ Confirmar Download</button>
@@ -199,8 +207,16 @@
         }
 
         async function carregarTudo(meuNick) {
-            const { data: usuario } = await _supabase.from('equipe').select('id').eq('nick', meuNick).single();
+            const { data: usuario } = await _supabase.from('equipe').select('*').eq('nick', meuNick).single();
             const meuId = usuario ? String(usuario.id) : null;
+            
+            // INTELIGÊNCIA: Verifica se a pessoa é Organizer em qualquer coluna da ficha
+            const ehOrganizer = usuario && JSON.stringify(usuario).toLowerCase().includes('organizer');
+            if (ehOrganizer) {
+                const boxBtn = document.getElementById('box-btn-raw');
+                if (boxBtn) boxBtn.classList.remove('hidden');
+            }
+
             const { data: obras } = await _supabase.from('obras').select('*').order('nome');
             const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
 
@@ -208,6 +224,7 @@
             const obrasStaff = [], obrasResp = [];
 
             if (obras) {
+                obrasDisponiveisRaw = obras; 
                 obras.forEach(o => {
                     const souResp = o.responsavel_nick && o.responsavel_nick.includes(meuNick);
                     const souStaff = o.staff_ids && meuId && o.staff_ids.map(String).includes(meuId);
@@ -215,9 +232,6 @@
                     if (souStaff) obrasStaff.push(o);
                 });
             }
-
-            // Obras que podem receber "Informar Download"
-            obrasDisponiveisRaw = [...obrasResp, ...obrasStaff];
 
             renderizarObras(obrasStaff, 'lista-obras-staff', false);
             renderizarObras(obrasResp, 'lista-obras-resp', true);
@@ -323,7 +337,7 @@
                     if(!isConcluida) {
                         botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
                     } else {
-                        const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}`;
+                        const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`;
                         botaoAcao = `
                             <div class="flex gap-1 mt-2">
                                 <button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded transition shadow-sm" title="Ir para divisão de tarefas">✂️ Dividir</button>
@@ -340,7 +354,10 @@
                     <div class="bg-white border border-gray-100 p-3 rounded shadow-sm hover:shadow-md transition">
                         <div class="flex justify-between items-start mb-2">
                             <span class="font-bold text-red-700 text-sm leading-tight">C.${t.capitulo}</span>
-                            <span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">PG: ${t.paginas || 'Todas'}</span>
+                            <div class="flex flex-col items-end gap-1">
+                                <span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">PG: ${t.paginas || 'Todas'}</span>
+                                ${t.altura ? `<span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">↕ Alt: ${t.altura}</span>` : ''}
+                            </div>
                         </div>
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-[10px] uppercase font-black text-gray-500">${t.etapa}</span>
@@ -374,7 +391,6 @@
             else { carregarTudo(localStorage.getItem('usuario_nick')); }
         }
 
-        // LÓGICA DO MODAL DE RAW
         function abrirModalDownload() {
             const select = document.getElementById('raw-obra');
             select.innerHTML = '<option value="">Selecione a obra...</option>';
@@ -385,7 +401,9 @@
 
         function fecharModalDownload() {
             document.getElementById('modal-download').classList.add('hidden');
-            document.getElementById('raw-capitulo').value = ''; document.getElementById('raw-paginas').value = '';
+            document.getElementById('raw-capitulo').value = ''; 
+            document.getElementById('raw-paginas').value = '';
+            document.getElementById('raw-altura').value = ''; 
         }
 
         async function salvarDownloadRaw(e) {
@@ -399,6 +417,7 @@
                 capitulo: document.getElementById('raw-capitulo').value,
                 etapa: 'Organizer / Raw',
                 paginas: document.getElementById('raw-paginas').value,
+                altura: document.getElementById('raw-altura').value,
                 responsavel_nick: nick,
                 prazo: null,
                 status: 'Concluído'
