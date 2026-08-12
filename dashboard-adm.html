@@ -44,6 +44,7 @@
                     <span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span>
                 </button>
 
+                <!-- BOTÃO DE MINHAS ADVERTÊNCIAS COM BADGE -->
                 <button onclick="abrirMinhasAdv()" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group">
                     <span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span>
                     <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
@@ -137,7 +138,27 @@
                         </div>
                     </div>
                     <div><label class="text-xs font-bold text-gray-600">Data de Entrada</label><input type="date" id="rh-entrada" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
-                    <div><label class="text-xs font-bold text-gray-600">Funções (Ex: Tradutor, Cleaner)</label><input type="text" id="rh-funcoes" class="w-full border border-gray-300 rounded p-2 text-sm"></div>
+                    
+                    <!-- NOVO CAMPO: FUNÇÕES (CHECKBOXES) -->
+                    <div>
+                        <label class="text-xs font-bold text-gray-600 block mb-1">Funções</label>
+                        <div class="grid grid-cols-2 gap-2 p-3 bg-gray-50 border border-gray-300 rounded max-h-40 overflow-y-auto">
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (PC)" class="text-purple-600 rounded"> EDITOR (PC)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (CELL)" class="text-purple-600 rounded"> EDITOR (CELL)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER" class="text-purple-600 rounded"> CLEANER</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (PC)" class="text-purple-600 rounded"> CLEANER (PC)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (CELL)" class="text-purple-600 rounded"> CLEANER (CELL)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (TABLET)" class="text-purple-600 rounded"> CLEANER (TABLET)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="ORGANIZER" class="text-purple-600 rounded"> ORGANIZER</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (INGLÊS)" class="text-purple-600 rounded"> TRADUTOR (INGLÊS)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (ESPANHOL)" class="text-purple-600 rounded"> TRADUTOR (ESPANHOL)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (KO)" class="text-purple-600 rounded"> TRADUTOR (KO)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (FRANCÊS)" class="text-purple-600 rounded"> TRADUTOR (FRANCÊS)</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="REVISOR" class="text-purple-600 rounded"> REVISOR</label>
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="REVISOR DE TESTES" class="text-purple-600 rounded"> REVISOR DE TESTES</label>
+                        </div>
+                    </div>
+
                     <div class="border-t border-gray-200 pt-4 mt-4">
                         <label class="text-xs font-bold text-gray-600">Status do Membro</label>
                         <select id="rh-status" onchange="verificarStatusRH()" class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-50 font-bold">
@@ -170,9 +191,9 @@
                     <h3 class="text-lg font-bold text-purple-800">📋 Controle e Estatísticas</h3>
                 </div>
 
-                <!-- PAINEL DE ESTATÍSTICAS -->
+                <!-- PAINEL DE ESTATÍSTICAS (BOTÕES INTERATIVOS) -->
                 <div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-100">
-                    <h4 class="text-xs font-black text-purple-900 mb-3 uppercase">📊 Contagem de Funções (Membros Ativos)</h4>
+                    <h4 class="text-xs font-black text-purple-900 mb-3 uppercase">📊 Contagem de Funções (Clique para Filtrar a Equipe Ativa)</h4>
                     <div id="rh-estatisticas" class="flex flex-wrap gap-2 text-xs">
                         <span class="text-gray-500 italic">Calculando...</span>
                     </div>
@@ -181,7 +202,9 @@
                 <div class="space-y-6">
                     <!-- MEMBROS ATIVOS -->
                     <div>
-                        <h4 class="font-bold text-green-800 bg-green-100 p-2 rounded-t-lg border border-green-200 text-sm">🟢 Equipe Ativa</h4>
+                        <h4 class="font-bold text-green-800 bg-green-100 p-2 rounded-t-lg border border-green-200 text-sm flex justify-between">
+                            <span>🟢 Equipe Ativa</span>
+                        </h4>
                         <div class="overflow-x-auto border border-t-0 border-green-200 rounded-b-lg">
                             <table class="w-full text-left text-sm text-gray-600">
                                 <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
@@ -229,7 +252,7 @@
         </div>
     </section>
 
-    <!-- ==================== MÓDULO: ADVERTÊNCIAS (Para Aplicar) ==================== -->
+    <!-- ==================== MÓDULO: ADVERTÊNCIAS ==================== -->
     <section id="painel-adv" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-black text-orange-900 flex items-center gap-2">⚠️ Controle de Advertências</h2>
@@ -375,6 +398,11 @@
         let obraAbertaAtual = null;
         let equipeBaseGlobal = [];
 
+        // Variáveis de Controle do RH
+        let equipeAtivaGlobal = [];
+        let funcoesCountGlobal = {};
+        let filtroFuncaoAtivo = null;
+
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
@@ -442,6 +470,9 @@
             navigator.clipboard.writeText(ta.value).then(() => alert("Copiado!")).catch(() => alert("Erro ao copiar."));
         }
 
+        // =========================================================================
+        // MÓDULO 1: RH (NOVO SISTEMA COM FILTROS E CHECKBOXES)
+        // =========================================================================
         function autoPreencherDadosBasicos() {
             const nickDigitado = document.getElementById('rh-nick').value;
             const membroBase = equipeBaseGlobal.find(m => m.nick === nickDigitado);
@@ -475,6 +506,7 @@
         function limparFormRH() {
             document.getElementById('form-rh').reset();
             document.getElementById('rh-id').value = '';
+            document.querySelectorAll('input[name="rh-funcao"]').forEach(cb => cb.checked = false);
             verificarStatusRH();
         }
 
@@ -487,65 +519,122 @@
 
             const { data } = await _supabase.from('equipe_geral').select('*').order('nick');
             
-            const tbAtivos = document.getElementById('tb-ativos'); tbAtivos.innerHTML = '';
             const tbHiatus = document.getElementById('tb-hiatus'); tbHiatus.innerHTML = '';
             const tbSaiu = document.getElementById('tb-saiu'); tbSaiu.innerHTML = '';
-            
             const selAdv = document.getElementById('adv-nick'); selAdv.innerHTML = '<option value="">Selecione o Infrator...</option>';
-            
-            let funcoesCount = {};
+
+            equipeAtivaGlobal = [];
+            funcoesCountGlobal = {};
 
             if(!data) return;
             data.forEach(m => {
                 selAdv.innerHTML += `<option value="${m.nick}">${m.nick}</option>`;
-                
                 const jsonObj = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
-                
-                let linha = `
-                    <tr class="hover:bg-gray-50 border-b border-gray-100">
-                        <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
-                        <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
-                        <td class="px-3 py-2 text-right">
-                            <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button>
-                            ${m.status_membro !== 'Ativo' ? `<button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer" title="Gerar Mensagem">📲 Aviso</button>` : ''}
-                        </td>
-                    </tr>
-                `;
 
                 if(m.status_membro === 'Hiatus') {
-                    tbHiatus.innerHTML += linha;
+                    tbHiatus.innerHTML += `
+                        <tr class="hover:bg-yellow-50 border-b border-yellow-100">
+                            <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
+                            <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
+                            <td class="px-3 py-2 text-right">
+                                <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button>
+                                <button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer">📲 Aviso</button>
+                            </td>
+                        </tr>
+                    `;
                 } else if(m.status_membro === 'Saiu') {
-                    tbSaiu.innerHTML += linha;
+                    tbSaiu.innerHTML += `
+                        <tr class="hover:bg-red-50 border-b border-red-100">
+                            <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
+                            <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
+                            <td class="px-3 py-2 text-right">
+                                <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button>
+                                <button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer">📲 Aviso</button>
+                            </td>
+                        </tr>
+                    `;
                 } else {
-                    tbAtivos.innerHTML += linha;
-                    
-                    // Lógica para contar as funções inteligentemente
+                    // É ATIVO!
+                    equipeAtivaGlobal.push(m);
                     if(m.funcoes) {
-                        let funcs = m.funcoes.split(/,| e | \/ |\/| \+ |\+/i).map(f => f.trim()).filter(f => f);
-                        funcs.forEach(f => {
-                            let name = f.charAt(0).toUpperCase() + f.slice(1).toLowerCase();
-                            funcoesCount[name] = (funcoesCount[name] || 0) + 1;
+                        const fList = m.funcoes.split(',').map(f => f.trim());
+                        fList.forEach(f => {
+                            if(f) funcoesCountGlobal[f] = (funcoesCountGlobal[f] || 0) + 1;
                         });
                     }
                 }
             });
 
-            if(tbAtivos.innerHTML === '') tbAtivos.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro ativo cadastrado no momento.</td></tr>';
-            if(tbHiatus.innerHTML === '') tbHiatus.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro em hiatus no momento.</td></tr>';
-            if(tbSaiu.innerHTML === '') tbSaiu.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum registro de saída cadastrado.</td></tr>';
+            if(tbHiatus.innerHTML === '') tbHiatus.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro em hiatus.</td></tr>';
+            if(tbSaiu.innerHTML === '') tbSaiu.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum registro de saída.</td></tr>';
 
-            // Preencher Estatísticas
+            renderizarEstatisticasRH();
+            renderizarTabelaAtivosRH();
+        }
+
+        // FUNÇÃO PARA FILTRAR OS ATIVOS CLICANDO NO BOTÃO
+        function filtrarPorFuncao(funcao) {
+            if(filtroFuncaoAtivo === funcao) filtroFuncaoAtivo = null; // desmarca se clicar de novo
+            else filtroFuncaoAtivo = funcao;
+            
+            renderizarEstatisticasRH();
+            renderizarTabelaAtivosRH();
+        }
+
+        function renderizarEstatisticasRH() {
             const estContainer = document.getElementById('rh-estatisticas');
             estContainer.innerHTML = '';
-            const funcoesArray = Object.keys(funcoesCount).sort((a,b) => funcoesCount[b] - funcoesCount[a]);
+            
+            const funcoesArray = Object.keys(funcoesCountGlobal).sort((a,b) => funcoesCountGlobal[b] - funcoesCountGlobal[a]);
             
             if(funcoesArray.length === 0) {
-                estContainer.innerHTML = '<span class="text-gray-500 italic">Nenhuma função preenchida nos perfis ativos para calcular.</span>';
-            } else {
-                funcoesArray.forEach(f => {
-                    estContainer.innerHTML += `<span class="bg-white border border-purple-200 text-purple-800 px-2 py-1 rounded-lg font-bold shadow-sm flex items-center gap-2">${f} <span class="text-white bg-purple-600 px-1.5 rounded text-[10px]">${funcoesCount[f]}</span></span>`;
-                });
+                estContainer.innerHTML = '<span class="text-gray-500 italic">Nenhuma função preenchida para calcular.</span>';
+                return;
             }
+
+            funcoesArray.forEach(f => {
+                const isActive = (filtroFuncaoAtivo === f);
+                const baseClasses = isActive ? "bg-purple-600 text-white border-purple-700" : "bg-white text-purple-800 border-purple-200 hover:bg-purple-100";
+                const badgeClasses = isActive ? "bg-white text-purple-700" : "bg-purple-600 text-white";
+                
+                estContainer.innerHTML += `
+                    <button type="button" onclick="filtrarPorFuncao('${f}')" class="transition cursor-pointer border px-2 py-1 rounded-lg font-bold shadow-sm flex items-center gap-2 ${baseClasses}">
+                        ${f} 
+                        <span class="px-1.5 rounded text-[10px] ${badgeClasses}">${funcoesCountGlobal[f]}</span>
+                    </button>
+                `;
+            });
+
+            if(filtroFuncaoAtivo) {
+                 estContainer.innerHTML += `<button type="button" onclick="filtrarPorFuncao('${filtroFuncaoAtivo}')" class="text-xs text-red-600 hover:text-red-800 font-black ml-2 underline cursor-pointer mt-1">Limpar Filtro ✖</button>`;
+            }
+        }
+
+        function renderizarTabelaAtivosRH() {
+            const tbAtivos = document.getElementById('tb-ativos');
+            tbAtivos.innerHTML = '';
+            let count = 0;
+
+            equipeAtivaGlobal.forEach(m => {
+                // Se tem filtro ativado e a pessoa não tem a função, pula ela
+                if(filtroFuncaoAtivo) {
+                    if(!m.funcoes || !m.funcoes.includes(filtroFuncaoAtivo)) return;
+                }
+                
+                const jsonObj = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
+                tbAtivos.innerHTML += `
+                    <tr class="hover:bg-green-50 border-b border-green-100 transition">
+                        <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
+                        <td class="px-3 py-2 text-xs text-gray-600">${m.funcoes || '-'}</td>
+                        <td class="px-3 py-2 text-right">
+                            <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold cursor-pointer shadow-sm">✏️ Editar</button>
+                        </td>
+                    </tr>
+                `;
+                count++;
+            });
+
+            if(count === 0) tbAtivos.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro encontrado neste filtro.</td></tr>';
         }
 
         function editarRH(encodedObj) {
@@ -556,23 +645,40 @@
             document.getElementById('rh-idade').value = m.idade || '';
             document.getElementById('rh-nasc').value = m.data_nascimento || '';
             document.getElementById('rh-entrada').value = m.data_entrada || '';
-            document.getElementById('rh-funcoes').value = m.funcoes || '';
             document.getElementById('rh-status').value = m.status_membro || 'Ativo';
             document.getElementById('rh-hia-inicio').value = m.hiatus_inicio || '';
             document.getElementById('rh-hia-fim').value = m.hiatus_fim || '';
             document.getElementById('rh-hia-motivo').value = m.hiatus_motivo || '';
             document.getElementById('rh-sai-data').value = m.saida_data || '';
             document.getElementById('rh-sai-motivo').value = m.saida_motivo || '';
+            
+            // Lógica de marcar os Checkboxes salvos
+            document.querySelectorAll('input[name="rh-funcao"]').forEach(cb => cb.checked = false);
+            if(m.funcoes) {
+                const fList = m.funcoes.split(',').map(f => f.trim());
+                fList.forEach(f => {
+                    const cb = document.querySelector(`input[name="rh-funcao"][value="${f}"]`);
+                    if(cb) cb.checked = true;
+                });
+            }
+
             verificarStatusRH();
+            document.getElementById('painel-rh').scrollIntoView({ behavior: 'smooth' });
         }
 
         async function salvarMembroRH(e) {
             e.preventDefault();
             const id = document.getElementById('rh-id').value;
+            
+            // Juntando os Checkboxes marcados
+            const checkboxesF = document.querySelectorAll('input[name="rh-funcao"]:checked');
+            const funcoesSelecionadas = Array.from(checkboxesF).map(cb => cb.value).join(', ');
+
             const obj = {
                 nick: document.getElementById('rh-nick').value, nome_real: document.getElementById('rh-nome').value,
                 idade: document.getElementById('rh-idade').value, data_nascimento: document.getElementById('rh-nasc').value,
-                data_entrada: document.getElementById('rh-entrada').value, funcoes: document.getElementById('rh-funcoes').value,
+                data_entrada: document.getElementById('rh-entrada').value, 
+                funcoes: funcoesSelecionadas, // <--- Aqui entra a lista certinha!
                 status_membro: document.getElementById('rh-status').value,
                 hiatus_inicio: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-inicio').value : null,
                 hiatus_fim: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-fim').value : null,
@@ -888,7 +994,7 @@
                 else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
 
                 const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2" title="Atualização">🔔</span>` : '';
-                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100 cursor-pointer" title="Editar">✏️</button>`;
+                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar">✏️</button>`;
 
                 container.innerHTML += `
                     <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
