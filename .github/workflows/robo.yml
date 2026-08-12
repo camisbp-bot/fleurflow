@@ -1,0 +1,25 @@
+name: 🤖 Robô de Views Automático
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Acorda no minuto 0 de toda santa hora (12:00, 13:00...)
+  workflow_dispatch: # Permite que a gente clique num botão pra rodar na hora que quiser
+
+jobs:
+  sincronizar_views:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📂 Pegando os arquivos do painel
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Configurando o cérebro (Node.js)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 📦 Instalando ferramentas
+        run: npm install @supabase/supabase-js cheerio
+
+      - name: 🚀 Acordando o Robô Sincronizador!
+        run: node scripts/robo_views.js
