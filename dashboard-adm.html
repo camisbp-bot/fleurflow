@@ -44,7 +44,6 @@
                     <span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span>
                 </button>
 
-                <!-- BOTÃO DE MINHAS ADVERTÊNCIAS COM BADGE -->
                 <button onclick="abrirMinhasAdv()" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group">
                     <span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span>
                     <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
@@ -117,7 +116,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-200 h-fit">
                 <h3 class="text-lg font-bold text-purple-800 mb-4">Adicionar / Editar Membro</h3>
                 <form id="form-rh" onsubmit="salvarMembroRH(event)" class="space-y-4">
                     <input type="hidden" id="rh-id">
@@ -164,16 +163,63 @@
                     </div>
                 </form>
             </div>
+
+            <!-- NOVA LISTA GERAL ORGANIZADA -->
             <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
-                <h3 class="text-lg font-bold text-purple-800 mb-4 border-b pb-2">📋 Lista Geral (Clique para Editar ou Avisar)</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
-                        <thead class="text-xs uppercase font-black text-gray-400 border-b">
-                            <tr><th>Status</th><th>Nick (Nome)</th><th>Funções</th><th>Ações Rápidas</th></tr>
-                        </thead>
-                        <tbody id="tabela-rh" class="divide-y divide-gray-100"></tbody>
-                    </table>
+                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                    <h3 class="text-lg font-bold text-purple-800">📋 Controle e Estatísticas</h3>
                 </div>
+
+                <!-- PAINEL DE ESTATÍSTICAS -->
+                <div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-100">
+                    <h4 class="text-xs font-black text-purple-900 mb-3 uppercase">📊 Contagem de Funções (Membros Ativos)</h4>
+                    <div id="rh-estatisticas" class="flex flex-wrap gap-2 text-xs">
+                        <span class="text-gray-500 italic">Calculando...</span>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- MEMBROS ATIVOS -->
+                    <div>
+                        <h4 class="font-bold text-green-800 bg-green-100 p-2 rounded-t-lg border border-green-200 text-sm">🟢 Equipe Ativa</h4>
+                        <div class="overflow-x-auto border border-t-0 border-green-200 rounded-b-lg">
+                            <table class="w-full text-left text-sm text-gray-600">
+                                <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
+                                    <tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr>
+                                </thead>
+                                <tbody id="tb-ativos" class="divide-y divide-gray-100 bg-white"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- MEMBROS EM HIATUS -->
+                    <div>
+                        <h4 class="font-bold text-yellow-800 bg-yellow-100 p-2 rounded-t-lg border border-yellow-200 text-sm">🟡 Em Hiatus</h4>
+                        <div class="overflow-x-auto border border-t-0 border-yellow-200 rounded-b-lg">
+                            <table class="w-full text-left text-sm text-gray-600">
+                                <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
+                                    <tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr>
+                                </thead>
+                                <tbody id="tb-hiatus" class="divide-y divide-gray-100 bg-white"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- MEMBROS QUE SAÍRAM -->
+                    <div>
+                        <h4 class="font-bold text-red-800 bg-red-100 p-2 rounded-t-lg border border-red-200 text-sm">🔴 Saíram da SCAN</h4>
+                        <div class="overflow-x-auto border border-t-0 border-red-200 rounded-b-lg">
+                            <table class="w-full text-left text-sm text-gray-600">
+                                <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
+                                    <tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr>
+                                </thead>
+                                <tbody id="tb-saiu" class="divide-y divide-gray-100 bg-white"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOX MENSAGEM WHATSAPP -->
                 <div id="area-wpp-rh" class="hidden mt-6 bg-purple-50 p-4 border border-purple-200 rounded-lg">
                     <h4 class="text-sm font-bold text-purple-900 mb-2">📲 Mensagem para o WhatsApp (Notificar Equipe)</h4>
                     <textarea id="texto-wpp-rh" rows="5" class="w-full bg-white border border-purple-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea>
@@ -440,30 +486,66 @@
             equipeBaseGlobal.forEach(m => { datalistNicks.innerHTML += `<option value="${m.nick}">`; });
 
             const { data } = await _supabase.from('equipe_geral').select('*').order('nick');
-            const tb = document.getElementById('tabela-rh'); tb.innerHTML = '';
+            
+            const tbAtivos = document.getElementById('tb-ativos'); tbAtivos.innerHTML = '';
+            const tbHiatus = document.getElementById('tb-hiatus'); tbHiatus.innerHTML = '';
+            const tbSaiu = document.getElementById('tb-saiu'); tbSaiu.innerHTML = '';
+            
             const selAdv = document.getElementById('adv-nick'); selAdv.innerHTML = '<option value="">Selecione o Infrator...</option>';
+            
+            let funcoesCount = {};
 
             if(!data) return;
             data.forEach(m => {
                 selAdv.innerHTML += `<option value="${m.nick}">${m.nick}</option>`;
-                let cor = 'bg-green-100 text-green-700';
-                if(m.status_membro === 'Hiatus') cor = 'bg-yellow-100 text-yellow-800';
-                if(m.status_membro === 'Saiu') cor = 'bg-red-100 text-red-800';
-
+                
                 const jsonObj = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
-
-                tb.innerHTML += `
+                
+                let linha = `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
-                        <td class="py-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${cor}">${m.status_membro}</span></td>
-                        <td class="py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
-                        <td class="py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
-                        <td class="py-2 text-right">
+                        <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
+                        <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
+                        <td class="px-3 py-2 text-right">
                             <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button>
                             ${m.status_membro !== 'Ativo' ? `<button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer" title="Gerar Mensagem">📲 Aviso</button>` : ''}
                         </td>
                     </tr>
                 `;
+
+                if(m.status_membro === 'Hiatus') {
+                    tbHiatus.innerHTML += linha;
+                } else if(m.status_membro === 'Saiu') {
+                    tbSaiu.innerHTML += linha;
+                } else {
+                    tbAtivos.innerHTML += linha;
+                    
+                    // Lógica para contar as funções inteligentemente
+                    if(m.funcoes) {
+                        let funcs = m.funcoes.split(/,| e | \/ |\/| \+ |\+/i).map(f => f.trim()).filter(f => f);
+                        funcs.forEach(f => {
+                            let name = f.charAt(0).toUpperCase() + f.slice(1).toLowerCase();
+                            funcoesCount[name] = (funcoesCount[name] || 0) + 1;
+                        });
+                    }
+                }
             });
+
+            if(tbAtivos.innerHTML === '') tbAtivos.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro ativo cadastrado no momento.</td></tr>';
+            if(tbHiatus.innerHTML === '') tbHiatus.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro em hiatus no momento.</td></tr>';
+            if(tbSaiu.innerHTML === '') tbSaiu.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum registro de saída cadastrado.</td></tr>';
+
+            // Preencher Estatísticas
+            const estContainer = document.getElementById('rh-estatisticas');
+            estContainer.innerHTML = '';
+            const funcoesArray = Object.keys(funcoesCount).sort((a,b) => funcoesCount[b] - funcoesCount[a]);
+            
+            if(funcoesArray.length === 0) {
+                estContainer.innerHTML = '<span class="text-gray-500 italic">Nenhuma função preenchida nos perfis ativos para calcular.</span>';
+            } else {
+                funcoesArray.forEach(f => {
+                    estContainer.innerHTML += `<span class="bg-white border border-purple-200 text-purple-800 px-2 py-1 rounded-lg font-bold shadow-sm flex items-center gap-2">${f} <span class="text-white bg-purple-600 px-1.5 rounded text-[10px]">${funcoesCount[f]}</span></span>`;
+                });
+            }
         }
 
         function editarRH(encodedObj) {
@@ -566,7 +648,6 @@
                 const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
                 const jsonObj = encodeURIComponent(JSON.stringify(a)).replace(/'/g, "%27");
                 
-                // ESCONDER BOTÕES SE A ADVERTÊNCIA FOR DO PRÓPRIO ADM
                 let botoesAcao = '';
                 if (a.membro_nick !== meuNick) {
                     botoesAcao = `
