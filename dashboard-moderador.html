@@ -14,6 +14,10 @@
             <h1 class="text-xl font-black tracking-wider">FleurFlow <span class="text-red-300 text-sm font-normal">| Painel do Moderador</span></h1>
         </div>
         <div class="flex items-center gap-4">
+            <!-- NOTIFICAÇÕES INTELIGENTES -->
+            <button onclick="abrirNotificacoes()" class="relative text-2xl hover:scale-110 transition cursor-pointer">
+                🔔 <span id="badge-notificacoes" class="hidden absolute -top-1 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow animate-pulse">0</span>
+            </button>
             <span id="nome-usuario" class="text-sm font-semibold text-red-100 hidden sm:block">Olá, Moderador</span>
             <button onclick="sair()" class="bg-red-800 hover:bg-red-950 text-white text-xs font-bold py-2 px-4 rounded-full transition cursor-pointer">Sair</button>
         </div>
@@ -23,463 +27,282 @@
         
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">🛠️ Ferramentas da Moderação</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
                 <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">📖</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Cadastrar Obra</span>
+                    <span class="text-3xl group-hover:scale-110 transition">📖</span><span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Cadastrar Obra</span>
                 </button>
                 <button onclick="window.location.href='listao-geral.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">📊</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Listão & Telegram</span>
+                    <span class="text-3xl group-hover:scale-110 transition">📊</span><span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Listão & Telegram</span>
                 </button>
                 <button onclick="window.location.href='andamento.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">⚙️</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Andamento (Staff)</span>
+                    <span class="text-3xl group-hover:scale-110 transition">⚙️</span><span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Andamento (Staff)</span>
                 </button>
                 <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">🔔</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Atualizações</span>
+                    <span class="text-3xl group-hover:scale-110 transition">🔔</span><span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Atualizações</span>
                 </button>
                 <button onclick="window.location.href='relatorios.html'" class="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                    <span class="text-3xl group-hover:scale-110 transition">📈</span>
-                    <span class="text-xs font-bold text-gray-700 group-hover:text-blue-700 text-center">Relatórios</span>
+                    <span class="text-3xl group-hover:scale-110 transition">📈</span><span class="text-xs font-bold text-gray-700 group-hover:text-blue-700 text-center">Relatórios</span>
                 </button>
                 
                 <div id="box-btn-raw" class="hidden">
                     <button onclick="abrirModalDownload()" class="w-full h-full bg-blue-50 border border-blue-200 hover:border-blue-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
-                        <span class="text-3xl group-hover:scale-110 transition">📥</span>
-                        <span class="text-xs font-black text-blue-800 group-hover:text-blue-900 text-center">Informar Raw</span>
+                        <span class="text-3xl group-hover:scale-110 transition">📥</span><span class="text-xs font-black text-blue-800 group-hover:text-blue-900 text-center">Informar Raw</span>
                     </button>
                 </div>
 
-                <!-- NOVO BOTÃO DE MINHAS ADVERTÊNCIAS COM BADGE -->
+                <!-- BOTÃO: Lançar Views -->
+                <button onclick="abrirModalSincronizar()" class="bg-emerald-50 border border-emerald-200 hover:border-emerald-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
+                    <span class="text-3xl group-hover:scale-110 transition">🔄</span><span class="text-xs font-black text-emerald-800 group-hover:text-emerald-900 text-center">Lançar Views</span>
+                </button>
+
                 <button onclick="abrirMinhasAdv()" class="bg-orange-50 border border-orange-200 hover:border-orange-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group relative">
                     <span id="badge-adv-mod" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span>
-                    <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
-                    <span class="text-xs font-black text-orange-800 group-hover:text-orange-900 text-center">Minhas Adv.</span>
+                    <span class="text-3xl group-hover:scale-110 transition">⚠️</span><span class="text-xs font-black text-orange-800 group-hover:text-orange-900 text-center">Minhas Adv.</span>
                 </button>
             </div>
         </section>
 
-        <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm">
-            <div class="flex justify-between items-center mb-4 border-b border-pink-100 pb-2">
-                <h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2>
-                <button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow transition cursor-pointer">📲 Mensagem de Hoje</button>
-            </div>
-            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]">
-                <p class="text-sm text-gray-500 italic">Buscando aniversariantes...</p>
-            </div>
-            <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t border-pink-200">
-                <p class="text-xs text-pink-800 font-bold mb-1">Copie para o WhatsApp:</p>
-                <textarea id="texto-niver" rows="4" class="w-full bg-white border border-pink-300 rounded-lg p-3 text-sm font-semibold text-gray-700 focus:outline-none" readonly></textarea>
-            </div>
-        </section>
-
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- DASHBOARD NORMAL E MODAIS -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
             <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[400px]">
                 <h2 class="text-lg font-black text-blue-900 mb-2 flex items-center gap-2">👥 Obras (STAFF)</h2>
-                <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as SUAS tarefas.</p>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-staff"></div>
             </div>
             
             <div class="bg-white rounded-xl shadow-sm border border-amber-200 p-6 flex flex-col h-[400px]">
                 <h2 class="text-lg font-black text-amber-900 mb-2 flex items-center gap-2">👑 Obras (RESPONSÁVEL)</h2>
-                <p class="text-[10px] text-gray-500 mb-4">Clique em uma obra para ver as entregas da SUA EQUIPE.</p>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-resp"></div>
             </div>
         </section>
-
-        <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all">
-            <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
-                <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Tarefas da Obra</h2>
-                <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 px-3 py-1 rounded transition cursor-pointer">✖ Fechar Painel</button>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-green-200 flex flex-col h-80">
-                    <div class="bg-green-50 p-3 border-b border-green-100 rounded-t-xl"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-red-200 flex flex-col h-80">
-                    <div class="bg-red-50 p-3 border-b border-red-100 rounded-t-xl"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-orange-200 flex flex-col h-80">
-                    <div class="bg-orange-50 p-3 border-b border-orange-100 rounded-t-xl"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-80">
-                    <div class="bg-gray-50 p-3 border-b border-gray-200 rounded-t-xl"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div>
-                    <div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <!-- MODAL DOWNLOAD RAW -->
-    <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-blue-800 p-4 flex justify-between items-center text-white">
-                <h3 class="font-black flex items-center gap-2">📥 Informar Download (Raw)</h3>
-                <button onclick="fecharModalDownload()" class="font-bold text-blue-200 hover:text-white cursor-pointer">✖</button>
+    <!-- MODAL: DETALHES DE VIEWS DA OBRA -->
+    <div id="modal-detalhes-views" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border-2 border-emerald-500">
+            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">📊 Analytics da Obra</h3>
+                <button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold text-emerald-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
             </div>
-            <form onsubmit="salvarDownloadRaw(event)" class="p-6 space-y-4">
-                <p class="text-xs text-gray-500 mb-2">Avise o sistema que você baixou a obra e libere a divisão para a equipe.</p>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Obra</label>
-                    <select id="raw-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label>
-                        <input type="text" id="raw-capitulo" placeholder="Ex: 30" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+            <div class="p-6 text-center">
+                <h4 id="view-obra-nome" class="text-xl font-black text-gray-800 mb-1">Nome da Obra</h4>
+                <p id="view-obra-priori" class="text-xs font-bold text-gray-500 mb-6 uppercase bg-gray-100 inline-block px-3 py-1 rounded-full">Prioridade: Média</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase">Views Totais</p>
+                        <p id="view-total" class="text-2xl font-black text-gray-800">0</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label>
-                        <input type="text" id="raw-paginas" placeholder="Ex: 1-15" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Altura Base (Px)</label>
-                        <input type="text" id="raw-altura" placeholder="Ex: 15000" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <p class="text-[10px] font-bold text-blue-700 uppercase">Média / Capítulo</p>
+                        <p id="view-media" class="text-2xl font-black text-blue-900">0</p>
                     </div>
                 </div>
-                <button type="submit" id="btn-salvar-raw" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4 cursor-pointer">✅ Confirmar Download</button>
-            </form>
+
+                <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 flex justify-between items-center mb-6">
+                    <div class="text-left">
+                        <p class="text-[10px] font-bold text-emerald-800 uppercase">Crescimento Diário</p>
+                        <p id="view-cresc" class="text-xl font-black text-emerald-900">+0</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-emerald-800 uppercase">Taxa de Evolução</p>
+                        <p id="view-taxa" class="text-xl font-black text-emerald-900">0%</p>
+                    </div>
+                </div>
+                <p id="view-sugestao" class="text-sm font-bold bg-yellow-100 text-yellow-800 p-2 rounded border border-yellow-300"></p>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL MINHAS ADVERTÊNCIAS -->
-    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <!-- MODAL: SINCRONIZAR VIEWS MANUALMENTE -->
+    <div id="modal-sinc-views" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="bg-blue-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">🔄 Atualizar Visualizações</h3>
+                <button onclick="document.getElementById('modal-sinc-views').classList.add('hidden')" class="font-bold text-blue-200 hover:text-white cursor-pointer">✖</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div><label class="block text-xs font-bold text-gray-700 mb-1">Obra</label><select id="sinc-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm"></select></div>
+                <div><label class="block text-xs font-bold text-gray-700 mb-1">Views Totais Atuais no Site</label><input type="number" id="sinc-views" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Ex: 50000"></div>
+                <button onclick="salvarViewsManual()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4 cursor-pointer">💾 Salvar e Calcular Crescimento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CENTRAL DE NOTIFICAÇÕES -->
+    <div id="modal-notificacoes" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-orange-800 p-4 flex justify-between items-center text-white">
-                <h3 class="font-black flex items-center gap-2">⚠️ Minhas Advertências</h3>
-                <button onclick="fecharMinhasAdv()" class="font-bold text-orange-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
+            <div class="bg-red-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">🔔 Notificações da Moderação</h3>
+                <button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold text-red-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
             </div>
             <div class="p-6">
-                <p class="text-xs text-gray-500 mb-4">Aqui fica o registro oficial das advertências aplicadas a você pela Administração. O acúmulo de advertências pode levar ao desligamento da equipe.</p>
-                <div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto pr-2">
-                    <p class="text-sm text-gray-400">Buscando histórico...</p>
+                <p class="text-xs text-gray-500 mb-4">O sistema detectou que as seguintes obras sob sua supervisão bateram metas e precisam ter a prioridade reavaliada!</p>
+                <div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                    <p class="text-sm text-gray-400 text-center py-4">Tudo tranquilo por aqui!</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- SCRIPT DE LÓGICA DO MODERADOR -->
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let todasTarefasGlobais = [];
-        let obrasDisponiveisRaw = [];
-        let obraAbertaAtual = null;
-        let modoAbertoAtual = null;
+        let configRegras = { media: 15000, maxima: 23000, alta: 30000 }; 
+        let obrasDisponiveisGlobal = [];
 
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
-            carregarTudo(nick);
-            carregarAniversariantes();
-            carregarMinhasAdv(nick); // Carrega o sistema de advertências
+            
+            await carregarRegrasSupabase();
+            carregarDashboardAntigo(nick);
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
 
-        // MÓDULO DE ADVERTÊNCIAS PESSOAIS
-        async function carregarMinhasAdv(meuNick) {
-            const { data } = await _supabase.from('advertencias').select('*').eq('membro_nick', meuNick).order('created_at', {ascending: false});
-            const lista = document.getElementById('lista-minhas-adv');
-            const badge = document.getElementById('badge-adv-mod');
-            
-            if(!data || data.length === 0) {
-                lista.innerHTML = '<div class="text-center py-4"><span class="text-4xl block mb-2">🎉</span><p class="text-sm font-bold text-green-700">Ficha Limpa!</p><p class="text-xs text-gray-500">Você não possui nenhuma advertência.</p></div>';
-                return;
+        async function carregarRegrasSupabase() {
+            const { data } = await _supabase.from('configuracoes').select('*').limit(1).single();
+            if (data) {
+                configRegras.media = data.regra_media || 15000;
+                configRegras.maxima = data.regra_maxima || 23000;
+                configRegras.alta = data.regra_alta || 30000;
             }
-
-            if(badge) { 
-                badge.classList.remove('hidden'); 
-                badge.textContent = data.length; 
-            }
-
-            lista.innerHTML = '';
-            data.forEach(a => {
-                const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
-                lista.innerHTML += `
-                    <div class="bg-red-50 border border-red-200 p-3 rounded shadow-sm">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-black text-red-900">${a.nivel || '1ª'} Advertência</span>
-                            <span class="text-[10px] bg-white border border-red-300 text-red-800 px-2 py-0.5 rounded font-bold">${dataFormat}</span>
-                        </div>
-                        <p class="text-xs text-gray-800 mt-2 border-l-2 border-red-400 pl-2">"${a.motivo}"</p>
-                    </div>
-                `;
-            });
         }
 
-        function abrirMinhasAdv() { document.getElementById('modal-minhas-adv').classList.remove('hidden'); }
-        function fecharMinhasAdv() { document.getElementById('modal-minhas-adv').classList.add('hidden'); }
+        function abrirNotificacoes() { document.getElementById('modal-notificacoes').classList.remove('hidden'); }
 
+        function processarAlertasBI(obras) {
+            const container = document.getElementById('lista-alertas-bi');
+            const badge = document.getElementById('badge-notificacoes');
+            container.innerHTML = '';
+            let alertasAtivos = 0;
 
-        async function carregarAniversariantes() {
-            const { data } = await _supabase.from('equipe').select('nick, data_nascimento');
-            const lista = document.getElementById('lista-aniversariantes');
-            if(!data || data.length === 0) { lista.innerHTML = '<p class="text-xs text-gray-400">Dados não encontrados.</p>'; return; }
+            obras.forEach(obra => {
+                const views = parseInt(obra.views_totais) || 0;
+                let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1;
+                if(caps === 0) caps = 1;
+                const media = Math.round(views / caps);
 
-            const hoje = new Date(); const mesAtual = hoje.getMonth() + 1; const diaAtual = hoje.getDate();
-            let html = ''; let aniversariantesHoje = [];
+                let sugestao = null; let cor = "";
+                if (media >= configRegras.alta) { sugestao = "Alta"; cor = "text-orange-600"; }
+                else if (media >= configRegras.maxima) { sugestao = "Máxima"; cor = "text-red-700"; }
+                else if (media >= configRegras.media) { sugestao = "Média"; cor = "text-blue-600"; }
 
-            data.forEach(m => {
-                if(m.data_nascimento) {
-                    const partes = m.data_nascimento.split('-');
-                    if(partes.length >= 3) {
-                        const mesNiver = parseInt(partes[1]); const diaNiver = parseInt(partes[2]);
-                        if(mesNiver === mesAtual) {
-                            const ehHoje = (diaNiver === diaAtual);
-                            if(ehHoje) aniversariantesHoje.push(m.nick);
-                            html += `<div class="bg-white border ${ehHoje ? 'border-pink-400 bg-pink-100 shadow-sm' : 'border-pink-200'} p-3 rounded-lg flex flex-col items-center min-w-[100px]"><span class="text-2xl">${ehHoje ? '🎂' : '🎈'}</span><span class="font-bold text-sm ${ehHoje ? 'text-pink-800' : 'text-gray-800'} mt-1 truncate max-w-[90px]" title="${m.nick}">${m.nick}</span><span class="text-xs text-gray-500">${diaNiver}/${mesNiver}</span></div>`;
-                        }
-                    }
+                const priAtual = obra.prioridade || 'Média';
+                if (sugestao && !sugestao.includes(priAtual)) {
+                    alertasAtivos++;
+                    container.innerHTML += `
+                        <div class="bg-gray-50 border border-gray-200 p-3 rounded-lg flex justify-between items-center shadow-sm">
+                            <div><p class="font-bold text-gray-800 text-sm">${obra.nome}</p><p class="text-[10px] text-gray-500">Média atual: <b class="${cor}">${media.toLocaleString('pt-BR')} v/cap</b></p></div>
+                            <div class="text-right"><p class="text-[9px] text-gray-400">Sugestão:</p><span class="bg-white border border-gray-300 px-2 py-0.5 rounded font-black text-xs ${cor}">Mudar p/ ${sugestao}</span></div>
+                        </div>`;
                 }
             });
 
-            if(html === '') html = '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês.</p>';
-            lista.innerHTML = html;
-            if(aniversariantesHoje.length > 0) {
-                document.getElementById('btn-gerar-niver').classList.remove('hidden');
-                window.anivHoje = aniversariantesHoje;
-            }
+            if (alertasAtivos > 0) { badge.classList.remove('hidden'); badge.innerText = alertasAtivos; } 
+            else { badge.classList.add('hidden'); container.innerHTML = '<p class="text-sm text-gray-400 text-center py-4">Nenhuma obra sua atingiu os limites hoje.</p>'; }
         }
 
-        function gerarMensagemNiver() {
-            if(!window.anivHoje) return;
-            const nomes = window.anivHoje.map(n => `@${n}`).join(' e ');
-            const texto = `🎉 Hoje é um dia super especial! 🎉\n\nVamos desejar um feliz aniversário para ${nomes}! 🎂🎈\n\nQue o dia seja repleto de alegria, saúde, paz e muitos capítulos perfeitinhos! A equipe FleurFlow deseja tudo de bom hoje e sempre! 💖✨\n\nDeixem seus parabéns aqui embaixo! 👇`;
-            document.getElementById('area-mensagem-niver').classList.remove('hidden');
-            document.getElementById('texto-niver').value = texto;
-        }
+        // VIEWS E MODAIS (MESMA LÓGICA DO ADM)
+        function abrirModalViews(encodedObj) {
+            const obra = JSON.parse(decodeURIComponent(encodedObj));
+            const viewsTot = parseInt(obra.views_totais) || 0; const viewsOnt = parseInt(obra.views_ontem) || 0;
+            const cresc = viewsTot - viewsOnt;
+            let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1;
+            const media = Math.round(viewsTot / caps);
+            let taxa = viewsOnt > 0 ? ((cresc / viewsOnt) * 100).toFixed(1) : 0;
 
-        async function carregarTudo(meuNick) {
-            const { data: usuario } = await _supabase.from('equipe').select('*').eq('nick', meuNick).single();
-            const meuId = usuario ? String(usuario.id) : null;
+            document.getElementById('view-obra-nome').textContent = obra.nome;
+            document.getElementById('view-obra-priori').textContent = `Prioridade Atual: ${obra.prioridade || 'Média'}`;
+            document.getElementById('view-total').textContent = viewsTot.toLocaleString('pt-BR');
+            document.getElementById('view-media').textContent = media.toLocaleString('pt-BR');
             
-            // INTELIGÊNCIA: Verifica se a pessoa é Organizer em qualquer coluna da ficha
-            const ehOrganizer = usuario && JSON.stringify(usuario).toLowerCase().includes('organizer');
-            if (ehOrganizer) {
-                const boxBtn = document.getElementById('box-btn-raw');
-                if (boxBtn) boxBtn.classList.remove('hidden');
-            }
+            const crescEl = document.getElementById('view-cresc');
+            if (cresc > 0) { crescEl.textContent = `+${cresc.toLocaleString('pt-BR')}`; crescEl.className = "text-xl font-black text-emerald-600"; }
+            else { crescEl.textContent = cresc.toLocaleString('pt-BR'); crescEl.className = "text-xl font-black text-red-500"; }
 
+            const taxaEl = document.getElementById('view-taxa');
+            if (taxa > 0) { taxaEl.textContent = `+${taxa}%`; taxaEl.className = "text-xl font-black text-emerald-600"; }
+            else { taxaEl.textContent = `${taxa}%`; taxaEl.className = "text-xl font-black text-red-500"; }
+
+            let sugestaoMsg = "A obra está caminhando bem na sua categoria.";
+            if (media >= configRegras.alta && !(obra.prioridade || '').includes('Alta')) sugestaoMsg = "💡 Avise a ADM: Sugestão para mudar para Prioridade ALTA.";
+            else if (media >= configRegras.maxima && !(obra.prioridade || '').includes('Máxima')) sugestaoMsg = "💡 Avise a ADM: Sugestão para mudar para Prioridade MÁXIMA.";
+            document.getElementById('view-sugestao').textContent = sugestaoMsg;
+
+            document.getElementById('modal-detalhes-views').classList.remove('hidden');
+        }
+
+        function abrirModalSincronizar() {
+            document.getElementById('sinc-obra').value = ''; document.getElementById('sinc-views').value = '';
+            document.getElementById('modal-sinc-views').classList.remove('hidden');
+        }
+
+        async function salvarViewsManual() {
+            const obraId = document.getElementById('sinc-obra').value;
+            const novasViews = parseInt(document.getElementById('sinc-views').value);
+            if(!obraId || isNaN(novasViews)) return alert("Preencha tudo!");
+
+            const obraInfo = obrasDisponiveisGlobal.find(o => String(o.id) === String(obraId));
+            if(!obraInfo) return;
+
+            const hojeStr = new Date().toDateString();
+            let viewsOntemSalvar = obraInfo.views_ontem;
+            if (obraInfo.data_verificacao !== hojeStr) viewsOntemSalvar = obraInfo.views_totais;
+
+            const { error } = await _supabase.from('obras').update({views_totais: novasViews, views_ontem: viewsOntemSalvar, data_verificacao: hojeStr}).eq('id', obraId);
+            if (error) { alert("🚨 Erro: " + error.message); } 
+            else { alert("✅ Views atualizadas!"); document.getElementById('modal-sinc-views').classList.add('hidden'); carregarDashboardAntigo(localStorage.getItem('usuario_nick')); }
+        }
+
+        async function carregarDashboardAntigo(meuNick) {
             const { data: obras } = await _supabase.from('obras').select('*').order('nome');
-            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
-
-            todasTarefasGlobais = tarefas || [];
             const obrasStaff = [], obrasResp = [];
 
             if (obras) {
-                obrasDisponiveisRaw = obras; 
+                obrasDisponiveisGlobal = obras;
+                processarAlertasBI(obras.filter(o => o.responsavel_nick && o.responsavel_nick.includes(meuNick))); // Só notifica obras dele
+
+                const selView = document.getElementById('sinc-obra');
+                if(selView) { selView.innerHTML = '<option value="">Selecione...</option>'; obras.forEach(o => selView.innerHTML += `<option value="${o.id}">${o.nome}</option>`); }
+
                 obras.forEach(o => {
                     const souResp = o.responsavel_nick && o.responsavel_nick.includes(meuNick);
-                    const souStaff = o.staff_ids && meuId && o.staff_ids.map(String).includes(meuId);
                     if (souResp) obrasResp.push(o);
-                    if (souStaff) obrasStaff.push(o);
                 });
             }
-
-            renderizarObras(obrasStaff, 'lista-obras-staff', false);
             renderizarObras(obrasResp, 'lista-obras-resp', true);
-
-            if (obraAbertaAtual && modoAbertoAtual) abrirTarefasObra(obraAbertaAtual, modoAbertoAtual);
         }
 
         function renderizarObras(listaObras, idContainer, isResp) {
             const container = document.getElementById(idContainer);
             container.innerHTML = '';
-            if (listaObras.length === 0) { container.innerHTML = `<p class="text-sm text-gray-400 italic">Nenhuma obra encontrada nesta categoria.</p>`; return; }
+            if (listaObras.length === 0) { container.innerHTML = `<p class="text-sm text-gray-400 italic">Vazio.</p>`; return; }
 
             listaObras.forEach(obra => {
                 let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
-                const papel = isResp ? '👑 Responsável' : '👥 Staff';
-                const modoClick = isResp ? 'responsavel' : 'staff';
                 const nomeSeguro = obra.nome.replace(/'/g, "\\'");
+                const jsonObj = encodeURIComponent(JSON.stringify(obra)).replace(/'/g, "%27");
                 
-                let mostrarSininho = false;
-                let titleSininho = '';
-
-                if(isResp) {
-                    mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Concluído');
-                    titleSininho = 'Nova entrega concluída pela equipe!';
-                } else {
-                    mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
-                    titleSininho = 'Nova tarefa aguardando por você!';
-                }
-
-                const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2 cursor-help" title="${titleSininho}">🔔</span>` : '';
-                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar Cadastro da Obra">✏️</button>`;
+                const lapisEdit = `
+                    <button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 bg-blue-50 border border-blue-200 p-1 rounded cursor-pointer" title="Ver Views">📊</button>
+                    <button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-1 opacity-50 hover:opacity-100 cursor-pointer" title="Editar">✏️</button>
+                `;
 
                 container.innerHTML += `
-                    <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
+                    <div class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
                         <div class="flex items-center">
-                            <div>
-                                <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm group-hover:text-red-900 transition">${obra.nome}</h3>
-                                <p class="text-[10px] text-gray-500 mt-1">Dono: ${obra.responsavel_nick || 'N/A'}</p>
-                            </div>
-                            ${sininho}
+                            <div><h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm group-hover:text-red-900">${obra.nome}</h3></div>
                             ${lapisEdit}
                         </div>
-                        <div class="flex flex-col items-end gap-1">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${obra.status}</span>
-                            <span class="text-[9px] text-gray-400 bg-gray-100 border border-gray-200 px-1 rounded">${papel}</span>
-                        </div>
+                        <div class="flex flex-col items-end gap-1"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${obra.status}</span></div>
                     </div>
                 `;
             });
-        }
-
-        function abrirTarefasObra(obraNome, modo) {
-            obraAbertaAtual = obraNome; modoAbertoAtual = modo;
-            const painel = document.getElementById('painel-tarefas');
-            const titulo = document.getElementById('titulo-painel-tarefas');
-            const meuNick = localStorage.getItem('usuario_nick');
-            
-            let tarefasFiltradas = []; let isMinhas = false;
-
-            if (modo === 'staff') {
-                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick);
-                titulo.innerHTML = `📝 Minhas Tarefas (STAFF) <span class="text-gray-400 text-sm font-normal mx-2">👉</span> <span class="text-blue-700">${obraNome}</span>`;
-                isMinhas = true;
-            } else {
-                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome);
-                titulo.innerHTML = `👑 Entregas da Equipe (RESPONSÁVEL) <span class="text-gray-400 text-sm font-normal mx-2">👉</span> <span class="text-amber-700">${obraNome}</span>`;
-            }
-
-            renderizarPainel(tarefasFiltradas, isMinhas);
-            painel.classList.remove('hidden');
-            painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        function fecharPainelTarefas() { document.getElementById('painel-tarefas').classList.add('hidden'); obraAbertaAtual = null; modoAbertoAtual = null; }
-
-        function renderizarPainel(lista, isMinhas) {
-            const containerAtraso = document.getElementById('detalhe-atraso');
-            const containerHoje = document.getElementById('detalhe-hoje');
-            const containerAtivas = document.getElementById('detalhe-ativas');
-            const containerConcluidas = document.getElementById('detalhe-concluidas');
-
-            containerAtraso.innerHTML = ''; containerHoje.innerHTML = ''; containerAtivas.innerHTML = ''; containerConcluidas.innerHTML = '';
-            
-            if (lista.length === 0) {
-                const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
-                containerAtraso.innerHTML = msgVazio; containerHoje.innerHTML = msgVazio; containerAtivas.innerHTML = msgVazio; containerConcluidas.innerHTML = msgVazio; return;
-            }
-
-            const agora = new Date(); const hojeStr = agora.toDateString();
-
-            lista.forEach(t => {
-                let isConcluida = t.status === 'Concluído';
-                let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
-                if(isConcluida) corStatus = 'bg-green-100 text-green-700';
-                
-                let botaoAcao = '';
-                if(isMinhas) {
-                    if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">▶️ Iniciar</button>`;
-                    else if(t.status === 'Em Andamento') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Entregar</button>`;
-                    else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-not-allowed">⏳ Aguardando Revisão</button>`;
-                } else {
-                    if(!isConcluida) {
-                        botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 transition">✅ Forçar Conclusão</button>`;
-                    } else {
-                        const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`;
-                        botaoAcao = `
-                            <div class="flex gap-1 mt-2">
-                                <button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded transition shadow-sm" title="Ir para divisão de tarefas">✂️ Dividir</button>
-                                <button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 hover:bg-green-700 text-white font-bold px-2 py-1.5 rounded transition shadow-sm" title="Marcar como Visto e Arquivar">📦 OK</button>
-                            </div>
-                        `;
-                    }
-                }
-
-                let prazoFormatado = '';
-                if (t.prazo) { const d = new Date(t.prazo); prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`; }
-
-                const cardHTML = `
-                    <div class="bg-white border border-gray-100 p-3 rounded shadow-sm hover:shadow-md transition">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="font-bold text-red-700 text-sm leading-tight">C.${t.capitulo}</span>
-                            <div class="flex flex-col items-end gap-1">
-                                <span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">PG: ${t.paginas || 'Todas'}</span>
-                                ${t.altura ? `<span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">↕ Alt: ${t.altura}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[10px] uppercase font-black text-gray-500">${t.etapa}</span>
-                            <span class="px-1 py-0.5 rounded text-[9px] font-bold ${corStatus}">${t.status}</span>
-                        </div>
-                        ${!isMinhas ? `<p class="text-[10px] font-bold text-blue-700 mb-1 mt-2">👤 ${t.responsavel_nick}</p>` : ''}
-                        ${t.prazo ? `<p class="text-[10px] font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded inline-block mt-1">${prazoFormatado}</p>` : ''}
-                        ${botaoAcao}
-                    </div>
-                `;
-
-                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; }
-                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; }
-                else {
-                    const dataPrazo = new Date(t.prazo);
-                    if (dataPrazo < agora) { containerAtraso.innerHTML += cardHTML; } 
-                    else if (dataPrazo.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; } 
-                    else { containerAtivas.innerHTML += cardHTML; }
-                }
-            });
-
-            const msgVazio = `<div class="text-center py-4"><p class="text-xs text-gray-400">Tudo limpo!</p></div>`;
-            if(containerAtraso.innerHTML === '') containerAtraso.innerHTML = msgVazio; 
-            if(containerHoje.innerHTML === '') containerHoje.innerHTML = msgVazio; 
-            if(containerAtivas.innerHTML === '') containerAtivas.innerHTML = msgVazio; 
-            if(containerConcluidas.innerHTML === '') containerConcluidas.innerHTML = msgVazio;
-        }
-
-        async function mudarStatusTarefa(id, novoStatus) {
-            const btn = event.target; const textOriginal = btn.innerHTML; btn.innerHTML = '⏳'; btn.disabled = true;
-            const { error } = await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id);
-            if(error) { alert("Erro: " + error.message); btn.innerHTML = textOriginal; btn.disabled = false; } 
-            else { carregarTudo(localStorage.getItem('usuario_nick')); }
-        }
-
-        function abrirModalDownload() {
-            const select = document.getElementById('raw-obra');
-            select.innerHTML = '<option value="">Selecione a obra...</option>';
-            const nomesUnicos = [...new Set(obrasDisponiveisRaw.map(o => o.nome))].sort();
-            nomesUnicos.forEach(nome => { select.innerHTML += `<option value="${nome}">${nome}</option>`; });
-            document.getElementById('modal-download').classList.remove('hidden');
-        }
-
-        function fecharModalDownload() {
-            document.getElementById('modal-download').classList.add('hidden');
-            document.getElementById('raw-capitulo').value = ''; 
-            document.getElementById('raw-paginas').value = '';
-            document.getElementById('raw-altura').value = ''; 
-        }
-
-        async function salvarDownloadRaw(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-salvar-raw');
-            btn.disabled = true; btn.textContent = 'Salvando...';
-
-            const nick = localStorage.getItem('usuario_nick');
-            const obj = {
-                obra_nome: document.getElementById('raw-obra').value,
-                capitulo: document.getElementById('raw-capitulo').value,
-                etapa: 'Organizer / Raw',
-                paginas: document.getElementById('raw-paginas').value,
-                altura: document.getElementById('raw-altura').value,
-                responsavel_nick: nick,
-                prazo: null,
-                status: 'Concluído'
-            };
-
-            const { error } = await _supabase.from('tarefas').insert([obj]);
-            if(error) { alert('Erro: ' + error.message); } 
-            else { fecharModalDownload(); carregarTudo(nick); }
-            btn.disabled = false; btn.textContent = '✅ Confirmar Download';
         }
     </script>
 </body>
