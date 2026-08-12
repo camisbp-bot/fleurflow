@@ -26,7 +26,6 @@
         
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">🛠️ Ferramentas da Moderação</h2>
-            <!-- GRADE AJUSTADA PARA 6 COLUNAS (ALINHADO PERFEITAMENTE) -->
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border border-gray-200 hover:border-red-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
                     <span class="text-3xl group-hover:scale-110 transition">📖</span><span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Cadastrar Obra</span>
@@ -41,7 +40,6 @@
                     <span class="text-3xl group-hover:scale-110 transition">🔔</span><span class="text-xs font-bold text-gray-700 group-hover:text-red-700 text-center">Atualizações</span>
                 </button>
                 
-                <!-- BOTÃO UNIFICADO: RELATÓRIOS E BI -->
                 <button onclick="abrirAba('painel-analytics')" class="bg-emerald-50 border border-emerald-200 hover:border-emerald-500 hover:shadow-md p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group">
                     <span class="text-3xl group-hover:scale-110 transition">📈</span><span class="text-xs font-black text-emerald-800 group-hover:text-emerald-900 text-center">Relatórios & BI</span>
                 </button>
@@ -53,7 +51,6 @@
             </div>
         </section>
 
-        <!-- DASHBOARD NORMAL -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
             <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[400px]">
                 <h2 class="text-lg font-black text-blue-900 mb-2 flex items-center gap-2">👥 Obras (STAFF)</h2>
@@ -66,7 +63,6 @@
             </div>
         </section>
 
-        <!-- PAINEL TAREFAS -->
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-300 transition-all mt-6">
             <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                 <h2 id="titulo-painel-tarefas" class="text-xl font-black text-gray-800 flex items-center gap-2">📋 Tarefas da Obra</h2>
@@ -81,7 +77,6 @@
         </section>
     </main>
 
-    <!-- ==================== MÓDULO: RELATÓRIOS E BI ==================== -->
     <section id="painel-analytics" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6 border-b border-emerald-200 pb-4">
             <div>
@@ -90,65 +85,28 @@
             </div>
             <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button>
         </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-emerald-200 h-fit">
-                <h3 class="text-lg font-black text-emerald-800 mb-4 border-b border-emerald-100 pb-2">⚖️ Metas da SCAN</h3>
-                <div class="space-y-4">
-                    <p class="text-xs font-bold text-purple-700">👑 Prioridade Altíssima:<br><span class="text-gray-500 font-normal mt-1 block">Acima de <b id="view-regra-altissima">...</b> v/cap</span></p>
-                    <p class="text-xs font-bold text-red-700">🔥 Prioridade Máxima:<br><span class="text-gray-500 font-normal mt-1 block">Acima de <b id="view-regra-maxima">...</b> v/cap</span></p>
-                    <p class="text-xs font-bold text-orange-600">⭐ Prioridade Alta:<br><span class="text-gray-500 font-normal mt-1 block">Acima de <b id="view-regra-alta">...</b> v/cap</span></p>
-                    <p class="text-xs font-bold text-blue-600">📄 Prioridade Média:<br><span class="text-gray-500 font-normal mt-1 block">Acima de <b id="view-regra-media">...</b> v/cap</span></p>
-                </div>
-            </div>
-
-            <div class="lg:col-span-3 space-y-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200">
-                    <div class="flex justify-between items-center mb-4 border-b border-emerald-100 pb-2">
-                        <h3 class="text-lg font-black text-emerald-800">📋 Relatório de Desempenho (Suas Obras)</h3>
-                        <p class="text-xs text-gray-500 italic">Atualizado automaticamente a cada 1 hora.</p>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-gray-600">
-                            <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
-                                <tr>
-                                    <th class="px-3 py-2">Obra</th>
-                                    <th class="px-3 py-2 text-center">Views Totais</th>
-                                    <th class="px-3 py-2 text-center">Média (V/Cap)</th>
-                                    <th class="px-3 py-2 text-center">Cresc. Diário</th>
-                                    <th class="px-3 py-2 text-center">Priori. Atual</th>
-                                    <th class="px-3 py-2 text-center">Sugestão IA</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-analytics" class="divide-y divide-gray-100 bg-white">
-                                <tr><td colspan="6" class="text-center text-xs text-gray-400 py-6">Carregando...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200">
+            <h3 class="text-lg font-black text-emerald-800 mb-4 border-b border-emerald-100 pb-2">📋 Relatório de Desempenho (Suas Obras)</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
+                        <tr><th class="px-3 py-2">Obra</th><th class="px-3 py-2 text-center">Views Totais</th><th class="px-3 py-2 text-center">Média (V/Cap)</th><th class="px-3 py-2 text-center">Cresc. Diário</th><th class="px-3 py-2 text-center">Priori.</th><th class="px-3 py-2 text-center">IA</th></tr>
+                    </thead>
+                    <tbody id="tabela-analytics" class="divide-y divide-gray-100 bg-white"></tbody>
+                </table>
             </div>
         </div>
     </section>
 
-    <!-- MODAL VIEWS -->
-    <div id="modal-detalhes-views" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border-2 border-emerald-500">
-            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white">
-                <h3 class="font-black flex items-center gap-2">📊 Analytics da Obra</h3>
-                <button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold text-emerald-200 hover:text-white cursor-pointer">✖</button>
+    <!-- MODAL MINHAS ADVERTÊNCIAS (FIXO E INTEGRADO) -->
+    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+            <div class="bg-orange-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">⚠️ Minhas Advertências</h3>
+                <button onclick="fecharMinhasAdv()" class="font-bold text-orange-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
             </div>
-            <div class="p-6 text-center">
-                <h4 id="view-obra-nome" class="text-xl font-black text-gray-800 mb-1">Nome</h4>
-                <p id="view-obra-priori" class="text-xs font-bold text-gray-500 mb-6 uppercase bg-gray-100 inline-block px-3 py-1 rounded-full">Prioridade</p>
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="bg-gray-50 p-4 rounded-lg border"><p class="text-[10px] font-bold text-gray-500 uppercase">Views Totais</p><p id="view-total" class="text-2xl font-black text-gray-800">0</p></div>
-                    <div class="bg-blue-50 p-4 rounded-lg border"><p class="text-[10px] font-bold text-blue-700 uppercase">Média / Capítulo</p><p id="view-media" class="text-2xl font-black text-blue-900">0</p></div>
-                </div>
-                <div class="bg-emerald-50 p-4 rounded-lg border flex justify-between items-center mb-6">
-                    <div class="text-left"><p class="text-[10px] font-bold text-emerald-800 uppercase">Crescimento Diário</p><p id="view-cresc" class="text-xl font-black text-emerald-900">+0</p></div>
-                    <div class="text-right"><p class="text-[10px] font-bold text-emerald-800 uppercase">Taxa de Evolução</p><p id="view-taxa" class="text-xl font-black text-emerald-900">0%</p></div>
-                </div>
-                <p id="view-sugestao" class="text-sm font-bold bg-yellow-100 text-yellow-800 p-2 rounded border"></p>
+            <div class="p-6">
+                <div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
             </div>
         </div>
     </div>
@@ -158,181 +116,88 @@
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-red-800 p-4 flex justify-between items-center text-white">
                 <h3 class="font-black flex items-center gap-2">🔔 Notificações</h3>
-                <button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold text-red-200 hover:text-white cursor-pointer">✖</button>
+                <button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold text-red-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
             </div>
             <div class="p-6"><div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto pr-2"><p class="text-sm text-gray-400 text-center py-4">Tudo tranquilo!</p></div></div>
         </div>
     </div>
 
-    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"></div>
-
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         let todasTarefasGlobais = [];
         let configRegras = { media: 5000, alta: 15000, maxima: 23000, altissima: 30000 }; 
 
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
             if(!nick) { window.location.href = 'index.html'; return; }
-            document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
-            await carregarRegrasSupabase();
-            carregarDashboardAntigo(nick);
+            document.getElementById('nome-usuario').textContent = `Olá, ${nick}`;
+            await carregarConfig();
+            carregarDashboard(nick);
+            carregarMinhasAdv(nick);
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
+        async function carregarConfig() {
+            const { data } = await _supabase.from('configuracoes').select('*').limit(1).single();
+            if(data) configRegras = { media: data.regra_media, alta: data.regra_alta, maxima: data.regra_maxima, altissima: data.regra_altissima };
+        }
         function abrirAba(id) { document.getElementById('main-content').classList.add('hidden'); document.getElementById('painel-analytics').classList.remove('hidden'); carregarAnalytics(); }
         function voltarAoPainelPrincipal() { document.getElementById('painel-analytics').classList.add('hidden'); document.getElementById('main-content').classList.remove('hidden'); }
         function abrirNotificacoes() { document.getElementById('modal-notificacoes').classList.remove('hidden'); }
+        function abrirMinhasAdv() { document.getElementById('modal-minhas-adv').classList.remove('hidden'); }
+        function fecharMinhasAdv() { document.getElementById('modal-minhas-adv').classList.add('hidden'); }
 
-        async function carregarRegrasSupabase() {
-            const { data } = await _supabase.from('configuracoes').select('*').limit(1).single();
-            if (data) {
-                configRegras.media = data.regra_media || 5000;
-                configRegras.alta = data.regra_alta || 15000;
-                configRegras.maxima = data.regra_maxima || 23000;
-                configRegras.altissima = data.regra_altissima || 30000;
-            }
-            if(document.getElementById('view-regra-media')) {
-                document.getElementById('view-regra-media').textContent = configRegras.media.toLocaleString('pt-BR');
-                document.getElementById('view-regra-alta').textContent = configRegras.alta.toLocaleString('pt-BR');
-                document.getElementById('view-regra-maxima').textContent = configRegras.maxima.toLocaleString('pt-BR');
-                document.getElementById('view-regra-altissima').textContent = configRegras.altissima.toLocaleString('pt-BR');
-            }
+        async function carregarMinhasAdv(meuNick) {
+            const { data } = await _supabase.from('advertencias').select('*').eq('membro_nick', meuNick).order('created_at', {ascending: false});
+            const lista = document.getElementById('lista-minhas-adv');
+            const badge = document.getElementById('badge-adv-mod');
+            if(!data || data.length === 0) { lista.innerHTML = '<p class="text-center text-sm">Ficha limpa! 🎉</p>'; return; }
+            if(badge) { badge.classList.remove('hidden'); badge.textContent = data.length; }
+            lista.innerHTML = '';
+            data.forEach(a => lista.innerHTML += `<div class="bg-red-50 border p-3 rounded shadow-sm text-xs text-red-900">${a.nivel || '1ª'} Adv: "${a.motivo}"</div>`);
+        }
+
+        async function carregarDashboard(meuNick) {
+            const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
+            const meuId = usuarioData && usuarioData[0] ? String(usuarioData[0].id) : null;
+            const { data: obras } = await _supabase.from('obras').select('*');
+            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado');
+            todasTarefasGlobais = tarefas || [];
+            processarAlertasBI(obras.filter(o => o.responsavel_nick && o.responsavel_nick.includes(meuNick)));
+
+            const staff = obras.filter(o => {
+                let sArr = typeof o.staff_ids === 'string' ? o.staff_ids.split(',') : (o.staff_ids || []);
+                return meuId && sArr.map(String).includes(meuId);
+            });
+            const resp = obras.filter(o => o.responsavel_nick && o.responsavel_nick.includes(meuNick));
+            
+            renderizarLista(staff, 'lista-obras-staff', false);
+            renderizarLista(resp, 'lista-obras-resp', true);
+        }
+
+        function renderizarLista(lista, id, isResp) {
+            const cont = document.getElementById(id); if(!cont) return; cont.innerHTML = '';
+            lista.forEach(o => {
+                const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
+                cont.innerHTML += `<div onclick="abrirTarefas('${o.nome}', '${isResp ? 'resp' : 'staff'}')" class="p-3 bg-white border border-gray-200 rounded-lg flex justify-between cursor-pointer hover:border-red-400">
+                    <div><h3 class="font-bold text-sm">${o.nome}</h3><span class="text-[10px] text-gray-500">👁️ ${(parseInt(o.views_totais)||0).toLocaleString()}</span></div>
+                    <div class="flex items-center gap-2"><button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation()" class="text-xs bg-blue-50 p-1 rounded">📊</button></div>
+                </div>`;
+            });
         }
 
         function processarAlertasBI(obras) {
-            const container = document.getElementById('lista-alertas-bi');
-            const badge = document.getElementById('badge-notificacoes');
-            container.innerHTML = ''; let count = 0;
-            obras.forEach(obra => {
-                const views = parseInt(obra.views_totais) || 0;
-                let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1;
-                if(caps === 0) caps = 1;
-                const media = Math.round(views / caps);
-                let sugestao = null; let cor = "";
-                if (media >= configRegras.altissima) { sugestao = "Altíssima"; cor = "text-purple-700"; }
-                else if (media >= configRegras.maxima) { sugestao = "Máxima"; cor = "text-red-700"; }
-                else if (media >= configRegras.alta) { sugestao = "Alta"; cor = "text-orange-600"; }
-                else if (media >= configRegras.media) { sugestao = "Média"; cor = "text-blue-600"; }
-
-                const priAtual = obra.prioridade || 'Média';
-                if (sugestao && !sugestao.includes(priAtual)) {
-                    count++;
-                    container.innerHTML += `<div class="bg-gray-50 border p-3 rounded flex justify-between items-center"><div><p class="font-bold text-sm">${obra.nome}</p><p class="text-xs text-gray-500">Média: <b class="${cor}">${media.toLocaleString('pt-BR')} v/cap</b></p></div><span class="bg-white border px-2 py-0.5 rounded font-black text-xs ${cor}">Mudar p/ ${sugestao}</span></div>`;
-                }
+            const cont = document.getElementById('lista-alertas-bi'); const badge = document.getElementById('badge-notificacoes');
+            cont.innerHTML = ''; let count = 0;
+            obras.forEach(o => {
+                const media = Math.round((parseInt(o.views_totais)||0) / (parseInt(String(o.capitulo_fleur).match(/\d+/))||1));
+                let sug = (media >= configRegras.altissima) ? "Altíssima" : (media >= configRegras.maxima) ? "Máxima" : (media >= configRegras.alta) ? "Alta" : null;
+                if(sug && !(o.prioridade||'').includes(sug)) { count++; cont.innerHTML += `<div class="bg-gray-50 border p-3 text-xs rounded">${o.nome}: Sugestão p/ ${sug}</div>`; }
             });
-            if (count > 0) { badge.classList.remove('hidden'); badge.innerText = count; } else { badge.classList.add('hidden'); container.innerHTML = '<p class="text-sm text-gray-400 text-center py-4">Tudo tranquilo!</p>'; }
+            if(count>0) { badge.classList.remove('hidden'); badge.innerText = count; }
         }
-
-        function abrirModalViews(encodedObj) {
-            const obra = JSON.parse(decodeURIComponent(encodedObj));
-            const viewsTot = parseInt(obra.views_totais) || 0; const viewsOnt = parseInt(obra.views_ontem) || 0;
-            const cresc = viewsTot - viewsOnt;
-            let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1;
-            const media = Math.round(viewsTot / caps);
-            let taxa = viewsOnt > 0 ? ((cresc / viewsOnt) * 100).toFixed(1) : 0;
-
-            document.getElementById('view-obra-nome').textContent = obra.nome;
-            document.getElementById('view-obra-priori').textContent = `Prioridade: ${obra.prioridade || 'Média'}`;
-            document.getElementById('view-total').textContent = viewsTot.toLocaleString('pt-BR');
-            document.getElementById('view-media').textContent = media.toLocaleString('pt-BR');
-            document.getElementById('view-cresc').textContent = (cresc >= 0 ? '+' : '') + cresc.toLocaleString('pt-BR');
-            document.getElementById('view-taxa').textContent = (taxa >= 0 ? '+' : '') + taxa + '%';
-            document.getElementById('view-sugestao').textContent = media >= configRegras.alta ? "💡 Sugestão para elevar prioridade." : "A obra está estável.";
-            document.getElementById('modal-detalhes-views').classList.remove('hidden');
-        }
-
-        async function carregarAnalytics() {
-            const meuNick = localStorage.getItem('usuario_nick');
-            const tb = document.getElementById('tabela-analytics');
-            tb.innerHTML = '<tr><td colspan="6" class="text-center text-xs text-gray-400 py-6">Carregando...</td></tr>';
-            
-            const { data } = await _supabase.from('obras').select('*').order('nome');
-            if(!data) return;
-
-            const obrasDoMod = data.filter(o => o.responsavel_nick && o.responsavel_nick.includes(meuNick));
-            tb.innerHTML = '';
-            if(obrasDoMod.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center text-xs text-gray-400 py-6">Nenhuma obra no seu nome.</td></tr>'; return; }
-
-            obrasDoMod.forEach(obra => {
-                const viewsTotais = parseInt(obra.views_totais) || 0;
-                const viewsOntem = parseInt(obra.views_ontem) || 0;
-                const crescimento = viewsTotais - viewsOntem;
-                let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1;
-                const mediaViews = Math.round(viewsTotais / caps);
-                
-                let badgeCresc = crescimento >= 0 ? `<span class="text-emerald-600 font-bold">+${crescimento.toLocaleString('pt-BR')}</span>` : `<span class="text-red-500 font-bold">${crescimento.toLocaleString('pt-BR')}</span>`;
-                let sugestao = "Baixa"; let cor = "text-gray-500";
-                if (mediaViews >= configRegras.altissima) { sugestao = "Altíssima"; cor = "text-purple-700 font-black"; }
-                else if (mediaViews >= configRegras.maxima) { sugestao = "Máxima"; cor = "text-red-700 font-black"; }
-                else if (mediaViews >= configRegras.alta) { sugestao = "Alta"; cor = "text-orange-600 font-black"; }
-                else if (mediaViews >= configRegras.media) { sugestao = "Média"; cor = "text-blue-600 font-bold"; }
-
-                tb.innerHTML += `<tr class="hover:bg-emerald-50 border-b"><td class="px-3 py-3 font-bold">${obra.nome}</td><td class="px-3 py-3 text-center">${viewsTotais.toLocaleString('pt-BR')}</td><td class="px-3 py-3 text-center">${mediaViews.toLocaleString('pt-BR')}</td><td class="px-3 py-3 text-center">${badgeCresc}</td><td class="px-3 py-3 text-center text-xs">${obra.prioridade || 'Média'}</td><td class="px-3 py-3 text-center text-xs ${cor}">${sugestao}</td></tr>`;
-            });
-        }
-
-        async function carregarDashboardAntigo(meuNick) {
-            const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
-            const usuario = usuarioData && usuarioData.length > 0 ? usuarioData[0] : null;
-            const meuId = usuario ? String(usuario.id) : null;
-            
-            const { data: obras } = await _supabase.from('obras').select('*').order('nome');
-            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
-
-            todasTarefasGlobais = tarefas || [];
-            const obrasStaff = [], obrasResp = [];
-
-            if (obras) {
-                processarAlertasBI(obras.filter(o => o.responsavel_nick && o.responsavel_nick.includes(meuNick)));
-                obras.forEach(o => {
-                    const souResp = o.responsavel_nick && o.responsavel_nick.includes(meuNick);
-                    let staffArr = [];
-                    if (typeof o.staff_ids === 'string') { try { staffArr = JSON.parse(o.staff_ids); } catch(e) { staffArr = o.staff_ids.split(','); } } 
-                    else if (Array.isArray(o.staff_ids)) { staffArr = o.staff_ids; }
-                    const souStaff = meuId && staffArr.map(String).includes(meuId);
-
-                    if (souResp) obrasResp.push(o);
-                    if (souStaff) obrasStaff.push(o);
-                });
-            }
-
-            renderizarObras(obrasStaff, 'lista-obras-staff', false);
-            renderizarObras(obrasResp, 'lista-obras-resp', true);
-        }
-
-        function renderizarObras(listaObras, idContainer, isResp) {
-            const container = document.getElementById(idContainer);
-            if(!container) return; container.innerHTML = '';
-            if (listaObras.length === 0) { container.innerHTML = `<p class="text-sm text-gray-400 italic">Vazio.</p>`; return; }
-
-            listaObras.forEach(obra => {
-                let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
-                const papel = isResp ? '👑 Responsável' : '👥 Staff';
-                const modoClick = isResp ? 'responsavel' : 'staff';
-                const jsonObj = encodeURIComponent(JSON.stringify(obra)).replace(/'/g, "%27");
-                
-                const lapisEdit = `<button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 bg-blue-50 border p-1 rounded cursor-pointer" title="Ver Views">📊</button>`;
-                const viewsNum = parseInt(obra.views_totais) || 0;
-                const badgeViews = `<span class="text-[10px] font-bold text-gray-600 bg-gray-100 border px-2 py-0.5 rounded-full flex items-center gap-1" title="Views">👁️ ${viewsNum.toLocaleString('pt-BR')}</span>`;
-
-                container.innerHTML += `
-                    <div onclick="abrirTarefasObra('${obra.nome}', '${modoClick}')" class="p-3 rounded-lg border hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
-                        <div class="flex items-center">
-                            <div><h3 class="font-bold text-gray-800 text-sm group-hover:text-red-900">${obra.nome}</h3></div>
-                            ${lapisEdit}
-                        </div>
-                        <div class="flex flex-col items-end gap-1">
-                            <div class="flex items-center gap-1">${badgeViews}<span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${obra.status}</span></div>
-                            <span class="text-[9px] text-gray-400 bg-gray-100 px-1 rounded">${papel}</span>
-                        </div>
-                    </div>`;
-            });
-        }
-        function abrirMinhasAdv() {}
     </script>
 </body>
 </html>
