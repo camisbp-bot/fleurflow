@@ -143,6 +143,7 @@
                     <div>
                         <label class="text-xs font-bold text-gray-600 block mb-1">Funções</label>
                         <div class="grid grid-cols-2 gap-2 p-3 bg-gray-50 border border-gray-300 rounded max-h-40 overflow-y-auto">
+                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="MODERAÇÃO" class="text-purple-600 rounded"> MODERAÇÃO</label>
                             <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (PC)" class="text-purple-600 rounded"> EDITOR (PC)</label>
                             <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (CELL)" class="text-purple-600 rounded"> EDITOR (CELL)</label>
                             <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER" class="text-purple-600 rounded"> CLEANER</label>
@@ -252,7 +253,7 @@
         </div>
     </section>
 
-    <!-- ==================== MÓDULO: ADVERTÊNCIAS ==================== -->
+    <!-- ==================== MÓDULO: ADVERTÊNCIAS (Para Aplicar) ==================== -->
     <section id="painel-adv" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-black text-orange-900 flex items-center gap-2">⚠️ Controle de Advertências</h2>
@@ -994,7 +995,7 @@
                 else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === obra.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
 
                 const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2" title="Atualização">🔔</span>` : '';
-                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100" title="Editar">✏️</button>`;
+                const lapisEdit = `<button onclick="window.location.href='cadastro-obra.html?edit=${obra.id}'; event.stopPropagation();" class="text-xs hover:scale-125 transition ml-2 opacity-50 hover:opacity-100 cursor-pointer" title="Editar">✏️</button>`;
 
                 container.innerHTML += `
                     <div onclick="abrirTarefasObra('${nomeSeguro}', '${modoClick}')" class="p-3 rounded-lg border border-gray-200 hover:border-red-400 hover:bg-red-50 transition flex justify-between items-center bg-white shadow-sm cursor-pointer group">
