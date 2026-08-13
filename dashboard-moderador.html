@@ -51,7 +51,18 @@
             </div>
         </section>
 
-        <!-- DASHBOARD NORMAL -->
+        <!-- 🎉 ANIVERSARIANTES DO MÊS -->
+        <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm mt-6">
+            <div class="flex justify-between items-center mb-4 border-b border-pink-100 pb-2">
+                <h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2>
+                <button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow transition cursor-pointer">📲 Mensagem de Hoje</button>
+            </div>
+            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]"></div>
+            <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t border-pink-200">
+                <textarea id="texto-niver" rows="4" class="w-full bg-white border border-pink-300 rounded-lg p-3 text-sm font-semibold text-gray-700 focus:outline-none" readonly></textarea>
+            </div>
+        </section>
+
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
             <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[400px]">
                 <h2 class="text-lg font-black text-blue-900 mb-2 flex items-center gap-2">👥 Obras (STAFF)</h2>
@@ -90,7 +101,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- REGRAS DA ADM -->
             <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-emerald-200 h-fit">
                 <h3 class="text-lg font-black text-emerald-800 mb-4 border-b border-emerald-100 pb-2">⚖️ Metas da SCAN</h3>
                 <p class="text-[10px] text-gray-500 mb-4">Mínimo de <b>Média de Views/Capítulo</b> definido pela ADM para cada prioridade:</p>
@@ -104,7 +114,6 @@
             </div>
 
             <div class="lg:col-span-3 space-y-6">
-                <!-- TABELA RELATÓRIO DO MODERADOR -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200">
                     <div class="flex justify-between items-center mb-4 border-b border-emerald-100 pb-2">
                         <h3 class="text-lg font-black text-emerald-800">📋 Relatório de Desempenho (Suas Obras)</h3>
@@ -219,6 +228,7 @@
             await carregarRegrasSupabase();
             carregarDashboardAntigo(nick);
             carregarMinhasAdv(nick);
+            carregarAniversariantes(); 
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
@@ -539,6 +549,39 @@
         }
 
         async function mudarStatusTarefa(id, novoStatus) { await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id); carregarDashboardAntigo(localStorage.getItem('usuario_nick')); }
+
+        // ==================== MÓDULO: ANIVERSARIANTES ====================
+        async function carregarAniversariantes() {
+            const { data } = await _supabase.from('equipe').select('nick, data_nascimento');
+            const lista = document.getElementById('lista-aniversariantes');
+            if(!data || data.length === 0) { lista.innerHTML = '<p class="text-xs text-gray-400">Dados não encontrados.</p>'; return; }
+            const hoje = new Date(); const mesAtual = hoje.getMonth() + 1; const diaAtual = hoje.getDate();
+            let html = ''; let aniversariantesHoje = [];
+
+            data.forEach(m => {
+                if(m.data_nascimento) {
+                    const partes = m.data_nascimento.split('-');
+                    if(partes.length >= 3) {
+                        const mesNiver = parseInt(partes[1]); const diaNiver = parseInt(partes[2]);
+                        if(mesNiver === mesAtual) {
+                            const ehHoje = (diaNiver === diaAtual);
+                            if(ehHoje) aniversariantesHoje.push(m.nick);
+                            html += `<div class="bg-white border ${ehHoje ? 'border-pink-400 bg-pink-100 shadow-sm' : 'border-pink-200'} p-3 rounded-lg flex flex-col items-center min-w-[100px]"><span class="text-2xl">${ehHoje ? '🎂' : '🎈'}</span><span class="font-bold text-sm ${ehHoje ? 'text-pink-800' : 'text-gray-800'} mt-1 truncate max-w-[90px]" title="${m.nick}">${m.nick}</span><span class="text-xs text-gray-500">${diaNiver}/${mesNiver}</span></div>`;
+                        }
+                    }
+                }
+            });
+            lista.innerHTML = html === '' ? '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês.</p>' : html;
+            if(aniversariantesHoje.length > 0) { document.getElementById('btn-gerar-niver').classList.remove('hidden'); window.anivHoje = aniversariantesHoje; }
+        }
+
+        function gerarMensagemNiver() {
+            if(!window.anivHoje) return;
+            const nomes = window.anivHoje.map(n => `@${n}`).join(' e ');
+            const texto = `🎉 Hoje é um dia super especial! 🎉\n\nVamos desejar um feliz aniversário para ${nomes}! 🎂🎈\n\nQue o dia seja repleto de alegria, saúde, paz e muitos capítulos perfeitinhos! A equipe FleurFlow deseja tudo de bom hoje e sempre! 💖✨\n\nDeixem seus parabéns aqui embaixo! 👇`;
+            document.getElementById('area-mensagem-niver').classList.remove('hidden'); document.getElementById('texto-niver').value = texto;
+        }
+
     </script>
 </body>
 </html>
