@@ -30,10 +30,10 @@ function parseViews(text) {
 }
 
 async function run() {
-    console.log("🤖 Robô de Views acionado (Busca Avançada)...");
+    console.log("🤖 Iniciando Robô com Proxy Invisível Anti-Bloqueio...");
     
     const { data: obras, error } = await supabase.from('obras').select('*').not('link_scan', 'is', null);
-    if(error) { console.error("🚨 Erro:", error); return; }
+    if(error) { console.error("🚨 Erro no banco de dados:", error); return; }
     
     const hojeStr = new Date().toDateString();
 
@@ -41,18 +41,37 @@ async function run() {
         if(!obra.link_scan || !obra.link_scan.includes('http')) continue;
         
         try {
-            const res = await fetch(obra.link_scan, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } });
-            const html = await res.text();
-            const $ = cheerio.load(html);
+            console.log(`\n🔎 Tentando ler: ${obra.nome}`);
             
+            // Usando proxy AllOrigins para driblar bloqueios + quebra de cache com Date.now()
+            const linkComQuebraDeCache = obra.link_scan + (obra.link_scan.includes('?') ? '&' : '?') + 't=' + Date.now();
+            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(linkComQuebraDeCache);
+            
+            const res = await fetch(proxyUrl, { 
+                headers: { 
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+                } 
+            });
+            
+            const html = await res.text();
+            
+            // Verifica se o Cloudflare ou Firewall pegou a gente
+            if(html.includes('Cloudflare') || html.includes('Just a moment...') || html.includes('Security check') || html.includes('DDoS protection')) {
+                console.log(`❌ BLOQUEIO DETECTADO: O firewall do site ainda conseguiu bloquear o acesso.`);
+                continue; 
+            }
+
+            const $ = cheerio.load(html);
             let textViews = '';
 
-            // Tenta achar pelo metadado padrão do WordPress/Madara
-            textViews = $('.post-total-views .number, .manga-info-views .number, .post-views, input[name*="views"]').first().val() || 
-                        $('.post-total-views, .manga-info-views, .post-views, .view-count').first().text();
+            // Caça as Views com alta precisão
+            textViews = $('.post-total-views .number').first().text() ||
+                        $('.manga-info-views .number').first().text() ||
+                        $('.post-views').first().text() ||
+                        $('.view-count').first().text();
 
             if (!textViews) {
-                // Varredura por atributos de texto genéricos
                 const regex = /(\d+[\d,.]*)\s*(views|visualiza)/i;
                 const match = html.match(regex);
                 if (match) textViews = match[1];
@@ -61,6 +80,8 @@ async function run() {
             const novasViews = parseViews(textViews);
             
             if(novasViews > 0) {
+                console.log(`👁️ Número original achado no site: "${textViews}" -> Convertido para: ${novasViews}`);
+                
                 let viewsOntemSalvar = obra.views_ontem || 0;
                 if(obra.data_verificacao !== hojeStr) {
                     viewsOntemSalvar = obra.views_totais || 0;
@@ -72,7 +93,10 @@ async function run() {
                     data_verificacao: hojeStr 
                 }).eq('id', obra.id);
                 
-                console.log(`✅ ${obra.nome}: ${novasViews} views.`);
+                console.log(`✅ SUCESSO! Banco atualizado para ${novasViews} views.`);
+            } else {
+                console.log(`⚠️ FALHA: O site liberou o acesso, mas a div/palavra com as views mudou de lugar ou não existe.`);
+                console.log(`   Recorte do HTML lido: ${html.substring(0, 150).replace(/\n/g, ' ')}...`);
             }
             
             await new Promise(r => setTimeout(r, 2000));
@@ -80,7 +104,7 @@ async function run() {
             console.error(`🚨 Erro em ${obra.nome}:`, e.message);
         }
     }
-    console.log("🏁 Sincronização finalizada.");
+    console.log("\n🏁 Sincronização finalizada.");
 }
 
 run();
