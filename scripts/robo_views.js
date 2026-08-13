@@ -30,7 +30,7 @@ function parseViews(text) {
 }
 
 async function run() {
-    console.log("🤖 Iniciando Robô com Proxy Invisível Anti-Bloqueio...");
+    console.log("🤖 Iniciando Robô Ninja (Acesso Direto com Disfarce Perfeito)...");
     
     const { data: obras, error } = await supabase.from('obras').select('*').not('link_scan', 'is', null);
     if(error) { console.error("🚨 Erro no banco de dados:", error); return; }
@@ -41,31 +41,39 @@ async function run() {
         if(!obra.link_scan || !obra.link_scan.includes('http')) continue;
         
         try {
-            console.log(`\n🔎 Tentando ler: ${obra.nome}`);
+            console.log(`\n🔎 Lendo: ${obra.nome}`);
             
-            // Usando proxy AllOrigins para driblar bloqueios + quebra de cache com Date.now()
-            const linkComQuebraDeCache = obra.link_scan + (obra.link_scan.includes('?') ? '&' : '?') + 't=' + Date.now();
-            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(linkComQuebraDeCache);
-            
-            const res = await fetch(proxyUrl, { 
+            // Acesso direto, mas simulando 100% um Google Chrome real vindo do Google
+            const res = await fetch(obra.link_scan, { 
                 headers: { 
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                    'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+                    'Referer': 'https://www.google.com/',
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache',
+                    'Sec-Ch-Ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+                    'Sec-Ch-Ua-Mobile': '?0',
+                    'Sec-Ch-Ua-Platform': '"Windows"',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'cross-site',
+                    'Sec-Fetch-User': '?1',
+                    'Upgrade-Insecure-Requests': '1'
                 } 
             });
             
             const html = await res.text();
             
-            // Verifica se o Cloudflare ou Firewall pegou a gente
-            if(html.includes('Cloudflare') || html.includes('Just a moment...') || html.includes('Security check') || html.includes('DDoS protection')) {
-                console.log(`❌ BLOQUEIO DETECTADO: O firewall do site ainda conseguiu bloquear o acesso.`);
+            if(html.includes('Cloudflare') || html.includes('Just a moment...')) {
+                console.log(`❌ BLOQUEIO: Cloudflare barrou o acesso.`);
                 continue; 
             }
 
             const $ = cheerio.load(html);
             let textViews = '';
 
-            // Caça as Views com alta precisão
+            // Caça as Views no tema Madara/MangaBooth
             textViews = $('.post-total-views .number').first().text() ||
                         $('.manga-info-views .number').first().text() ||
                         $('.post-views').first().text() ||
@@ -80,7 +88,7 @@ async function run() {
             const novasViews = parseViews(textViews);
             
             if(novasViews > 0) {
-                console.log(`👁️ Número original achado no site: "${textViews}" -> Convertido para: ${novasViews}`);
+                console.log(`👁️ Encontrou: "${textViews}" -> Gravando: ${novasViews}`);
                 
                 let viewsOntemSalvar = obra.views_ontem || 0;
                 if(obra.data_verificacao !== hojeStr) {
@@ -93,15 +101,16 @@ async function run() {
                     data_verificacao: hojeStr 
                 }).eq('id', obra.id);
                 
-                console.log(`✅ SUCESSO! Banco atualizado para ${novasViews} views.`);
+                console.log(`✅ SUCESSO! Banco atualizado.`);
             } else {
-                console.log(`⚠️ FALHA: O site liberou o acesso, mas a div/palavra com as views mudou de lugar ou não existe.`);
-                console.log(`   Recorte do HTML lido: ${html.substring(0, 150).replace(/\n/g, ' ')}...`);
+                console.log(`⚠️ FALHA: Página carregou, mas a palavra com as views não foi achada.`);
+                // Imprime um pedaço do HTML pra gente ver se a página real carregou mesmo
+                console.log(`   HTML recebido (início): ${html.substring(0, 100).replace(/\n/g, ' ')}...`);
             }
             
             await new Promise(r => setTimeout(r, 2000));
         } catch(e) {
-            console.error(`🚨 Erro em ${obra.nome}:`, e.message);
+            console.error(`🚨 Erro de conexão em ${obra.nome}:`, e.message);
         }
     }
     console.log("\n🏁 Sincronização finalizada.");
