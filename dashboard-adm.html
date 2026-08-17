@@ -61,9 +61,17 @@
             </div>
         </section>
         
+        <!-- ==================================================== -->
+        <!-- OBRAS POR EQUIPE (VISÃO ADM COM FILHOS) -->
+        <!-- ==================================================== -->
         <section class="bg-white rounded-xl shadow-sm border p-6 flex flex-col mt-8">
-            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👥 Obras por Moderador (Visão Rápida)</h2>
-            <div class="overflow-y-auto max-h-[500px] pr-2 space-y-4" id="lista-todas-obras"></div>
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4 border-b border-gray-100 pb-2 gap-4">
+                <h2 class="text-lg font-black text-gray-800 flex items-center gap-2">👥 Obras por Equipe (Visão ADM)</h2>
+                <button onclick="abrirModalVinculoADM()" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold px-3 py-2 rounded cursor-pointer transition flex items-center gap-1 shadow-sm">
+                    👑 Vincular Moderadores
+                </button>
+            </div>
+            <div class="overflow-y-auto max-h-[600px] pr-2" id="lista-todas-obras"></div>
         </section>
     </main>
 
@@ -99,7 +107,7 @@
         </div>
     </section>
 
-    <!-- ABA DE RECRUTAMENTO DA ADM (AGORA 100% INTERATIVA!) -->
+    <!-- ABA DE RECRUTAMENTO DA ADM -->
     <section id="painel-recrut" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-black text-teal-900 flex items-center gap-2">🎯 Processo de Recrutamento</h2>
@@ -142,9 +150,26 @@
         </div>
     </section>
 
-    <!-- (Se você já tiver as abas de RH e ADV configuradas com forms, não apague elas. Mas se não tiver, elas continuarão abrindo as antigas normalmente) -->
-    <!-- <section id="painel-rh">...</section> -->
-    <!-- <section id="painel-adv">...</section> -->
+    <!-- (Mantenha <section id="painel-rh"> e <section id="painel-adv"> se tiver configurado nelas antes) -->
+
+    <!-- ==================================================== -->
+    <!-- MODAL VINCULAR ADMs AOS MODERADORES -->
+    <!-- ==================================================== -->
+    <div id="modal-vincular-adm" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+            <div class="bg-purple-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">👑 Vincular Moderadores às ADMs</h3>
+                <button onclick="document.getElementById('modal-vincular-adm').classList.add('hidden')" class="font-bold hover:scale-110 transition cursor-pointer">✖</button>
+            </div>
+            <div class="p-6">
+                <p class="text-xs text-gray-500 mb-4 border-b border-gray-100 pb-2">Defina qual Administradora é a "mãe" (responsável) de cada moderador. Isso organizará a sua tela de obras!</p>
+                <div id="lista-vinculo-mods" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                    <p class="text-center text-xs text-gray-400 py-4">Buscando equipe...</p>
+                </div>
+                <button onclick="salvarVinculosADM()" class="mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow cursor-pointer transition">💾 Salvar Vínculos</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL NOTIFICAÇÕES -->
     <div id="modal-notificacoes" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -187,6 +212,7 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let todasTarefasGlobais = [];
+        let listaEquipeGlobal = [];
         let configRegras = { media: 5000, maxima: 15000, altissima: 23000 }; 
 
         window.onload = async () => {
@@ -201,7 +227,7 @@
             carregarObrasPorModerador();
             carregarMinhasAdv(nick);
             carregarAniversariantes();
-            carregarRecrutamento(); // ADM carrega direto!
+            carregarRecrutamento(); 
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
@@ -292,41 +318,137 @@
         }
         function abrirModalViews(enc) { const o = JSON.parse(decodeURIComponent(enc)); document.getElementById('view-obra-nome').textContent=o.nome; document.getElementById('view-total').textContent=(parseInt(o.views_totais)||0).toLocaleString(); document.getElementById('modal-detalhes-views').classList.remove('hidden'); }
 
-        async function carregarObrasPorModerador() {
-            const { data } = await _supabase.from('obras').select('*').order('responsavel_nick');
-            const container = document.getElementById('lista-todas-obras'); if(!container || !data) return; container.innerHTML = '';
-            
-            const obrasPorMod = {};
-            data.forEach(obra => { 
-                const respStr = obra.responsavel_nick || 'Sem Moderador';
-                respStr.split(',').map(s=>s.trim()).forEach(mod => { if(!obrasPorMod[mod]) obrasPorMod[mod] = []; obrasPorMod[mod].push(obra); }); 
-            });
-            
-            for (const mod in obrasPorMod) {
-                let htmlMod = `<div class="bg-gray-50 border rounded-lg p-4 mb-4"><h3 class="font-black text-red-900 mb-3 border-b pb-2">👤 ${mod}</h3><ul class="space-y-2">`;
-                obrasPorMod[mod].forEach(obra => {
-                    const cO = obra.capitulo_plataforma || '0'; const cF = obra.capitulo_fleur || '0'; let sL = '';
-                    
-                    if (obra.status === 'Pausada' || obra.status === 'Finalizada') { 
-                        sL = `<span class="text-[10px] text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full font-bold">${obra.status.toUpperCase()}</span>`; 
-                    } else {
-                        const matchO = String(cO).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cO];
-                        const matchF = String(cF).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cF];
-                        const numO = parseInt(matchO[2]); const numF = parseInt(matchF[2]);
-                        
-                        if (!isNaN(numO) && !isNaN(numF)) { 
-                            const at = numO - numF; 
-                            if (at > 0) {
-                                let txtNome = matchO[1].trim().toLowerCase();
-                                let sufixo = txtNome.includes('side') ? 'sides' : (txtNome.includes('ep') ? 'epílogos' : 'caps');
-                                sL = `<span class="text-[10px] text-red-700 bg-red-100 px-2 py-0.5 rounded-full font-bold">⚠️ ${at} ${sufixo.toUpperCase()} ATRASADO(S)</span>`; 
-                            } else { sL = `<span class="text-[10px] text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-bold">✅ EM DIA</span>`; }
-                        } else { sL = `<span class="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full font-bold">⚠️ VERIFICAR</span>`; }
-                    }
-                    htmlMod += `<li class="text-sm flex justify-between bg-white p-2 border rounded shadow-sm"><div><span class="font-bold">• ${obra.nome}</span><span class="text-[10px] text-gray-500 block">Oficial: ${cO} | Fleur: ${cF}</span></div> ${sL}</li>`;
+        // ==========================================
+        // 🎯 LÓGICA DE VINCULAR ADMs E FILTRAR OBRAS
+        // ==========================================
+        async function abrirModalVinculoADM() {
+            document.getElementById('modal-vincular-adm').classList.remove('hidden');
+            const cont = document.getElementById('lista-vinculo-mods');
+            cont.innerHTML = '<p class="text-center text-xs text-gray-400 py-4">Carregando...</p>';
+
+            const { data: equipe } = await _supabase.from('equipe').select('*').order('nick');
+            if(!equipe) return;
+            listaEquipeGlobal = equipe;
+
+            const adms = equipe.filter(m => m.cargo_sistema === 'Administrador');
+            const mods = equipe.filter(m => m.cargo_sistema !== 'Administrador');
+
+            let html = '';
+            mods.forEach(mod => {
+                let options = `<option value="">-- Nenhuma Mãe --</option>`;
+                adms.forEach(adm => {
+                    const sel = (mod.adm_responsavel === adm.nick) ? 'selected' : '';
+                    options += `<option value="${adm.nick}" ${sel}>${adm.nick}</option>`;
                 });
-                container.innerHTML += htmlMod + `</ul></div>`;
+                html += `
+                    <div class="bg-gray-50 border border-gray-200 p-3 rounded-lg flex justify-between items-center shadow-sm">
+                        <span class="font-bold text-sm text-gray-800 flex items-center gap-2">👤 ${mod.nick}</span>
+                        <select id="sel-adm-${mod.id}" class="border border-purple-200 rounded p-1.5 text-xs font-bold text-purple-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">
+                            ${options}
+                        </select>
+                    </div>`;
+            });
+            cont.innerHTML = html;
+        }
+
+        async function salvarVinculosADM() {
+            const btn = document.querySelector('#modal-vincular-adm button.bg-purple-600');
+            btn.innerText = '⏳ Salvando...';
+            
+            const mods = listaEquipeGlobal.filter(m => m.cargo_sistema !== 'Administrador');
+            for (const mod of mods) {
+                const selectVal = document.getElementById(`sel-adm-${mod.id}`).value;
+                if (selectVal !== (mod.adm_responsavel || '')) {
+                    await _supabase.from('equipe').update({ adm_responsavel: selectVal || null }).eq('id', mod.id);
+                }
             }
+            
+            btn.innerText = '💾 Salvar Vínculos';
+            document.getElementById('modal-vincular-adm').classList.add('hidden');
+            carregarObrasPorModerador(); // Atualiza a tela de trás na hora!
+        }
+
+        async function carregarObrasPorModerador() {
+            const { data: obras } = await _supabase.from('obras').select('*').order('responsavel_nick');
+            const { data: equipe } = await _supabase.from('equipe').select('nick, adm_responsavel');
+            
+            const container = document.getElementById('lista-todas-obras'); 
+            if(!container || !obras || !equipe) return; 
+            container.innerHTML = '';
+            
+            const mapaAdms = {};
+            equipe.forEach(m => { mapaAdms[m.nick] = m.adm_responsavel || 'Sem ADM Responsável'; });
+
+            const hierarquia = {};
+            
+            obras.forEach(obra => { 
+                const respStrs = (obra.responsavel_nick || 'Sem Moderador').split(',').map(s=>s.trim());
+                respStrs.forEach(mod => { 
+                    const adm = mapaAdms[mod] || 'Sem ADM Responsável';
+                    if(!hierarquia[adm]) hierarquia[adm] = {};
+                    if(!hierarquia[adm][mod]) hierarquia[adm][mod] = [];
+                    hierarquia[adm][mod].push(obra); 
+                }); 
+            });
+
+            const meuNick = localStorage.getItem('usuario_nick');
+            let htmlFinal = '';
+            
+            // Coloca a ADM logada sempre no topo!
+            const admsOrdenados = Object.keys(hierarquia).sort((a, b) => {
+                if (a === meuNick) return -1;
+                if (b === meuNick) return 1;
+                return a.localeCompare(b);
+            });
+
+            admsOrdenados.forEach(adm => {
+                const isMinhaEquipe = (adm === meuNick);
+                const corBorda = isMinhaEquipe ? 'border-purple-400 bg-purple-50' : 'border-gray-200 bg-gray-50';
+                const corTitulo = isMinhaEquipe ? 'text-purple-900 font-black' : 'text-gray-600 font-bold';
+                const titulo = isMinhaEquipe ? '👑 MINHA EQUIPE (Meus Afilhados)' : `Equipe da ADM: ${adm}`;
+
+                let htmlAdm = `<div class="${corBorda} border-2 rounded-xl p-5 mb-6 shadow-sm">
+                    <h3 class="${corTitulo} text-lg mb-4 border-b border-gray-200 pb-2 flex justify-between items-center">
+                        <span>${titulo}</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                `;
+
+                for (const mod in hierarquia[adm]) {
+                    htmlAdm += `<div class="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+                        <h4 class="font-black text-red-800 mb-2 border-b border-gray-100 pb-1">👤 Mod: ${mod}</h4>
+                        <ul class="space-y-2">`;
+                    
+                    hierarquia[adm][mod].forEach(obra => {
+                        const cO = obra.capitulo_plataforma || '0'; const cF = obra.capitulo_fleur || '0'; let sL = '';
+                        if (obra.status === 'Pausada' || obra.status === 'Finalizada') { 
+                            sL = `<span class="text-[9px] text-gray-500 bg-gray-200 px-1.5 py-0.5 rounded font-bold">${obra.status.toUpperCase()}</span>`; 
+                        } else {
+                            const matchO = String(cO).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cO];
+                            const matchF = String(cF).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cF];
+                            const numO = parseInt(matchO[2]); const numF = parseInt(matchF[2]);
+                            
+                            if (!isNaN(numO) && !isNaN(numF)) { 
+                                const at = numO - numF; 
+                                if (at > 0) {
+                                    let txtNome = matchO[1].trim().toLowerCase();
+                                    let sufixo = txtNome.includes('side') ? 'sides' : (txtNome.includes('ep') ? 'epílogos' : 'caps');
+                                    sL = `<span class="text-[9px] text-red-700 bg-red-100 px-1.5 py-0.5 rounded font-bold">⚠️ ${at} ${sufixo.toUpperCase()} ATRASADO(S)</span>`; 
+                                } else { sL = `<span class="text-[9px] text-green-700 bg-green-100 px-1.5 py-0.5 rounded font-bold">✅ EM DIA</span>`; }
+                            } else { sL = `<span class="text-[9px] text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded font-bold">⚠️ VERIFICAR</span>`; }
+                        }
+                        htmlAdm += `<li class="text-xs flex flex-col justify-between bg-gray-50 p-1.5 border rounded">
+                            <div class="flex justify-between items-center"><span class="font-bold truncate" title="${obra.nome}">• ${obra.nome}</span> ${sL}</div>
+                            <span class="text-[9px] text-gray-500 mt-1">Oficial: ${cO} | Fleur: ${cF}</span>
+                        </li>`;
+                    });
+                    htmlAdm += `</ul></div>`;
+                }
+                htmlAdm += `</div></div>`;
+                htmlFinal += htmlAdm;
+            });
+
+            container.innerHTML = htmlFinal;
         }
 
         async function carregarAnalytics() {
@@ -442,7 +564,6 @@
                 carregarRecrutamento();
             }
         }
-        // ==========================================
 
         async function carregarAniversariantes() {
             const { data } = await _supabase.from('equipe').select('nick, data_nascimento');
