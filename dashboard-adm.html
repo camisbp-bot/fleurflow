@@ -22,30 +22,31 @@
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">👑 Ferramentas da Administração</h2>
             <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4 mb-4">
-                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">📖</span><span class="text-xs font-bold text-gray-700 text-center">Cadastrar Obra</span></button>
-                <button onclick="window.location.href='listao-geral.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">📊</span><span class="text-xs font-bold text-gray-700 text-center">Listão & Telegram</span></button>
-                <button onclick="window.location.href='andamento.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">⚙️</span><span class="text-xs font-bold text-gray-700 text-center">Andamento (Staff)</span></button>
-                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">🔔</span><span class="text-xs font-bold text-gray-700 text-center">Atualizações</span></button>
-                <button onclick="abrirModalDownload()" class="bg-blue-50 border hover:border-blue-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span></button>
-                <button onclick="abrirAba('painel-analytics')" class="bg-emerald-50 border hover:border-emerald-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">📈</span><span class="text-xs font-black text-emerald-800 text-center">Relatórios & BI</span></button>
-                <button onclick="abrirMinhasAdv()" class="bg-orange-50 border hover:border-orange-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition relative group"><span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span><span class="text-3xl group-hover:scale-110 transition">⚠️</span><span class="text-xs font-black text-orange-800 text-center">Minhas Adv.</span></button>
+                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📖</span><span class="text-xs font-bold text-gray-700 text-center">Cadastrar Obra</span></button>
+                <button onclick="window.location.href='listao-geral.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📊</span><span class="text-xs font-bold text-gray-700 text-center">Listão & Telegram</span></button>
+                <button onclick="window.location.href='andamento.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">⚙️</span><span class="text-xs font-bold text-gray-700 text-center">Andamento (Staff)</span></button>
+                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">🔔</span><span class="text-xs font-bold text-gray-700 text-center">Atualizações</span></button>
+                <button onclick="abrirModalDownload()" class="bg-blue-50 border hover:border-blue-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📥</span><span class="text-xs font-black text-blue-800 text-center">Informar Raw</span></button>
+                <button onclick="abrirAba('painel-analytics')" class="bg-emerald-50 border hover:border-emerald-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📈</span><span class="text-xs font-black text-emerald-800 text-center">Relatórios & BI</span></button>
+                <button onclick="abrirMinhasAdv()" class="bg-orange-50 border hover:border-orange-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition relative group cursor-pointer"><span id="badge-adv-adm" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span><span class="text-3xl group-hover:scale-110 transition">⚠️</span><span class="text-xs font-black text-orange-800 text-center">Minhas Adv.</span></button>
             </div>
             
             <h2 class="text-lg font-black text-purple-900 mb-4 mt-8 flex items-center gap-2">🏢 Gestão de Pessoal (RH)</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <button onclick="abrirAba('painel-rh')" class="bg-purple-50 border hover:border-purple-500 p-4 rounded-xl flex items-center justify-center gap-3 transition"><span class="text-2xl">👥</span><span class="text-sm font-black text-purple-800">Equipe Geral</span></button>
-                <button onclick="abrirAba('painel-adv')" class="bg-orange-50 border hover:border-orange-500 p-4 rounded-xl flex items-center justify-center gap-3 transition"><span class="text-2xl">⚠️</span><span class="text-sm font-black text-orange-800">Advertências</span></button>
-                <button onclick="abrirAba('painel-recrut')" class="bg-teal-50 border hover:border-teal-500 p-4 rounded-xl flex items-center justify-center gap-3 transition"><span class="text-2xl">🎯</span><span class="text-sm font-black text-teal-800">Recrutamento</span></button>
+                <button onclick="abrirAba('painel-rh')" class="bg-purple-50 border hover:border-purple-500 p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer"><span class="text-2xl">👥</span><span class="text-sm font-black text-purple-800">Equipe Geral</span></button>
+                <button onclick="abrirAba('painel-adv')" class="bg-orange-50 border hover:border-orange-500 p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer"><span class="text-2xl">⚠️</span><span class="text-sm font-black text-orange-800">Advertências</span></button>
+                <button onclick="abrirAba('painel-recrut')" class="bg-teal-50 border hover:border-teal-500 p-4 rounded-xl flex items-center justify-center gap-3 transition cursor-pointer"><span class="text-2xl">🎯</span><span class="text-sm font-black text-teal-800">Recrutamento</span></button>
             </div>
         </section>
 
-        <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm">
-            <div class="flex justify-between items-center mb-4 border-b pb-2"><h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2><button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow">📲 Mensagem de Hoje</button></div>
+        <!-- 🎉 ANIVERSARIANTES DO MÊS -->
+        <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm mt-6">
+            <div class="flex justify-between items-center mb-4 border-b pb-2"><h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2><button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow cursor-pointer">📲 Mensagem de Hoje</button></div>
             <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]"></div>
-            <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t"><textarea id="texto-niver" rows="4" class="w-full bg-white border rounded-lg p-3 text-sm" readonly></textarea></div>
+            <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t"><textarea id="texto-niver" rows="4" class="w-full bg-white border rounded-lg p-3 text-sm focus:outline-none" readonly></textarea></div>
         </section>
 
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
             <div class="bg-white rounded-xl shadow-sm border p-6 flex flex-col h-[400px]"><h2 class="text-lg font-black text-blue-900 mb-2">👥 Obras (STAFF)</h2><div class="overflow-y-auto flex-1 space-y-3" id="lista-obras-staff"></div></div>
             <div class="bg-white rounded-xl shadow-sm border p-6 flex flex-col h-[400px]"><h2 class="text-lg font-black text-amber-900 mb-2">👑 Obras (RESPONSÁVEL)</h2><div class="overflow-y-auto flex-1 space-y-3" id="lista-obras-resp"></div></div>
         </section>
@@ -66,11 +67,11 @@
         </section>
     </main>
 
-    <!-- MÓDULO: BI -->
+    <!-- MÓDULO BI DA ADM -->
     <section id="painel-analytics" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <div><h2 class="text-2xl font-black text-emerald-900">📈 Relatórios & Inteligência</h2></div>
-            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 font-bold py-2 px-4 rounded-lg">Voltar</button>
+            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar</button>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div class="lg:col-span-1 bg-white p-6 rounded-xl border h-fit">
@@ -79,16 +80,16 @@
                     <div><label class="text-xs font-bold text-purple-700">👑 Prioridade Altíssima</label><input type="number" id="config-altissima" required class="w-full border rounded p-2 text-sm font-bold"></div>
                     <div><label class="text-xs font-bold text-red-600">🔥 Prioridade Máxima</label><input type="number" id="config-maxima" required class="w-full border rounded p-2 text-sm font-bold"></div>
                     <div><label class="text-xs font-bold text-blue-600">📄 Prioridade Média</label><input type="number" id="config-media" required class="w-full border rounded p-2 text-sm font-bold"></div>
-                    <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 rounded">💾 Salvar Metas</button>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded cursor-pointer transition">💾 Salvar Metas</button>
                 </form>
             </div>
             <div class="lg:col-span-3">
                 <div class="bg-white p-6 rounded-xl border">
-                    <h3 class="text-lg font-black text-emerald-800 mb-4 border-b pb-2">📋 Relatório de Desempenho</h3>
+                    <h3 class="text-lg font-black text-emerald-800 mb-4 border-b pb-2">📋 Relatório de Desempenho Geral</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-gray-600">
                             <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
-                                <tr><th class="px-3 py-2">Obra</th><th class="px-3 py-2 text-center">Views App</th><th class="px-3 py-2 text-center">Views Site</th><th class="px-3 py-2 text-center">Média (V/Cap)</th><th class="px-3 py-2 text-center">Cresc. Diário</th><th class="px-3 py-2 text-center">IA</th><th class="px-3 py-2 text-right">Ação</th></tr>
+                                <tr><th class="px-3 py-2">Obra</th><th class="px-3 py-2 text-center">Views App</th><th class="px-3 py-2 text-center">Views Site (Raw)</th><th class="px-3 py-2 text-center">Média (V/Cap)</th><th class="px-3 py-2 text-center">Cresc. Diário</th><th class="px-3 py-2 text-center">IA</th><th class="px-3 py-2 text-right">Ação</th></tr>
                             </thead>
                             <tbody id="tabela-analytics" class="divide-y divide-gray-100 bg-white"></tbody>
                         </table>
@@ -98,40 +99,85 @@
         </div>
     </section>
 
-    <!-- (COLOQUE AQUI AS TAGS <section> DE RH, ADV E RECRUTAMENTO QUE JÁ EXISTIAM NO SEU ARQUIVO!) -->
-    <!-- Para economizar o limite de caracteres da IA e focar nas novidades, mantenha suas abas <section id="painel-rh">, <section id="painel-adv"> e <section id="painel-recrut"> exatamente iguais como estavam no código anterior -->
+    <!-- ABA DE RECRUTAMENTO DA ADM (AGORA 100% INTERATIVA!) -->
+    <section id="painel-recrut" class="hidden max-w-6xl mx-auto p-6 mt-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black text-teal-900 flex items-center gap-2">🎯 Processo de Recrutamento</h2>
+            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-teal-200 mb-6">
+            <form onsubmit="salvarRecrutamento(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+                <input type="hidden" id="rec-id">
+                <div><label class="text-xs font-bold text-gray-600">Nome / Nick</label><input type="text" id="rec-nome" required class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-teal-500"></div>
+                <div><label class="text-xs font-bold text-gray-600">Função Pretendida</label><input type="text" id="rec-funcao" required class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-teal-500"></div>
+                <div><label class="text-xs font-bold text-gray-600">Fase Atual</label>
+                    <select id="rec-fase" class="w-full border rounded p-2 text-sm font-bold bg-teal-50 text-teal-800 focus:ring-2 focus:ring-teal-500 cursor-pointer">
+                        <option value="Em Teste">Em Teste</option>
+                        <option value="1ª Fase">1ª Fase</option>
+                        <option value="Aprovados (1ª Fase)">Aprovados (1ª Fase)</option>
+                        <option value="2ª Fase">2ª Fase</option>
+                        <option value="Aprovados (2ª Fase)">Aprovados (2ª Fase)</option>
+                        <option value="3ª Fase">3ª Fase</option>
+                        <option value="Aprovados">Aprovados</option>
+                        <option value="Reprovados">Reprovados</option>
+                    </select>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="limparFormRecrutamento()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-3 rounded cursor-pointer transition">✖</button>
+                    <button type="submit" id="btn-salvar-rec" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded cursor-pointer shadow transition">➕ Adicionar</button>
+                </div>
+            </form>
+        </div>
 
-    <!-- MODAL NOTIFICAÇÕES (COM BOTÃO DE LIMPAR) -->
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x w-full">
+            <div class="bg-gray-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3">⏳ Em Teste</h3><div id="rec-col-1" class="overflow-y-auto space-y-2"></div></div>
+            <div class="bg-blue-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-blue-800">📄 1ª Fase</h3><div id="rec-col-2" class="overflow-y-auto space-y-2"></div></div>
+            <div class="bg-green-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-green-800">✅ Aprovados (1)</h3><div id="rec-col-3" class="overflow-y-auto space-y-2"></div></div>
+            <div class="bg-blue-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-blue-800">📄 2ª Fase</h3><div id="rec-col-4" class="overflow-y-auto space-y-2"></div></div>
+            <div class="bg-green-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-green-800">✅ Aprovados (2)</h3><div id="rec-col-5" class="overflow-y-auto space-y-2"></div></div>
+            <div class="bg-blue-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-blue-800">📄 3ª Fase</h3><div id="rec-col-6" class="overflow-y-auto space-y-2"></div></div>
+            <div class="bg-emerald-100 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-emerald-900">🏆 Aprovados</h3><div id="rec-col-7" class="overflow-y-auto space-y-2"></div></div>
+            <div class="bg-red-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-red-800">❌ Reprovados</h3><div id="rec-col-8" class="overflow-y-auto space-y-2"></div></div>
+        </div>
+    </section>
+
+    <!-- (Se você já tiver as abas de RH e ADV configuradas com forms, não apague elas. Mas se não tiver, elas continuarão abrindo as antigas normalmente) -->
+    <!-- <section id="painel-rh">...</section> -->
+    <!-- <section id="painel-adv">...</section> -->
+
+    <!-- MODAL NOTIFICAÇÕES -->
     <div id="modal-notificacoes" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-red-800 p-4 flex justify-between items-center text-white">
-                <h3 class="font-black flex items-center gap-2">🔔 Notificações</h3>
-                <button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold hover:scale-110">✖</button>
-            </div>
+            <div class="bg-red-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">🔔 Notificações do Sistema</h3><button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold hover:scale-110">✖</button></div>
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
-                    <p class="text-xs text-gray-500">Avisos de prioridade do BI.</p>
-                    <button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded transition">🧹 Limpar Avisos</button>
+                    <p class="text-xs text-gray-500">Avisos e Sugestões do BI.</p>
+                    <button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded cursor-pointer transition">🧹 Limpar Avisos</button>
                 </div>
                 <div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL VIEWS -->
+    <!-- MODAL VIEWS DETALHADAS -->
     <div id="modal-detalhes-views" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <!-- O mesmo modal de views aqui... -->
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border-2 border-emerald-500">
-            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">📊 Analytics da Obra</h3><button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold">✖</button></div>
+            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">📊 Analytics da Obra</h3><button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold hover:scale-110">✖</button></div>
             <div class="p-6 text-center">
-                <h4 id="view-obra-nome" class="text-xl font-black text-gray-800 mb-1">Nome</h4>
-                <p id="view-obra-priori" class="text-xs font-bold text-gray-500 mb-4 bg-gray-100 inline-block px-3 py-1 rounded-full">Prioridade: Média</p>
-                <div class="grid grid-cols-2 gap-4 mb-6">
+                <h4 id="view-obra-nome" class="text-xl font-black mb-1">Nome</h4>
+                <div class="grid grid-cols-2 gap-4 mt-4">
                     <div class="bg-gray-50 p-4 rounded-lg border"><p class="text-[10px] font-bold text-gray-500">TOTAL NO APP</p><p id="view-total" class="text-2xl font-black text-gray-800">0</p></div>
-                    <div class="bg-blue-50 p-4 rounded-lg border"><p class="text-[10px] font-bold text-blue-700">MÉDIA / CAP</p><p id="view-media" class="text-2xl font-black text-blue-900">0</p></div>
                 </div>
-                <p id="view-sugestao" class="text-sm font-bold bg-yellow-100 text-yellow-800 p-2 rounded border"></p>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL MINHAS ADV -->
+    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+            <div class="bg-orange-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">⚠️ Minhas Advertências</h3><button onclick="document.getElementById('modal-minhas-adv').classList.add('hidden')" class="font-bold hover:scale-110">✖</button></div>
+            <div class="p-6"><div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto"></div></div>
         </div>
     </div>
 
@@ -145,19 +191,24 @@
 
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
-            if(!nick) return window.location.href = 'index.html';
+            const cargo = localStorage.getItem('usuario_cargo');
+            if(!nick || cargo !== 'Administrador') return window.location.href = 'index.html';
+            
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
             
             await carregarRegrasSupabase();
             carregarDashboardAntigo(nick);
             carregarObrasPorModerador();
+            carregarMinhasAdv(nick);
             carregarAniversariantes();
+            carregarRecrutamento(); // ADM carrega direto!
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
-        function abrirAba(id) { document.getElementById('main-content').classList.add('hidden'); document.getElementById(id).classList.remove('hidden'); if(id==='painel-analytics') carregarAnalytics(); }
+        function abrirAba(id) { document.querySelectorAll('section[id^="painel-"]').forEach(s=>s.classList.add('hidden')); document.getElementById('main-content').classList.add('hidden'); document.getElementById(id).classList.remove('hidden'); if(id==='painel-analytics') carregarAnalytics(); }
         function voltarAoPainelPrincipal() { document.querySelectorAll('section[id^="painel-"]').forEach(s=>s.classList.add('hidden')); document.getElementById('main-content').classList.remove('hidden'); }
         function abrirNotificacoes() { document.getElementById('modal-notificacoes').classList.remove('hidden'); }
+        function abrirMinhasAdv() { document.getElementById('modal-minhas-adv').classList.remove('hidden'); }
         function fecharPainelTarefas() { document.getElementById('painel-tarefas').classList.add('hidden'); }
 
         function limparNotificacoes() {
@@ -206,12 +257,40 @@
                 const priAtual = obra.prioridade || 'Baixa';
                 if (!sugestao.includes(priAtual)) {
                     alertasAtivos++;
-                    container.innerHTML += `<div class="bg-gray-50 border p-3 rounded flex justify-between items-center text-xs"><div><p class="font-bold">${obra.nome}</p><p class="text-gray-500">Média: <b class="${cor}">${media.toLocaleString()}</b></p></div><span class="bg-white border px-2 py-0.5 rounded font-black ${cor}">Mudar p/ ${sugestao}</span></div>`;
+                    container.innerHTML += `<div class="bg-gray-50 border p-3 rounded flex justify-between items-center text-xs"><div><p class="font-bold">${obra.nome}</p><p class="text-gray-500">Média: <b class="${cor}">${media.toLocaleString()}</b></p></div><span class="bg-white border px-2 py-0.5 rounded font-black ${cor}">Sugestão: ${sugestao}</span></div>`;
                 }
             });
             if (alertasAtivos > 0) { badge.classList.remove('hidden'); badge.innerText = alertasAtivos; } 
-            else { container.innerHTML = '<p class="text-sm text-gray-400 text-center py-4">Tudo tranquilo!</p>'; }
+            else { container.innerHTML = '<p class="text-sm text-gray-400 text-center py-4">Nenhuma obra atingiu metas novas hoje.</p>'; }
         }
+
+        async function carregarDashboardAntigo(meuNick) {
+            const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
+            const meuId = usuarioData && usuarioData[0] ? String(usuarioData[0].id) : null;
+            const { data: obras } = await _supabase.from('obras').select('*').order('nome');
+            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
+            todasTarefasGlobais = tarefas || [];
+            
+            if (obras) {
+                processarAlertasBI(obras);
+                renderizarObras(obras.filter(o => { let sArr = typeof o.staff_ids === 'string' ? o.staff_ids.split(',') : (o.staff_ids||[]); return meuId && sArr.map(String).includes(meuId); }), 'lista-obras-staff', false);
+                renderizarObras(obras.filter(o => o.responsavel_nick && o.responsavel_nick.includes(meuNick)), 'lista-obras-resp', true);
+            }
+        }
+
+        function renderizarObras(lista, idCont, isResp) {
+            const cont = document.getElementById(idCont); if(!cont) return; cont.innerHTML = '';
+            lista.forEach(o => {
+                const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
+                const viewsApp = parseInt(o.views_totais) || 0;
+                cont.innerHTML += `<div class="p-3 bg-white border rounded-lg flex justify-between cursor-pointer hover:border-red-400">
+                    <div><h3 class="font-bold text-sm">${o.nome}</h3><p class="text-[10px] text-gray-500">Dono: ${o.responsavel_nick||'N/A'}</p></div>
+                    <div class="flex flex-col items-end gap-1"><span class="text-[10px] font-bold bg-gray-100 border px-2 py-0.5 rounded-full">👁️ ${viewsApp.toLocaleString()}</span>
+                    <div class="flex gap-1"><button onclick="abrirModalViews('${jsonObj}')" class="text-xs bg-blue-50 p-1 rounded">📊</button><button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'" class="text-xs">✏️</button></div></div>
+                </div>`;
+            });
+        }
+        function abrirModalViews(enc) { const o = JSON.parse(decodeURIComponent(enc)); document.getElementById('view-obra-nome').textContent=o.nome; document.getElementById('view-total').textContent=(parseInt(o.views_totais)||0).toLocaleString(); document.getElementById('modal-detalhes-views').classList.remove('hidden'); }
 
         async function carregarObrasPorModerador() {
             const { data } = await _supabase.from('obras').select('*').order('responsavel_nick');
@@ -231,7 +310,6 @@
                     if (obra.status === 'Pausada' || obra.status === 'Finalizada') { 
                         sL = `<span class="text-[10px] text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full font-bold">${obra.status.toUpperCase()}</span>`; 
                     } else {
-                        // LEITURA INTELIGENTE DE SIDES/EPÍLOGOS
                         const matchO = String(cO).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cO];
                         const matchF = String(cF).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cF];
                         const numO = parseInt(matchO[2]); const numF = parseInt(matchF[2]);
@@ -269,41 +347,137 @@
                 else if (mediaViews >= configRegras.media) { sug = "Média"; corSug = "text-blue-600 font-bold"; }
 
                 const priAtual = obra.prioridade || 'Baixa';
-                let btnAceitar = sug === priAtual ? `<span class="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">✅ Ideal</span>` : `<button onclick="aceitarSugestao('${obra.id}', '${sug}')" class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded w-full">Aceitar: ${sug}</button>`;
+                let btnAceitar = sug === priAtual ? `<span class="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">✅ Ideal</span>` : `<button onclick="aceitarSugestao('${obra.id}', '${sug}')" class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded w-full cursor-pointer hover:bg-emerald-200">Aceitar: ${sug}</button>`;
 
                 tb.innerHTML += `<tr class="border-b"><td class="px-3 py-3 font-bold text-gray-800">${obra.nome}</td><td class="px-3 py-3 text-center font-bold text-blue-900">${viewsTot.toLocaleString()}</td><td class="px-3 py-3 text-center text-xs text-gray-400 border-l">${viewsSiteRaw.toLocaleString()}</td><td class="px-3 py-3 text-center font-mono text-xs font-bold">${mediaViews.toLocaleString()}</td><td class="px-3 py-3 text-center">${badgeCresc}</td><td class="px-3 py-3 text-center text-xs ${corSug}">${sug}</td><td class="px-3 py-3 text-right">${btnAceitar}</td></tr>`;
             });
         }
         async function aceitarSugestao(id, nova) { await _supabase.from('obras').update({ prioridade: nova }).eq('id', id); carregarAnalytics(); }
 
-        async function carregarDashboardAntigo(meuNick) {
-            const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
-            const meuId = usuarioData && usuarioData[0] ? String(usuarioData[0].id) : null;
-            const { data: obras } = await _supabase.from('obras').select('*').order('nome');
-            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado');
-            todasTarefasGlobais = tarefas || [];
+        // ==========================================
+        // 🎯 MÓDULO RECRUTAMENTO (ADM - COM EDIÇÃO E EXCLUSÃO)
+        // ==========================================
+        async function carregarRecrutamento() {
+            const { data } = await _supabase.from('recrutamento').select('*'); if(!data) return;
+            for(let i=1; i<=8; i++) document.getElementById(`rec-col-${i}`).innerHTML = '';
             
-            if (obras) {
-                processarAlertasBI(obras);
-                renderizarObras(obras.filter(o => { let sArr = typeof o.staff_ids === 'string' ? o.staff_ids.split(',') : (o.staff_ids||[]); return meuId && sArr.map(String).includes(meuId); }), 'lista-obras-staff', false);
-                renderizarObras(obras.filter(o => o.responsavel_nick && o.responsavel_nick.includes(meuNick)), 'lista-obras-resp', true);
-            }
-        }
-
-        function renderizarObras(lista, idCont, isResp) {
-            const cont = document.getElementById(idCont); if(!cont) return; cont.innerHTML = '';
-            lista.forEach(o => {
-                const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
-                const viewsApp = parseInt(o.views_totais) || 0;
-                cont.innerHTML += `<div class="p-3 bg-white border rounded-lg flex justify-between cursor-pointer hover:border-red-400">
-                    <div><h3 class="font-bold text-sm">${o.nome}</h3><p class="text-[10px] text-gray-500">Dono: ${o.responsavel_nick||'N/A'}</p></div>
-                    <div class="flex flex-col items-end gap-1"><span class="text-[10px] font-bold bg-gray-100 border px-2 py-0.5 rounded-full">👁️ ${viewsApp.toLocaleString()}</span>
-                    <div class="flex gap-1"><button onclick="abrirModalViews('${jsonObj}')" class="text-xs bg-blue-50 p-1 rounded">📊</button><button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'" class="text-xs">✏️</button></div></div>
-                </div>`;
+            data.forEach(c => {
+                const nomeSeguro = c.nome.replace(/'/g, "\\'");
+                const funcaoSegura = (c.funcao || '').replace(/'/g, "\\'");
+                const faseSegura = c.fase.replace(/'/g, "\\'");
+                
+                const card = `
+                    <div class="bg-white border border-gray-200 p-3 rounded shadow-sm mb-2 relative group hover:border-teal-400 transition">
+                        <p class="font-black text-sm text-gray-800">${c.nome}</p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase">${c.funcao||''}</p>
+                        <div class="flex gap-2 mt-3 pt-2 border-t border-gray-100">
+                            <button onclick="prepararEdicaoRecrutamento('${c.id}', '${nomeSeguro}', '${funcaoSegura}', '${faseSegura}')" class="flex-1 text-[10px] bg-blue-50 text-blue-700 hover:bg-blue-100 py-1 rounded font-bold transition cursor-pointer">✏️ Editar</button>
+                            <button onclick="excluirRecrutamento('${c.id}')" class="text-[10px] bg-red-50 text-red-700 hover:bg-red-100 px-2 py-1 rounded transition cursor-pointer" title="Excluir">🗑️</button>
+                        </div>
+                    </div>`;
+                
+                if(c.fase === 'Em Teste') document.getElementById('rec-col-1').innerHTML += card;
+                else if(c.fase === '1ª Fase') document.getElementById('rec-col-2').innerHTML += card;
+                else if(c.fase === 'Aprovados (1ª Fase)') document.getElementById('rec-col-3').innerHTML += card;
+                else if(c.fase === '2ª Fase') document.getElementById('rec-col-4').innerHTML += card;
+                else if(c.fase === 'Aprovados (2ª Fase)') document.getElementById('rec-col-5').innerHTML += card;
+                else if(c.fase === '3ª Fase') document.getElementById('rec-col-6').innerHTML += card;
+                else if(c.fase === 'Aprovados') document.getElementById('rec-col-7').innerHTML += card;
+                else if(c.fase === 'Reprovados') document.getElementById('rec-col-8').innerHTML += card;
             });
         }
 
-        function abrirModalViews(enc) { const o = JSON.parse(decodeURIComponent(enc)); document.getElementById('view-obra-nome').textContent=o.nome; document.getElementById('view-total').textContent=(parseInt(o.views_totais)||0).toLocaleString(); document.getElementById('modal-detalhes-views').classList.remove('hidden'); }
+        function prepararEdicaoRecrutamento(id, nome, funcao, fase) {
+            document.getElementById('rec-id').value = id;
+            document.getElementById('rec-nome').value = nome;
+            document.getElementById('rec-funcao').value = funcao;
+            document.getElementById('rec-fase').value = fase;
+            
+            const btn = document.getElementById('btn-salvar-rec');
+            btn.innerHTML = '🔄 Atualizar Fase';
+            btn.classList.replace('bg-teal-600', 'bg-blue-600');
+            btn.classList.replace('hover:bg-teal-700', 'hover:bg-blue-700');
+            
+            document.getElementById('painel-recrut').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function limparFormRecrutamento() {
+            document.getElementById('rec-id').value = '';
+            document.getElementById('rec-nome').value = '';
+            document.getElementById('rec-funcao').value = '';
+            document.getElementById('rec-fase').value = 'Em Teste';
+            
+            const btn = document.getElementById('btn-salvar-rec');
+            btn.innerHTML = '➕ Adicionar';
+            btn.classList.replace('bg-blue-600', 'bg-teal-600');
+            btn.classList.replace('hover:bg-blue-700', 'hover:bg-teal-700');
+        }
+
+        async function salvarRecrutamento(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-salvar-rec');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '⏳ Salvando...';
+            
+            const id = document.getElementById('rec-id').value;
+            const obj = { 
+                nome: document.getElementById('rec-nome').value, 
+                funcao: document.getElementById('rec-funcao').value, 
+                fase: document.getElementById('rec-fase').value 
+            };
+            
+            if (id) {
+                await _supabase.from('recrutamento').update(obj).eq('id', id);
+            } else {
+                await _supabase.from('recrutamento').insert([obj]);
+            }
+            
+            limparFormRecrutamento();
+            carregarRecrutamento();
+        }
+
+        async function excluirRecrutamento(id) {
+            if(confirm("Tem certeza que deseja excluir este candidato do sistema?")) {
+                await _supabase.from('recrutamento').delete().eq('id', id);
+                carregarRecrutamento();
+            }
+        }
+        // ==========================================
+
+        async function carregarAniversariantes() {
+            const { data } = await _supabase.from('equipe').select('nick, data_nascimento');
+            const lista = document.getElementById('lista-aniversariantes');
+            if(!data || data.length === 0) return;
+            const hoje = new Date(); const mesAtual = hoje.getMonth() + 1; const diaAtual = hoje.getDate();
+            let html = ''; let aniversariantesHoje = [];
+            data.forEach(m => {
+                if(m.data_nascimento) {
+                    const partes = m.data_nascimento.split('-');
+                    if(partes.length >= 3) {
+                        const mesNiver = parseInt(partes[1]); const diaNiver = parseInt(partes[2]);
+                        if(mesNiver === mesAtual) {
+                            const ehHoje = (diaNiver === diaAtual); if(ehHoje) aniversariantesHoje.push(m.nick);
+                            html += `<div class="bg-white border ${ehHoje ? 'border-pink-400 bg-pink-100 shadow-sm' : 'border-pink-200'} p-3 rounded-lg flex flex-col items-center min-w-[100px]"><span class="text-2xl">${ehHoje ? '🎂' : '🎈'}</span><span class="font-bold text-sm ${ehHoje ? 'text-pink-800' : 'text-gray-800'} mt-1 truncate max-w-[90px]" title="${m.nick}">${m.nick}</span><span class="text-xs text-gray-500">${diaNiver}/${mesNiver}</span></div>`;
+                        }
+                    }
+                }
+            });
+            lista.innerHTML = html === '' ? '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês.</p>' : html;
+            if(aniversariantesHoje.length > 0) { document.getElementById('btn-gerar-niver').classList.remove('hidden'); window.anivHoje = aniversariantesHoje; }
+        }
+        function gerarMensagemNiver() {
+            if(!window.anivHoje) return; const nomes = window.anivHoje.map(n => `@${n}`).join(' e ');
+            const texto = `🎉 Hoje é um dia super especial! 🎉\n\nVamos desejar um feliz aniversário para ${nomes}! 🎂🎈\n\nQue o dia seja repleto de alegria, saúde, paz e muitos capítulos perfeitinhos! A equipe FleurFlow deseja tudo de bom hoje e sempre! 💖✨\n\nDeixem seus parabéns aqui embaixo! 👇`;
+            document.getElementById('area-mensagem-niver').classList.remove('hidden'); document.getElementById('texto-niver').value = texto;
+        }
+
+        async function carregarMinhasAdv(meuNick) {
+            const { data } = await _supabase.from('advertencias').select('*').eq('membro_nick', meuNick).order('created_at', {ascending: false});
+            const lista = document.getElementById('lista-minhas-adv');
+            if(!data || data.length === 0) return lista.innerHTML = '<p class="text-center text-sm">Ficha limpa! 🎉</p>';
+            lista.innerHTML = '';
+            data.forEach(a => lista.innerHTML += `<div class="bg-red-50 border p-3 rounded shadow-sm text-xs text-red-900">${a.nivel || '1ª'} Adv: "${a.motivo}"</div>`);
+        }
     </script>
 </body>
 </html>
