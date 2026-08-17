@@ -23,15 +23,15 @@
         <section>
             <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">🛠️ Ferramentas da Moderação</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
-                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">📖</span><span class="text-xs font-bold text-center">Cadastrar Obra</span></button>
-                <button onclick="window.location.href='listao-geral.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">📊</span><span class="text-xs font-bold text-center">Listão & Telegram</span></button>
-                <button onclick="window.location.href='andamento.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">⚙️</span><span class="text-xs font-bold text-center">Andamento (Staff)</span></button>
-                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">🔔</span><span class="text-xs font-bold text-center">Atualizações</span></button>
-                <button onclick="abrirAba('painel-analytics')" class="bg-emerald-50 border hover:border-emerald-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition"><span class="text-3xl">📈</span><span class="text-xs font-black text-emerald-800 text-center">Relatórios & BI</span></button>
-                <button onclick="abrirMinhasAdv()" class="bg-orange-50 border hover:border-orange-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition relative group"><span id="badge-adv-mod" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span><span class="text-3xl group-hover:scale-110 transition">⚠️</span><span class="text-xs font-black text-orange-800 text-center">Minhas Adv.</span></button>
+                <button onclick="window.location.href='cadastro-obra.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📖</span><span class="text-xs font-bold text-center">Cadastrar Obra</span></button>
+                <button onclick="window.location.href='listao-geral.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📊</span><span class="text-xs font-bold text-center">Listão & Telegram</span></button>
+                <button onclick="window.location.href='andamento.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">⚙️</span><span class="text-xs font-bold text-center">Andamento (Staff)</span></button>
+                <button onclick="window.location.href='central-atualizacoes.html'" class="bg-white border hover:border-red-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">🔔</span><span class="text-xs font-bold text-center">Atualizações</span></button>
+                <button onclick="abrirAba('painel-analytics')" class="bg-emerald-50 border hover:border-emerald-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📈</span><span class="text-xs font-black text-emerald-800 text-center">Relatórios & BI</span></button>
+                <button onclick="abrirMinhasAdv()" class="bg-orange-50 border hover:border-orange-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group"><span id="badge-adv-mod" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span><span class="text-3xl group-hover:scale-110 transition">⚠️</span><span class="text-xs font-black text-orange-800 text-center">Minhas Adv.</span></button>
                 
-                <!-- BOTÃO DE RECRUTAMENTO (Oculto por padrão, liberado via JS para o Moderador Especial) -->
-                <button id="btn-recrutamento-mod" onclick="abrirAba('painel-recrut')" class="hidden bg-teal-50 border hover:border-teal-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition group"><span class="text-3xl group-hover:scale-110 transition">🎯</span><span class="text-xs font-black text-teal-800 text-center">Recrutamento</span></button>
+                <!-- BOTÃO DE RECRUTAMENTO DA NEMU -->
+                <button id="btn-recrutamento-mod" onclick="abrirAba('painel-recrut')" class="hidden bg-teal-50 border hover:border-teal-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group"><span class="text-3xl group-hover:scale-110 transition">🎯</span><span class="text-xs font-black text-teal-800 text-center">Recrutamento</span></button>
             </div>
         </section>
 
@@ -52,7 +52,13 @@
             <div class="bg-white rounded-xl shadow-sm border p-6 flex flex-col h-[400px]"><h2 class="text-lg font-black text-amber-900 mb-2">👑 Obras (RESPONSÁVEL)</h2><div class="overflow-y-auto flex-1 space-y-3" id="lista-obras-resp"></div></div>
         </section>
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border mt-6">
-            <!-- (Conteúdo do Painel Tarefas mantido idêntico) -->
+            <div class="flex justify-between items-center mb-6 border-b pb-3"><h2 id="titulo-painel-tarefas" class="text-xl font-black flex items-center gap-2">📋 Tarefas da Obra</h2><button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:text-red-700 px-3 py-1 rounded">✖ Fechar</button></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border flex flex-col h-80"><div class="bg-green-50 p-3 border-b"><h3 class="font-black text-green-800 text-sm">✅ Entregas Concluídas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div></div>
+                <div class="bg-white rounded-xl shadow-sm border flex flex-col h-80"><div class="bg-red-50 p-3 border-b"><h3 class="font-black text-red-800 text-sm">🚨 Entregas Atrasadas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div></div>
+                <div class="bg-white rounded-xl shadow-sm border flex flex-col h-80"><div class="bg-orange-50 p-3 border-b"><h3 class="font-black text-orange-800 text-sm">🗓️ Entregas para Hoje</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-hoje"></div></div>
+                <div class="bg-white rounded-xl shadow-sm border flex flex-col h-80"><div class="bg-gray-50 p-3 border-b"><h3 class="font-black text-gray-800 text-sm">📋 Entregas Ativas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-ativas"></div></div>
+            </div>
         </section>
     </main>
 
@@ -60,7 +66,7 @@
     <section id="painel-analytics" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <div><h2 class="text-2xl font-black text-emerald-900">📈 Relatórios & Inteligência</h2></div>
-            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 font-bold py-2 px-4 rounded-lg">Voltar</button>
+            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar</button>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200">
             <h3 class="text-lg font-black text-emerald-800 mb-4 border-b pb-2">📋 Suas Obras</h3>
@@ -75,26 +81,37 @@
         </div>
     </section>
 
-    <!-- ABA DE RECRUTAMENTO (SOMENTE VISÍVEL PRO MODERADOR ESCOLHIDO) -->
+    <!-- ABA DE RECRUTAMENTO DA NEMU -->
     <section id="painel-recrut" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-black text-teal-900 flex items-center gap-2">🎯 Processo de Recrutamento</h2>
             <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button>
         </div>
-        <!-- Formulário e Quadro Kanban iguais do painel ADM -->
+        
         <div class="bg-white p-6 rounded-xl shadow-sm border border-teal-200 mb-6">
             <form onsubmit="salvarRecrutamento(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
                 <input type="hidden" id="rec-id">
-                <div><label class="text-xs font-bold text-gray-600">Nome / Nick</label><input type="text" id="rec-nome" required class="w-full border rounded p-2 text-sm"></div>
-                <div><label class="text-xs font-bold text-gray-600">Função Pretendida</label><input type="text" id="rec-funcao" required class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="text-xs font-bold text-gray-600">Nome / Nick</label><input type="text" id="rec-nome" required class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-teal-500"></div>
+                <div><label class="text-xs font-bold text-gray-600">Função Pretendida</label><input type="text" id="rec-funcao" required class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-teal-500"></div>
                 <div><label class="text-xs font-bold text-gray-600">Fase Atual</label>
-                    <select id="rec-fase" class="w-full border rounded p-2 text-sm font-bold bg-teal-50 text-teal-800">
-                        <option value="Em Teste">Em Teste</option><option value="1ª Fase">1ª Fase</option><option value="Aprovados (1ª Fase)">Aprovados (1ª Fase)</option><option value="2ª Fase">2ª Fase</option><option value="Aprovados (2ª Fase)">Aprovados (2ª Fase)</option><option value="3ª Fase">3ª Fase</option><option value="Aprovados">Aprovados</option><option value="Reprovados">Reprovados</option>
+                    <select id="rec-fase" class="w-full border rounded p-2 text-sm font-bold bg-teal-50 text-teal-800 focus:ring-2 focus:ring-teal-500">
+                        <option value="Em Teste">Em Teste</option>
+                        <option value="1ª Fase">1ª Fase</option>
+                        <option value="Aprovados (1ª Fase)">Aprovados (1ª Fase)</option>
+                        <option value="2ª Fase">2ª Fase</option>
+                        <option value="Aprovados (2ª Fase)">Aprovados (2ª Fase)</option>
+                        <option value="3ª Fase">3ª Fase</option>
+                        <option value="Aprovados">Aprovados</option>
+                        <option value="Reprovados">Reprovados</option>
                     </select>
                 </div>
-                <div class="flex gap-2"><button type="submit" id="btn-salvar-rec" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded">➕ Adicionar</button></div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="limparFormRecrutamento()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-3 rounded cursor-pointer">✖</button>
+                    <button type="submit" id="btn-salvar-rec" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded cursor-pointer shadow">➕ Adicionar</button>
+                </div>
             </form>
         </div>
+
         <div class="flex gap-4 overflow-x-auto pb-4 snap-x w-full">
             <div class="bg-gray-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3">⏳ Em Teste</h3><div id="rec-col-1" class="overflow-y-auto space-y-2"></div></div>
             <div class="bg-blue-50 border p-3 min-w-[260px] flex flex-col h-[500px] rounded"><h3 class="font-black text-sm border-b pb-2 mb-3 text-blue-800">📄 1ª Fase</h3><div id="rec-col-2" class="overflow-y-auto space-y-2"></div></div>
@@ -114,7 +131,7 @@
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <p class="text-xs text-gray-500">Avisos do sistema.</p>
-                    <button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded">🧹 Limpar Avisos</button>
+                    <button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded cursor-pointer">🧹 Limpar Avisos</button>
                 </div>
                 <div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto"></div>
             </div>
@@ -135,7 +152,6 @@
     </div>
 
     <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <!-- O mesmo modal de advertências aqui -->
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-orange-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">⚠️ Minhas Advertências</h3><button onclick="document.getElementById('modal-minhas-adv').classList.add('hidden')" class="font-bold">✖</button></div>
             <div class="p-6"><div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto"></div></div>
@@ -148,7 +164,7 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // ==========================================
-        // 🔴 ATENÇÃO: NOME DO MODERADOR DO RH AQUI:
+        // 🔴 O NICK EXATO DA NEMU AQUI:
         const NICK_MODERADOR_RH = "Nemu"; 
         // ==========================================
 
@@ -159,7 +175,7 @@
             if(!nick) return window.location.href = 'index.html';
             document.getElementById('nome-usuario').textContent = `Olá, ${nick}`;
             
-            // Libera Recrutamento
+            // Libera Recrutamento para a Nemu
             if (nick === NICK_MODERADOR_RH) document.getElementById('btn-recrutamento-mod').classList.remove('hidden');
 
             await carregarRegrasSupabase();
@@ -247,12 +263,28 @@
             });
         }
 
-        // --- Recrutamento pro Moderador ---
+        // ==========================================
+        // 🎯 MÓDULO RECRUTAMENTO (AGORA COM EDIÇÃO E EXCLUSÃO)
+        // ==========================================
         async function carregarRecrutamento() {
             const { data } = await _supabase.from('recrutamento').select('*'); if(!data) return;
             for(let i=1; i<=8; i++) document.getElementById(`rec-col-${i}`).innerHTML = '';
+            
             data.forEach(c => {
-                const card = `<div class="bg-white border p-3 rounded mb-2"><p class="font-black text-sm">${c.nome}</p><p class="text-[10px] font-bold text-gray-500 uppercase">${c.funcao||''}</p></div>`;
+                const nomeSeguro = c.nome.replace(/'/g, "\\'");
+                const funcaoSegura = (c.funcao || '').replace(/'/g, "\\'");
+                const faseSegura = c.fase.replace(/'/g, "\\'");
+                
+                const card = `
+                    <div class="bg-white border border-gray-200 p-3 rounded shadow-sm mb-2 relative group hover:border-teal-400 transition">
+                        <p class="font-black text-sm text-gray-800">${c.nome}</p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase">${c.funcao||''}</p>
+                        <div class="flex gap-2 mt-3 pt-2 border-t border-gray-100">
+                            <button onclick="prepararEdicaoRecrutamento('${c.id}', '${nomeSeguro}', '${funcaoSegura}', '${faseSegura}')" class="flex-1 text-[10px] bg-blue-50 text-blue-700 hover:bg-blue-100 py-1 rounded font-bold transition">✏️ Editar</button>
+                            <button onclick="excluirRecrutamento('${c.id}')" class="text-[10px] bg-red-50 text-red-700 hover:bg-red-100 px-2 py-1 rounded transition" title="Excluir">🗑️</button>
+                        </div>
+                    </div>`;
+                
                 if(c.fase === 'Em Teste') document.getElementById('rec-col-1').innerHTML += card;
                 else if(c.fase === '1ª Fase') document.getElementById('rec-col-2').innerHTML += card;
                 else if(c.fase === 'Aprovados (1ª Fase)') document.getElementById('rec-col-3').innerHTML += card;
@@ -264,11 +296,63 @@
             });
         }
 
+        function prepararEdicaoRecrutamento(id, nome, funcao, fase) {
+            document.getElementById('rec-id').value = id;
+            document.getElementById('rec-nome').value = nome;
+            document.getElementById('rec-funcao').value = funcao;
+            document.getElementById('rec-fase').value = fase;
+            
+            const btn = document.getElementById('btn-salvar-rec');
+            btn.innerHTML = '🔄 Atualizar Fase';
+            btn.classList.replace('bg-teal-600', 'bg-blue-600');
+            btn.classList.replace('hover:bg-teal-700', 'hover:bg-blue-700');
+            
+            // Rola a tela pra cima pra Nemu ver o formulário
+            document.getElementById('painel-recrut').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function limparFormRecrutamento() {
+            document.getElementById('rec-id').value = '';
+            document.getElementById('rec-nome').value = '';
+            document.getElementById('rec-funcao').value = '';
+            document.getElementById('rec-fase').value = 'Em Teste';
+            
+            const btn = document.getElementById('btn-salvar-rec');
+            btn.innerHTML = '➕ Adicionar';
+            btn.classList.replace('bg-blue-600', 'bg-teal-600');
+            btn.classList.replace('hover:bg-blue-700', 'hover:bg-teal-700');
+        }
+
         async function salvarRecrutamento(e) {
             e.preventDefault();
-            const obj = { nome: document.getElementById('rec-nome').value, funcao: document.getElementById('rec-funcao').value, fase: document.getElementById('rec-fase').value };
-            await _supabase.from('recrutamento').insert([obj]); carregarRecrutamento(); alert("Candidato salvo!");
+            const btn = document.getElementById('btn-salvar-rec');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '⏳ Salvando...';
+            
+            const id = document.getElementById('rec-id').value;
+            const obj = { 
+                nome: document.getElementById('rec-nome').value, 
+                funcao: document.getElementById('rec-funcao').value, 
+                fase: document.getElementById('rec-fase').value 
+            };
+            
+            if (id) {
+                await _supabase.from('recrutamento').update(obj).eq('id', id);
+            } else {
+                await _supabase.from('recrutamento').insert([obj]);
+            }
+            
+            limparFormRecrutamento();
+            carregarRecrutamento();
         }
+
+        async function excluirRecrutamento(id) {
+            if(confirm("Tem certeza que deseja excluir este candidato do sistema?")) {
+                await _supabase.from('recrutamento').delete().eq('id', id);
+                carregarRecrutamento();
+            }
+        }
+        // ==========================================
 
         async function carregarAniversariantes() {
             const { data } = await _supabase.from('equipe').select('nick, data_nascimento');
