@@ -30,12 +30,10 @@
                 <button onclick="abrirAba('painel-analytics')" class="bg-emerald-50 border hover:border-emerald-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer"><span class="text-3xl">📈</span><span class="text-xs font-black text-emerald-800 text-center">Relatórios & BI</span></button>
                 <button onclick="abrirMinhasAdv()" class="bg-orange-50 border hover:border-orange-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer relative group"><span id="badge-adv-mod" class="hidden absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow animate-bounce">!</span><span class="text-3xl group-hover:scale-110 transition">⚠️</span><span class="text-xs font-black text-orange-800 text-center">Minhas Adv.</span></button>
                 
-                <!-- BOTÃO DE RECRUTAMENTO DA NEMU -->
                 <button id="btn-recrutamento-mod" onclick="abrirAba('painel-recrut')" class="hidden bg-teal-50 border hover:border-teal-500 p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition cursor-pointer group"><span class="text-3xl group-hover:scale-110 transition">🎯</span><span class="text-xs font-black text-teal-800 text-center">Recrutamento</span></button>
             </div>
         </section>
 
-        <!-- 🎉 ANIVERSARIANTES DO MÊS -->
         <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm mt-6">
             <div class="flex justify-between items-center mb-4 border-b border-pink-100 pb-2">
                 <h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2>
@@ -48,11 +46,11 @@
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
-            <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[400px]">
+            <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col h-[500px]">
                 <h2 class="text-lg font-black text-blue-900 mb-2 flex items-center gap-2">👥 Obras (STAFF)</h2>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-staff"></div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-amber-200 p-6 flex flex-col h-[400px]">
+            <div class="bg-white rounded-xl shadow-sm border border-amber-200 p-6 flex flex-col h-[500px]">
                 <h2 class="text-lg font-black text-amber-900 mb-2 flex items-center gap-2">👑 Obras (RESPONSÁVEL)</h2>
                 <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="lista-obras-resp"></div>
             </div>
@@ -134,14 +132,14 @@
         </div>
     </section>
 
-    <!-- MODAL NOTIFICAÇÕES -->
+    <!-- MODAIS DE SISTEMA -->
     <div id="modal-notificacoes" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-red-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">🔔 Notificações</h3><button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold cursor-pointer">✖</button></div>
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <p class="text-xs text-gray-500">Avisos do sistema.</p>
-                    <button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded cursor-pointer">🧹 Limpar Avisos</button>
+                    <button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded cursor-pointer transition">🧹 Limpar Avisos</button>
                 </div>
                 <div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto"></div>
             </div>
@@ -151,12 +149,19 @@
     <!-- MODAL VIEWS -->
     <div id="modal-detalhes-views" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border-2 border-emerald-500">
-            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">📊 Analytics</h3><button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold cursor-pointer">✖</button></div>
+            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">📊 Analytics da Obra</h3><button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold hover:scale-110 cursor-pointer">✖</button></div>
             <div class="p-6 text-center">
-                <h4 id="view-obra-nome" class="text-xl font-black mb-1">Nome</h4>
+                <h4 id="view-obra-nome" class="text-xl font-black text-gray-800 mb-1">Nome da Obra</h4>
+                <p id="view-obra-priori" class="text-xs font-bold text-gray-500 mb-6 uppercase bg-gray-100 inline-block px-3 py-1 rounded-full">Prioridade: Média</p>
                 <div class="grid grid-cols-2 gap-4 mb-6 mt-4">
-                    <div class="bg-gray-50 p-4 rounded-lg border"><p class="text-[10px] font-bold text-gray-500">TOTAL NO APP</p><p id="view-total" class="text-2xl font-black text-gray-800">0</p></div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"><p class="text-[10px] font-bold text-gray-500 uppercase">TOTAL NO APP</p><p id="view-total" class="text-2xl font-black text-gray-800">0</p></div>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200"><p class="text-[10px] font-bold text-blue-700 uppercase">MÉDIA / CAP</p><p id="view-media" class="text-2xl font-black text-blue-900">0</p></div>
                 </div>
+                <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 flex justify-between items-center mb-6">
+                    <div class="text-left"><p class="text-[10px] font-bold text-emerald-800 uppercase">Crescimento Diário</p><p id="view-cresc" class="text-xl font-black text-emerald-900">+0</p></div>
+                    <div class="text-right"><p class="text-[10px] font-bold text-emerald-800 uppercase">Taxa de Evolução</p><p id="view-taxa" class="text-xl font-black text-emerald-900">0%</p></div>
+                </div>
+                <p id="view-sugestao" class="text-sm font-bold bg-yellow-100 text-yellow-800 p-2 rounded border border-yellow-300"></p>
             </div>
         </div>
     </div>
@@ -164,11 +169,12 @@
     <!-- MODAL MINHAS ADVERTÊNCIAS -->
     <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-orange-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">⚠️ Minhas Advertências</h3><button onclick="document.getElementById('modal-minhas-adv').classList.add('hidden')" class="font-bold cursor-pointer">✖</button></div>
+            <div class="bg-orange-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">⚠️ Minhas Advertências</h3><button onclick="document.getElementById('modal-minhas-adv').classList.add('hidden')" class="font-bold hover:scale-110 cursor-pointer">✖</button></div>
             <div class="p-6"><div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto"></div></div>
         </div>
     </div>
 
+    <!-- ==================== LÓGICA DO SISTEMA ==================== -->
     <script>
         const SUPABASE_URL = 'https://sqdgafisdbjotyzlhhsj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
@@ -185,7 +191,7 @@
             if(!nick) return window.location.href = 'index.html';
             document.getElementById('nome-usuario').textContent = `Olá, ${nick}`;
             
-            // Libera Recrutamento
+            // Libera Recrutamento para a Nemu
             if (nick === NICK_MODERADOR_RH) document.getElementById('btn-recrutamento-mod').classList.remove('hidden');
 
             await carregarRegrasSupabase();
@@ -245,34 +251,46 @@
         }
 
         // ==========================================
-        // 🎯 AQUI O LÁPIS VOLTOU PARA A OBRAS RESPONSÁVEL!
+        // 🌟 RENDERIZAR OBRAS (AGORA COM CAPAS E BOTÕES CORRIGIDOS) 🌟
         // ==========================================
-     function renderizarObras(lista, idCont, isResp) {
+        function renderizarObras(lista, idCont, isResp) {
             const cont = document.getElementById(idCont); if(!cont) return; cont.innerHTML = '';
             if (lista.length === 0) { cont.innerHTML = `<p class="text-sm text-gray-400 italic">Vazio.</p>`; return; }
 
             lista.forEach(o => {
                 const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
                 const viewsApp = parseInt(o.views_totais) || 0;
+                let corStatus = o.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
                 
-                // 🌟 NOVO: Lógica da Imagem da Capa 🌟
+                // Lógica da Capa
                 const imgCapa = o.capa_url 
                     ? `<img src="${o.capa_url}" class="w-10 h-14 object-cover rounded shadow-sm border border-gray-200 flex-shrink-0" alt="Capa">` 
                     : `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400">Sem Capa</span></div>`;
 
+                // Botão de editar só para Responsáveis
                 const btnEdit = isResp ? `<button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'; event.stopPropagation();" class="text-xs bg-gray-100 border border-gray-200 hover:bg-gray-200 px-2 py-1 rounded cursor-pointer transition" title="Editar Obra">✏️</button>` : '';
 
-                cont.innerHTML += `<div onclick="abrirTarefasObra('${o.nome.replace(/'/g, "\\'")}', '${isResp ? 'responsavel' : 'staff'}')" class="p-3 bg-white border border-gray-200 rounded-lg flex justify-between cursor-pointer hover:border-red-400 mb-2 transition shadow-sm group">
+                // Verifica se tem notificação de tarefa
+                let mostrarSininho = false;
+                if(isResp) mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === o.nome && t.status === 'Concluído');
+                else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === o.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
+                const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2">🔔</span>` : '';
+
+                cont.innerHTML += `
+                <div onclick="abrirTarefasObra('${o.nome.replace(/'/g, "\\'")}', '${isResp ? 'responsavel' : 'staff'}')" class="p-3 bg-white border border-gray-200 rounded-lg flex justify-between cursor-pointer hover:border-red-400 mb-2 transition shadow-sm group">
                     <div class="flex items-center gap-3">
                         ${imgCapa}
                         <div>
-                            <h3 class="font-bold text-sm text-gray-800 group-hover:text-red-900 leading-tight mb-1">${o.nome}</h3>
+                            <h3 class="font-bold text-sm text-gray-800 group-hover:text-red-900 leading-tight mb-1 flex items-center">${o.nome} ${sininho}</h3>
                             <p class="text-[10px] text-gray-500">Dono: ${o.responsavel_nick||'N/A'}</p>
                         </div>
                     </div>
                     <div class="flex flex-col items-end gap-1 justify-center">
-                        <span class="text-[10px] font-bold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full text-gray-600 mb-1">👁️ ${viewsApp.toLocaleString('pt-BR')}</span>
-                        <div class="flex gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-[10px] font-bold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full text-gray-600" title="Views Totais">👁️ ${viewsApp.toLocaleString('pt-BR')}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${o.status}</span>
+                        </div>
+                        <div class="flex gap-1 mt-1">
                             <button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation();" class="text-xs bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 py-1 rounded cursor-pointer transition" title="Ver Views">📊</button>
                             ${btnEdit}
                         </div>
@@ -280,32 +298,24 @@
                 </div>`;
             });
         }
-                
-                // Lápis só aparece nas Obras do Responsável (isResp == true)
-                const btnEdit = isResp ? `<button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'; event.stopPropagation();" class="text-xs bg-gray-100 hover:bg-gray-200 border border-gray-200 px-2 py-1 rounded cursor-pointer transition" title="Editar Obra">✏️</button>` : '';
 
-                cont.innerHTML += `<div onclick="abrirTarefasObra('${o.nome.replace(/'/g, "\\'")}', '${isResp ? 'responsavel' : 'staff'}')" class="p-3 bg-white border border-gray-200 rounded-lg flex justify-between cursor-pointer hover:border-red-400 mb-2 transition shadow-sm group">
-                    <div><h3 class="font-bold text-sm text-gray-800 group-hover:text-red-900">${o.nome}</h3><p class="text-[10px] text-gray-500 mt-1">Dono: ${o.responsavel_nick||'N/A'}</p></div>
-                    <div class="flex flex-col items-end gap-1">
-                        <span class="text-[10px] font-bold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full text-gray-600">👁️ ${viewsApp.toLocaleString('pt-BR')}</span>
-                        <div class="flex gap-1 mt-1">
-                            <button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation();" class="text-xs bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 py-1 rounded cursor-pointer transition">📊</button>
-                            ${btnEdit}
-                        </div>
-                    </div>
-                </div>`;
-            });
-        }
-
+        // ==========================================
+        // 🌟 LÓGICA DE ABRIR TAREFAS
+        // ==========================================
         function abrirTarefasObra(obraNome, modo) {
-            obraAbertaAtual = obraNome;
             const painel = document.getElementById('painel-tarefas');
             const titulo = document.getElementById('titulo-painel-tarefas');
             const meuNick = localStorage.getItem('usuario_nick');
             
             let tarefasFiltradas = []; let isMinhas = false;
-            if (modo === 'staff') { tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick); titulo.innerHTML = `📝 Minhas Tarefas <span class="text-gray-400 mx-2">👉</span> <span class="text-blue-700">${obraNome}</span>`; isMinhas = true; } 
-            else { tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome); titulo.innerHTML = `👑 Entregas da Equipe <span class="text-gray-400 mx-2">👉</span> <span class="text-amber-700">${obraNome}</span>`; }
+            if (modo === 'staff') { 
+                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick); 
+                titulo.innerHTML = `📝 Minhas Tarefas <span class="text-gray-400 mx-2">👉</span> <span class="text-blue-700">${obraNome}</span>`; 
+                isMinhas = true; 
+            } else { 
+                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome); 
+                titulo.innerHTML = `👑 Entregas da Equipe <span class="text-gray-400 mx-2">👉</span> <span class="text-amber-700">${obraNome}</span>`; 
+            }
 
             renderizarPainel(tarefasFiltradas, isMinhas);
             painel.classList.remove('hidden'); painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -348,7 +358,40 @@
 
         async function mudarStatusTarefa(id, novoStatus) { await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id); carregarDashboardAntigo(localStorage.getItem('usuario_nick')); }
 
-        function abrirModalViews(enc) { const o = JSON.parse(decodeURIComponent(enc)); document.getElementById('view-obra-nome').textContent=o.nome; document.getElementById('view-total').textContent=(parseInt(o.views_totais)||0).toLocaleString(); document.getElementById('modal-detalhes-views').classList.remove('hidden'); }
+        // ==========================================
+        // 🌟 LÓGICA DO MODAL DE VIEWS E ANALYTICS
+        // ==========================================
+        function abrirModalViews(enc) { 
+            const o = JSON.parse(decodeURIComponent(enc)); 
+            
+            const viewsTot = parseInt(o.views_totais) || 0; 
+            const viewsOnt = parseInt(o.views_ontem) || 0;
+            const cresc = viewsTot - viewsOnt;
+            let caps = parseInt(String(o.capitulo_fleur).match(/\d+/)) || 1;
+            const media = Math.round(viewsTot / caps);
+            let taxa = viewsOnt > 0 ? ((cresc / viewsOnt) * 100).toFixed(1) : 0;
+
+            document.getElementById('view-obra-nome').textContent = o.nome; 
+            document.getElementById('view-obra-priori').textContent = `Prioridade Atual: ${o.prioridade || 'Média'}`;
+            document.getElementById('view-total').textContent = viewsTot.toLocaleString('pt-BR'); 
+            document.getElementById('view-media').textContent = media.toLocaleString('pt-BR');
+
+            const crescEl = document.getElementById('view-cresc');
+            if (cresc > 0) { crescEl.textContent = `+${cresc.toLocaleString('pt-BR')}`; crescEl.className = "text-xl font-black text-emerald-600"; }
+            else { crescEl.textContent = cresc.toLocaleString('pt-BR'); crescEl.className = "text-xl font-black text-red-500"; }
+
+            const taxaEl = document.getElementById('view-taxa');
+            if (taxa > 0) { taxaEl.textContent = `+${taxa}%`; taxaEl.className = "text-xl font-black text-emerald-600"; }
+            else { taxaEl.textContent = `${taxa}%`; taxaEl.className = "text-xl font-black text-red-500"; }
+
+            let sugestaoMsg = "A obra está caminhando bem na sua categoria.";
+            if (media >= configRegras.altissima && !(o.prioridade || '').includes('Altíssima')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade ALTÍSSIMA.";
+            else if (media >= configRegras.maxima && !(o.prioridade || '').includes('Máxima')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade MÁXIMA.";
+            else if (media >= configRegras.alta && !(o.prioridade || '').includes('Alta')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade ALTA.";
+            document.getElementById('view-sugestao').textContent = sugestaoMsg;
+
+            document.getElementById('modal-detalhes-views').classList.remove('hidden'); 
+        }
 
         async function carregarAnalytics() {
             const tb = document.getElementById('tabela-analytics'); tb.innerHTML = '<tr><td colspan="6" class="text-center text-xs py-6">Carregando...</td></tr>';
@@ -434,10 +477,14 @@
             const id = document.getElementById('rec-id').value;
             const obj = { nome: document.getElementById('rec-nome').value, funcao: document.getElementById('rec-funcao').value, fase: document.getElementById('rec-fase').value };
             
-            if (id) await _supabase.from('recrutamento').update(obj).eq('id', id);
-            else await _supabase.from('recrutamento').insert([obj]);
+            if (id) {
+                await _supabase.from('recrutamento').update(obj).eq('id', id);
+            } else {
+                await _supabase.from('recrutamento').insert([obj]);
+            }
             
-            limparFormRecrutamento(); carregarRecrutamento();
+            limparFormRecrutamento();
+            carregarRecrutamento();
         }
 
         async function excluirRecrutamento(id) {
@@ -448,7 +495,7 @@
         }
 
         // ==========================================
-        // 🎯 ANIVERSARIANTES (AGORA PUXA DA equipe_geral)
+        // 🎯 LÓGICA DE ANIVERSARIANTES E AVISOS
         // ==========================================
         async function carregarAniversariantes() {
             const { data } = await _supabase.from('equipe_geral').select('nick, data_nascimento');
