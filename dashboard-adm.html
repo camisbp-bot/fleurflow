@@ -565,11 +565,39 @@
         }
 
         // 🌟 RENDERIZAR OBRAS (AGORA COM O ABRIR TAREFAS E MODAL CORRIGIDOS) 🌟
-        function renderizarObras(listaObras, idContainer, isResp) {
-            const container = document.getElementById(idContainer);
-            if(!container) return;
-            container.innerHTML = '';
-            if (listaObras.length === 0) { container.innerHTML = `<p class="text-sm text-gray-400 italic">Vazio.</p>`; return; }
+     function renderizarObras(lista, idCont, isResp) {
+            const cont = document.getElementById(idCont); if(!cont) return; cont.innerHTML = '';
+            if (lista.length === 0) { cont.innerHTML = `<p class="text-sm text-gray-400 italic">Vazio.</p>`; return; }
+
+            lista.forEach(o => {
+                const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
+                const viewsApp = parseInt(o.views_totais) || 0;
+                
+                // 🌟 NOVO: Lógica da Imagem da Capa 🌟
+                const imgCapa = o.capa_url 
+                    ? `<img src="${o.capa_url}" class="w-10 h-14 object-cover rounded shadow-sm border border-gray-200 flex-shrink-0" alt="Capa">` 
+                    : `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400">Sem Capa</span></div>`;
+
+                const btnEdit = isResp ? `<button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'; event.stopPropagation();" class="text-xs bg-gray-100 border border-gray-200 hover:bg-gray-200 px-2 py-1 rounded cursor-pointer transition" title="Editar Obra">✏️</button>` : '';
+
+                cont.innerHTML += `<div onclick="abrirTarefasObra('${o.nome.replace(/'/g, "\\'")}', '${isResp ? 'responsavel' : 'staff'}')" class="p-3 bg-white border border-gray-200 rounded-lg flex justify-between cursor-pointer hover:border-red-400 mb-2 transition shadow-sm group">
+                    <div class="flex items-center gap-3">
+                        ${imgCapa}
+                        <div>
+                            <h3 class="font-bold text-sm text-gray-800 group-hover:text-red-900 leading-tight mb-1">${o.nome}</h3>
+                            <p class="text-[10px] text-gray-500">Dono: ${o.responsavel_nick||'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end gap-1 justify-center">
+                        <span class="text-[10px] font-bold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full text-gray-600 mb-1">👁️ ${viewsApp.toLocaleString('pt-BR')}</span>
+                        <div class="flex gap-1">
+                            <button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation();" class="text-xs bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 py-1 rounded cursor-pointer transition" title="Ver Views">📊</button>
+                            ${btnEdit}
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
 
             listaObras.forEach(obra => {
                 let corStatus = obra.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
