@@ -18,7 +18,6 @@
         </div>
     </nav>
 
-    <!-- ==================== PAINEL PRINCIPAL ==================== -->
     <main id="main-content" class="max-w-6xl mx-auto p-6 mt-4 space-y-8">
         
         <section>
@@ -41,10 +40,9 @@
             </div>
         </section>
 
-        <!-- 🎉 ANIVERSARIANTES DO MÊS -->
         <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm mt-6">
             <div class="flex justify-between items-center mb-4 border-b pb-2"><h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2><button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow cursor-pointer">📲 Mensagem de Hoje</button></div>
-            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]"><p class="text-sm text-gray-500 italic px-2">Buscando aniversariantes...</p></div>
+            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]"></div>
             <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t"><textarea id="texto-niver" rows="4" class="w-full bg-white border rounded-lg p-3 text-sm focus:outline-none" readonly></textarea></div>
         </section>
 
@@ -72,205 +70,6 @@
         </section>
     </main>
 
-    <!-- ==================== OUTRAS TELAS E MODAIS (RH, BI, ETC) ==================== -->
-    <section id="painel-rh" class="hidden max-w-6xl mx-auto p-6 mt-4">
-        <div class="flex justify-between items-center mb-6 border-b pb-4">
-            <div><h2 class="text-2xl font-black text-purple-900">👥 Equipe Geral (RH)</h2></div>
-            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-200 h-fit">
-                <h3 class="text-lg font-bold text-purple-800 mb-4">Adicionar / Editar Membro</h3>
-                <form id="form-rh" onsubmit="salvarMembroRH(event)" class="space-y-4">
-                    <input type="hidden" id="rh-id">
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">Nick na SCAN</label>
-                        <input type="text" id="rh-nick" list="nicks-equipe" onchange="autoPreencherDadosBasicos()" autocomplete="off" required class="w-full border border-gray-300 rounded p-2 text-sm" placeholder="Digite ou selecione da lista...">
-                        <datalist id="nicks-equipe"></datalist>
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">Nome Real</label>
-                        <input type="text" id="rh-nome" class="w-full border border-gray-300 rounded p-2 text-sm">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-xs font-bold text-gray-600">Data Nasc.</label>
-                            <input type="date" id="rh-nasc" onchange="calcularIdade()" class="w-full border border-gray-300 rounded p-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-600">Idade</label>
-                            <input type="number" id="rh-idade" readonly class="w-full bg-gray-100 border border-gray-300 rounded p-2 text-sm text-gray-500 cursor-not-allowed" placeholder="Automático">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">Data de Entrada</label>
-                        <input type="date" id="rh-entrada" class="w-full border border-gray-300 rounded p-2 text-sm">
-                    </div>
-                    
-                    <div>
-                        <label class="text-xs font-bold text-gray-600 block mb-1">Funções</label>
-                        <div class="grid grid-cols-2 gap-2 p-3 bg-gray-50 border border-gray-300 rounded max-h-40 overflow-y-auto">
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="MODERAÇÃO" class="text-purple-600 rounded"> MODERAÇÃO</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (PC)" class="text-purple-600 rounded"> EDITOR (PC)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (CELL)" class="text-purple-600 rounded"> EDITOR (CELL)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER" class="text-purple-600 rounded"> CLEANER</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (PC)" class="text-purple-600 rounded"> CLEANER (PC)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (CELL)" class="text-purple-600 rounded"> CLEANER (CELL)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (TABLET)" class="text-purple-600 rounded"> CLEANER (TABLET)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="ORGANIZER" class="text-purple-600 rounded"> ORGANIZER</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (INGLÊS)" class="text-purple-600 rounded"> TRADUTOR (INGLÊS)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (ESPANHOL)" class="text-purple-600 rounded"> TRADUTOR (ESPANHOL)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (KO)" class="text-purple-600 rounded"> TRADUTOR (KO)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (FRANCÊS)" class="text-purple-600 rounded"> TRADUTOR (FRANCÊS)</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="REVISOR" class="text-purple-600 rounded"> REVISOR</label>
-                            <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="REVISOR DE TESTES" class="text-purple-600 rounded"> REVISOR DE TESTES</label>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-gray-200 pt-4 mt-4">
-                        <label class="text-xs font-bold text-gray-600">Status do Membro</label>
-                        <select id="rh-status" onchange="verificarStatusRH()" class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-50 font-bold">
-                            <option value="Ativo">🟢 Ativo</option>
-                            <option value="Hiatus">🟡 Em Hiatus</option>
-                            <option value="Saiu">🔴 Saiu da SCAN</option>
-                        </select>
-                    </div>
-
-                    <div id="box-hiatus" class="hidden space-y-2 bg-yellow-50 p-3 rounded border border-yellow-200">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div><label class="text-xs font-bold">Início</label><input type="date" id="rh-hia-inicio" class="w-full border rounded p-1 text-xs"></div>
-                            <div><label class="text-xs font-bold">Fim Previsto</label><input type="date" id="rh-hia-fim" class="w-full border rounded p-1 text-xs"></div>
-                        </div>
-                        <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-hia-motivo" class="w-full border rounded p-1 text-xs"></div>
-                    </div>
-
-                    <div id="box-saida" class="hidden space-y-2 bg-red-50 p-3 rounded border border-red-200">
-                        <div><label class="text-xs font-bold">Data de Saída</label><input type="date" id="rh-sai-data" class="w-full border rounded p-1 text-xs"></div>
-                        <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-sai-motivo" class="w-full border rounded p-1 text-xs"></div>
-                    </div>
-
-                    <div class="flex gap-2 pt-2">
-                        <button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold cursor-pointer transition">Limpar</button>
-                        <button type="submit" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 rounded shadow cursor-pointer transition">💾 Salvar Ficha</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
-                <div class="flex justify-between items-center border-b pb-2 mb-4">
-                    <h3 class="text-lg font-bold text-purple-800">📋 Controle e Estatísticas</h3>
-                </div>
-
-                <div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-100">
-                    <h4 class="text-xs font-black text-purple-900 mb-3 uppercase">📊 Contagem de Funções</h4>
-                    <div id="rh-estatisticas" class="flex flex-wrap gap-2 text-xs">
-                        <span class="text-gray-500 italic">Calculando...</span>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <div>
-                        <h4 class="font-bold text-green-800 bg-green-100 p-2 rounded-t-lg border border-green-200 text-sm flex justify-between"><span>🟢 Equipe Ativa</span></h4>
-                        <div class="overflow-x-auto border border-t-0 border-green-200 rounded-b-lg">
-                            <table class="w-full text-left text-sm text-gray-600">
-                                <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
-                                    <tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr>
-                                </thead>
-                                <tbody id="tb-ativos" class="divide-y divide-gray-100 bg-white"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="font-bold text-yellow-800 bg-yellow-100 p-2 rounded-t-lg border border-yellow-200 text-sm">🟡 Em Hiatus</h4>
-                        <div class="overflow-x-auto border border-t-0 border-yellow-200 rounded-b-lg">
-                            <table class="w-full text-left text-sm text-gray-600">
-                                <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
-                                    <tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr>
-                                </thead>
-                                <tbody id="tb-hiatus" class="divide-y divide-gray-100 bg-white"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="font-bold text-red-800 bg-red-100 p-2 rounded-t-lg border border-red-200 text-sm">🔴 Saíram da SCAN</h4>
-                        <div class="overflow-x-auto border border-t-0 border-red-200 rounded-b-lg">
-                            <table class="w-full text-left text-sm text-gray-600">
-                                <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
-                                    <tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr>
-                                </thead>
-                                <tbody id="tb-saiu" class="divide-y divide-gray-100 bg-white"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="area-wpp-rh" class="hidden mt-6 bg-purple-50 p-4 border border-purple-200 rounded-lg">
-                    <h4 class="text-sm font-bold text-purple-900 mb-2">📲 Mensagem para o WhatsApp</h4>
-                    <textarea id="texto-wpp-rh" rows="5" class="w-full bg-white border border-purple-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea>
-                    <button onclick="copiarTexto('texto-wpp-rh')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded cursor-pointer">📋 Copiar e Enviar</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MÓDULO BI DA ADM -->
-    <section id="painel-analytics" class="hidden max-w-6xl mx-auto p-6 mt-4">
-        <div class="flex justify-between items-center mb-6 border-b pb-4">
-            <div><h2 class="text-2xl font-black text-emerald-900">📈 Relatórios & Inteligência</h2></div>
-            <button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar</button>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div class="lg:col-span-1 bg-white p-6 rounded-xl border h-fit">
-                <h3 class="text-lg font-black text-emerald-800 mb-4 border-b pb-2">⚖️ Metas da SCAN</h3>
-                <form onsubmit="salvarRegras(event)" class="space-y-4">
-                    <div><label class="text-xs font-bold text-purple-700">👑 Prioridade Altíssima</label><input type="number" id="config-altissima" required class="w-full border rounded p-2 text-sm font-bold"></div>
-                    <div><label class="text-xs font-bold text-red-600">🔥 Prioridade Máxima</label><input type="number" id="config-maxima" required class="w-full border rounded p-2 text-sm font-bold"></div>
-                    <div><label class="text-xs font-bold text-blue-600">📄 Prioridade Média</label><input type="number" id="config-media" required class="w-full border rounded p-2 text-sm font-bold"></div>
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded cursor-pointer transition">💾 Salvar Metas</button>
-                </form>
-            </div>
-            <div class="lg:col-span-3">
-                <div class="bg-white p-6 rounded-xl border">
-                    <h3 class="text-lg font-black text-emerald-800 mb-4 border-b pb-2">📋 Relatório de Desempenho Geral</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-gray-600">
-                            <thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50">
-                                <tr><th class="px-3 py-2">Obra</th><th class="px-3 py-2 text-center">Views App</th><th class="px-3 py-2 text-center">Views Site (Raw)</th><th class="px-3 py-2 text-center">Média (V/Cap)</th><th class="px-3 py-2 text-center">Cresc. Diário</th><th class="px-3 py-2 text-center">IA</th><th class="px-3 py-2 text-right">Ação</th></tr>
-                            </thead>
-                            <tbody id="tabela-analytics" class="divide-y divide-gray-100 bg-white"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MÓDULO ADVERTÊNCIAS -->
-    <section id="painel-adv" class="hidden max-w-6xl mx-auto p-6 mt-4">
-        <div class="flex justify-between items-center mb-6 border-b pb-4"><h2 class="text-2xl font-black text-orange-900 flex items-center gap-2">⚠️ Gestão de Advertências</h2><button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar</button></div>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-orange-200 h-fit">
-                <h3 class="text-lg font-black text-orange-800 mb-4 border-b pb-2">➕ Aplicar Nova</h3>
-                <form onsubmit="aplicarAdvertencia(event)" class="space-y-4">
-                    <input type="hidden" id="adv-id">
-                    <div><label class="text-xs font-bold text-gray-600">Membro da Equipe</label><select id="adv-membro" required class="w-full border rounded p-2 text-sm cursor-pointer"></select></div>
-                    <div><label class="text-xs font-bold text-gray-600">Nível da Advertência</label><select id="adv-nivel" required class="w-full border rounded p-2 text-sm cursor-pointer bg-orange-50 font-bold text-orange-800"><option value="1ª">1ª Advertência</option><option value="2ª">2ª Advertência</option><option value="3ª">3ª Advertência</option></select></div>
-                    <div><label class="text-xs font-bold text-gray-600">Data da Ocorrência</label><input type="date" id="adv-data" required class="w-full border rounded p-2 text-sm"></div>
-                    <div><label class="text-xs font-bold text-gray-600">Motivo</label><textarea id="adv-motivo" required rows="3" class="w-full border rounded p-2 text-sm"></textarea></div>
-                    <div class="flex gap-2"><button type="button" id="btn-cancelar-adv" onclick="limparFormAdv()" class="hidden bg-gray-200 px-3 rounded text-sm font-bold cursor-pointer">✖</button><button type="submit" id="btn-salvar-adv" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded cursor-pointer transition shadow">🚨 Aplicar Advertência</button></div>
-                </form>
-                <div id="area-wpp-adv" class="hidden mt-6 bg-orange-50 p-4 border border-orange-200 rounded-lg"><h4 class="text-sm font-bold text-orange-900 mb-2">📲 Enviar ao Infrator</h4><textarea id="texto-wpp-adv" rows="7" class="w-full bg-white border border-orange-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea><button onclick="copiarTexto('texto-wpp-adv')" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded cursor-pointer">📋 Copiar Mensagem</button></div>
-            </div>
-            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-orange-200">
-                <h3 class="text-lg font-black text-orange-800 mb-4 border-b pb-2">📋 Histórico Geral</h3>
-                <div class="overflow-y-auto max-h-[500px] pr-2 space-y-3" id="lista-todas-adv"><p class="text-sm text-gray-400 text-center py-4">Buscando histórico...</p></div>
-            </div>
-        </div>
-    </section>
-
     <!-- ABA DE RECRUTAMENTO DA ADM -->
     <section id="painel-recrut" class="hidden max-w-6xl mx-auto p-6 mt-4">
         <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-black text-teal-900 flex items-center gap-2">🎯 Processo de Recrutamento</h2><button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar</button></div>
@@ -297,6 +96,13 @@
         </div>
     </section>
 
+    <!-- MANTENHA AS SECTIONS id="painel-rh" , id="painel-analytics" e id="painel-adv" AQUI -->
+    <section id="painel-rh" class="hidden max-w-6xl mx-auto p-6 mt-4"><div class="flex justify-between items-center mb-6 border-b pb-4"><div><h2 class="text-2xl font-black text-purple-900">👥 Equipe Geral (RH)</h2></div><button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar ao Dashboard</button></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-200 h-fit"><h3 class="text-lg font-bold text-purple-800 mb-4">Adicionar / Editar Membro</h3><form id="form-rh" onsubmit="salvarMembroRH(event)" class="space-y-4"><input type="hidden" id="rh-id"><div><label class="text-xs font-bold text-gray-600">Nick na SCAN</label><input type="text" id="rh-nick" list="nicks-equipe" onchange="autoPreencherDadosBasicos()" autocomplete="off" required class="w-full border border-gray-300 rounded p-2 text-sm"><datalist id="nicks-equipe"></datalist></div><div><label class="text-xs font-bold text-gray-600">Nome Real</label><input type="text" id="rh-nome" class="w-full border border-gray-300 rounded p-2 text-sm"></div><div class="grid grid-cols-2 gap-2"><div><label class="text-xs font-bold text-gray-600">Data Nasc.</label><input type="date" id="rh-nasc" onchange="calcularIdade()" class="w-full border border-gray-300 rounded p-2 text-sm"></div><div><label class="text-xs font-bold text-gray-600">Idade</label><input type="number" id="rh-idade" readonly class="w-full bg-gray-100 border border-gray-300 rounded p-2 text-sm text-gray-500 cursor-not-allowed"></div></div><div><label class="text-xs font-bold text-gray-600">Data de Entrada</label><input type="date" id="rh-entrada" class="w-full border border-gray-300 rounded p-2 text-sm"></div><div><label class="text-xs font-bold text-gray-600 block mb-1">Funções</label><div class="grid grid-cols-2 gap-2 p-3 bg-gray-50 border border-gray-300 rounded max-h-40 overflow-y-auto"><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="MODERAÇÃO" class="text-purple-600 rounded"> MODERAÇÃO</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (PC)" class="text-purple-600 rounded"> EDITOR (PC)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="EDITOR (CELL)" class="text-purple-600 rounded"> EDITOR (CELL)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER" class="text-purple-600 rounded"> CLEANER</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (PC)" class="text-purple-600 rounded"> CLEANER (PC)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (CELL)" class="text-purple-600 rounded"> CLEANER (CELL)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="CLEANER (TABLET)" class="text-purple-600 rounded"> CLEANER (TABLET)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="ORGANIZER" class="text-purple-600 rounded"> ORGANIZER</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (INGLÊS)" class="text-purple-600 rounded"> TRADUTOR (INGLÊS)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (ESPANHOL)" class="text-purple-600 rounded"> TRADUTOR (ESPANHOL)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (KO)" class="text-purple-600 rounded"> TRADUTOR (KO)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="TRADUTOR (FRANCÊS)" class="text-purple-600 rounded"> TRADUTOR (FRANCÊS)</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="REVISOR" class="text-purple-600 rounded"> REVISOR</label><label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="REVISOR DE TESTES" class="text-purple-600 rounded"> REVISOR DE TESTES</label></div></div><div class="border-t border-gray-200 pt-4 mt-4"><label class="text-xs font-bold text-gray-600">Status do Membro</label><select id="rh-status" onchange="verificarStatusRH()" class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-50 font-bold"><option value="Ativo">🟢 Ativo</option><option value="Hiatus">🟡 Em Hiatus</option><option value="Saiu">🔴 Saiu da SCAN</option></select></div><div id="box-hiatus" class="hidden space-y-2 bg-yellow-50 p-3 rounded border border-yellow-200"><div class="grid grid-cols-2 gap-2"><div><label class="text-xs font-bold">Início</label><input type="date" id="rh-hia-inicio" class="w-full border rounded p-1 text-xs"></div><div><label class="text-xs font-bold">Fim Previsto</label><input type="date" id="rh-hia-fim" class="w-full border rounded p-1 text-xs"></div></div><div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-hia-motivo" class="w-full border rounded p-1 text-xs"></div></div><div id="box-saida" class="hidden space-y-2 bg-red-50 p-3 rounded border border-red-200"><div><label class="text-xs font-bold">Data de Saída</label><input type="date" id="rh-sai-data" class="w-full border rounded p-1 text-xs"></div><div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-sai-motivo" class="w-full border rounded p-1 text-xs"></div></div><div class="flex gap-2 pt-2"><button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold cursor-pointer transition">Limpar</button><button type="submit" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 rounded shadow cursor-pointer transition">💾 Salvar Ficha</button></div></form></div><div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-200"><div class="flex justify-between items-center border-b pb-2 mb-4"><h3 class="text-lg font-bold text-purple-800">📋 Controle e Estatísticas</h3></div><div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-100"><h4 class="text-xs font-black text-purple-900 mb-3 uppercase">📊 Contagem de Funções</h4><div id="rh-estatisticas" class="flex flex-wrap gap-2 text-xs"></div></div><div class="space-y-6"><div><h4 class="font-bold text-green-800 bg-green-100 p-2 rounded-t-lg border border-green-200 text-sm">🟢 Equipe Ativa</h4><div class="overflow-x-auto border border-t-0 border-green-200 rounded-b-lg"><table class="w-full text-left text-sm text-gray-600"><thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50"><tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr></thead><tbody id="tb-ativos" class="divide-y divide-gray-100 bg-white"></tbody></table></div></div><div><h4 class="font-bold text-yellow-800 bg-yellow-100 p-2 rounded-t-lg border border-yellow-200 text-sm">🟡 Em Hiatus</h4><div class="overflow-x-auto border border-t-0 border-yellow-200 rounded-b-lg"><table class="w-full text-left text-sm text-gray-600"><thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50"><tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr></thead><tbody id="tb-hiatus" class="divide-y divide-gray-100 bg-white"></tbody></table></div></div><div><h4 class="font-bold text-red-800 bg-red-100 p-2 rounded-t-lg border border-red-200 text-sm">🔴 Saíram da SCAN</h4><div class="overflow-x-auto border border-t-0 border-red-200 rounded-b-lg"><table class="w-full text-left text-sm text-gray-600"><thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50"><tr><th class="px-3 py-2">Nick (Nome)</th><th class="px-3 py-2">Funções</th><th class="px-3 py-2 text-right">Ações</th></tr></thead><tbody id="tb-saiu" class="divide-y divide-gray-100 bg-white"></tbody></table></div></div></div><div id="area-wpp-rh" class="hidden mt-6 bg-purple-50 p-4 border border-purple-200 rounded-lg"><h4 class="text-sm font-bold text-purple-900 mb-2">📲 Mensagem para o WhatsApp</h4><textarea id="texto-wpp-rh" rows="5" class="w-full bg-white border border-purple-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea><button onclick="copiarTexto('texto-wpp-rh')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded cursor-pointer">📋 Copiar e Enviar</button></div></div></div></section>
+    
+    <section id="painel-analytics" class="hidden max-w-6xl mx-auto p-6 mt-4"><div class="flex justify-between items-center mb-6 border-b pb-4"><div><h2 class="text-2xl font-black text-emerald-900">📈 Relatórios & Inteligência</h2></div><button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 font-bold py-2 px-4 rounded-lg cursor-pointer">Voltar</button></div><div class="grid grid-cols-1 lg:grid-cols-4 gap-6"><div class="lg:col-span-1 bg-white p-6 rounded-xl border h-fit"><h3 class="text-lg font-black text-emerald-800 mb-4 border-b pb-2">⚖️ Metas da SCAN</h3><form onsubmit="salvarRegras(event)" class="space-y-4"><div><label class="text-xs font-bold text-purple-700">👑 Prioridade Altíssima</label><input type="number" id="config-altissima" required class="w-full border rounded p-2 text-sm font-bold"></div><div><label class="text-xs font-bold text-red-600">🔥 Prioridade Máxima</label><input type="number" id="config-maxima" required class="w-full border rounded p-2 text-sm font-bold"></div><div><label class="text-xs font-bold text-blue-600">📄 Prioridade Média</label><input type="number" id="config-media" required class="w-full border rounded p-2 text-sm font-bold"></div><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded cursor-pointer transition">💾 Salvar Metas</button></form></div><div class="lg:col-span-3"><div class="bg-white p-6 rounded-xl border"><h3 class="text-lg font-black text-emerald-800 mb-4 border-b pb-2">📋 Relatório de Desempenho Geral</h3><div class="overflow-x-auto"><table class="w-full text-left text-sm text-gray-600"><thead class="text-[10px] uppercase font-black text-gray-400 border-b bg-gray-50"><tr><th class="px-3 py-2">Obra</th><th class="px-3 py-2 text-center">Views App</th><th class="px-3 py-2 text-center">Views Site (Raw)</th><th class="px-3 py-2 text-center">Média (V/Cap)</th><th class="px-3 py-2 text-center">Cresc. Diário</th><th class="px-3 py-2 text-center">IA</th><th class="px-3 py-2 text-right">Ação</th></tr></thead><tbody id="tabela-analytics" class="divide-y divide-gray-100 bg-white"></tbody></table></div></div></div></div></section>
+    
+    <section id="painel-adv" class="hidden max-w-6xl mx-auto p-6 mt-4"><div class="flex justify-between items-center mb-6 border-b pb-4"><h2 class="text-2xl font-black text-orange-900 flex items-center gap-2">⚠️ Gestão de Advertências</h2><button onclick="voltarAoPainelPrincipal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg cursor-pointer transition">Voltar</button></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-orange-200 h-fit"><h3 class="text-lg font-black text-orange-800 mb-4 border-b pb-2">➕ Aplicar Nova</h3><form onsubmit="aplicarAdvertencia(event)" class="space-y-4"><input type="hidden" id="adv-id"><div><label class="text-xs font-bold text-gray-600">Membro da Equipe</label><select id="adv-membro" required class="w-full border rounded p-2 text-sm cursor-pointer"></select></div><div><label class="text-xs font-bold text-gray-600">Nível da Advertência</label><select id="adv-nivel" required class="w-full border rounded p-2 text-sm cursor-pointer bg-orange-50 font-bold text-orange-800"><option value="1ª">1ª Advertência</option><option value="2ª">2ª Advertência</option><option value="3ª">3ª Advertência</option></select></div><div><label class="text-xs font-bold text-gray-600">Data da Ocorrência</label><input type="date" id="adv-data" required class="w-full border rounded p-2 text-sm"></div><div><label class="text-xs font-bold text-gray-600">Motivo</label><textarea id="adv-motivo" required rows="3" class="w-full border rounded p-2 text-sm"></textarea></div><div class="flex gap-2"><button type="button" id="btn-cancelar-adv" onclick="limparFormAdv()" class="hidden bg-gray-200 px-3 rounded text-sm font-bold cursor-pointer">✖</button><button type="submit" id="btn-salvar-adv" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded cursor-pointer transition shadow">🚨 Aplicar Advertência</button></div></form><div id="area-wpp-adv" class="hidden mt-6 bg-orange-50 p-4 border border-orange-200 rounded-lg"><h4 class="text-sm font-bold text-orange-900 mb-2">📲 Enviar ao Infrator</h4><textarea id="texto-wpp-adv" rows="7" class="w-full bg-white border border-orange-300 rounded p-2 text-sm focus:outline-none mb-2" readonly></textarea><button onclick="copiarTexto('texto-wpp-adv')" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded cursor-pointer">📋 Copiar Mensagem</button></div></div><div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-orange-200"><h3 class="text-lg font-black text-orange-800 mb-4 border-b pb-2">📋 Histórico Geral</h3><div class="overflow-y-auto max-h-[500px] pr-2 space-y-3" id="lista-todas-adv"><p class="text-sm text-gray-400 text-center py-4">Buscando histórico...</p></div></div></div></section>
+
     <!-- MODAIS DE SISTEMA -->
     <div id="modal-vincular-adm" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
@@ -305,62 +111,22 @@
         </div>
     </div>
 
-    <!-- 🌟 MODAL DE VIEWS (CORRIGIDO) 🌟 -->
     <div id="modal-detalhes-views" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border-2 border-emerald-500">
-            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white">
-                <h3 class="font-black flex items-center gap-2">📊 Analytics da Obra</h3>
-                <button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold text-emerald-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
-            </div>
+            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white"><h3 class="font-black flex items-center gap-2">📊 Analytics da Obra</h3><button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold text-emerald-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button></div>
             <div class="p-6 text-center">
                 <h4 id="view-obra-nome" class="text-xl font-black text-gray-800 mb-1">Nome da Obra</h4>
                 <p id="view-obra-priori" class="text-xs font-bold text-gray-500 mb-6 uppercase bg-gray-100 inline-block px-3 py-1 rounded-full">Prioridade: Média</p>
-                
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"><p class="text-[10px] font-bold text-gray-500 uppercase">Views Totais</p><p id="view-total" class="text-2xl font-black text-gray-800">0</p></div>
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200"><p class="text-[10px] font-bold text-blue-700 uppercase">Média / Capítulo</p><p id="view-media" class="text-2xl font-black text-blue-900">0</p></div>
-                </div>
-
-                <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 flex justify-between items-center mb-6">
-                    <div class="text-left"><p class="text-[10px] font-bold text-emerald-800 uppercase">Crescimento Diário</p><p id="view-cresc" class="text-xl font-black text-emerald-900">+0</p></div>
-                    <div class="text-right"><p class="text-[10px] font-bold text-emerald-800 uppercase">Taxa de Evolução</p><p id="view-taxa" class="text-xl font-black text-emerald-900">0%</p></div>
-                </div>
+                <div class="grid grid-cols-2 gap-4 mb-6"><div class="bg-gray-50 p-4 rounded-lg border border-gray-200"><p class="text-[10px] font-bold text-gray-500 uppercase">Views Totais</p><p id="view-total" class="text-2xl font-black text-gray-800">0</p></div><div class="bg-blue-50 p-4 rounded-lg border border-blue-200"><p class="text-[10px] font-bold text-blue-700 uppercase">Média / Capítulo</p><p id="view-media" class="text-2xl font-black text-blue-900">0</p></div></div>
+                <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 flex justify-between items-center mb-6"><div class="text-left"><p class="text-[10px] font-bold text-emerald-800 uppercase">Crescimento Diário</p><p id="view-cresc" class="text-xl font-black text-emerald-900">+0</p></div><div class="text-right"><p class="text-[10px] font-bold text-emerald-800 uppercase">Taxa de Evolução</p><p id="view-taxa" class="text-xl font-black text-emerald-900">0%</p></div></div>
                 <p id="view-sugestao" class="text-sm font-bold bg-yellow-100 text-yellow-800 p-2 rounded border border-yellow-300"></p>
             </div>
         </div>
     </div>
 
-    <div id="modal-notificacoes" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-red-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">🔔 Notificações</h3><button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold cursor-pointer">✖</button></div>
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4"><p class="text-xs text-gray-500">Avisos do sistema.</p><button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded cursor-pointer transition">🧹 Limpar Avisos</button></div>
-                <div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-blue-800 p-4 flex justify-between items-center text-white"><h3 class="font-black flex items-center gap-2">📥 Informar Download (Raw)</h3><button onclick="fecharModalDownload()" class="font-bold text-blue-200 hover:text-white cursor-pointer">✖</button></div>
-            <form onsubmit="salvarDownloadRaw(event)" class="p-6 space-y-4">
-                <div><label class="block text-xs font-bold text-gray-700 mb-1">Obra</label><select id="raw-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select></div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div><label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label><input type="text" id="raw-capitulo" required class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div>
-                    <div><label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label><input type="text" id="raw-paginas" required class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div>
-                    <div><label class="block text-xs font-bold text-gray-700 mb-1">Altura Base (Px)</label><input type="text" id="raw-altura" class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div>
-                </div>
-                <button type="submit" id="btn-salvar-raw" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4 cursor-pointer">✅ Confirmar Download</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-orange-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">⚠️ Minhas Advertências</h3><button onclick="document.getElementById('modal-minhas-adv').classList.add('hidden')" class="font-bold hover:scale-110 cursor-pointer">✖</button></div>
-            <div class="p-6"><div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto"></div></div>
-        </div>
-    </div>
+    <div id="modal-notificacoes" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden"><div class="bg-red-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">🔔 Notificações</h3><button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold hover:scale-110 cursor-pointer">✖</button></div><div class="p-6"><div class="flex justify-between items-center mb-4"><p class="text-xs text-gray-500">Avisos do sistema.</p><button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded cursor-pointer transition">🧹 Limpar Avisos</button></div><div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div></div></div></div>
+    <div id="modal-download" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden"><div class="bg-blue-800 p-4 flex justify-between items-center text-white"><h3 class="font-black flex items-center gap-2">📥 Informar Download (Raw)</h3><button onclick="fecharModalDownload()" class="font-bold text-blue-200 hover:text-white cursor-pointer">✖</button></div><form onsubmit="salvarDownloadRaw(event)" class="p-6 space-y-4"><div><label class="block text-xs font-bold text-gray-700 mb-1">Obra</label><select id="raw-obra" required class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-4"><div><label class="block text-xs font-bold text-gray-700 mb-1">Capítulo</label><input type="text" id="raw-capitulo" required class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div><div><label class="block text-xs font-bold text-gray-700 mb-1">Páginas</label><input type="text" id="raw-paginas" required class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div><div><label class="block text-xs font-bold text-gray-700 mb-1">Altura Base (Px)</label><input type="text" id="raw-altura" class="w-full bg-gray-50 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></div></div><button type="submit" id="btn-salvar-raw" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4 cursor-pointer">✅ Confirmar Download</button></form></div></div>
+    <div id="modal-minhas-adv" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden"><div class="bg-orange-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">⚠️ Minhas Advertências</h3><button onclick="document.getElementById('modal-minhas-adv').classList.add('hidden')" class="font-bold hover:scale-110 cursor-pointer">✖</button></div><div class="p-6"><div id="lista-minhas-adv" class="space-y-3 max-h-80 overflow-y-auto"></div></div></div></div>
 
     <!-- ==================== LÓGICA DO SISTEMA ==================== -->
     <script>
@@ -368,23 +134,15 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZGdhZmlzZGJqb3R5emxoaHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NzMzMDgsImV4cCI6MjEwMTQ0OTMwOH0.H6tPKPFZ0XsuQed3vL2wLi5--nZyB17YQiZ2jd4Yvt0';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let todasTarefasGlobais = [];
-        let obrasDisponiveisGlobal = [];
-        let listaEquipeGlobal = [];
+        let todasTarefasGlobais = []; let obrasDisponiveisGlobal = []; let listaEquipeGlobal = []; let obrasAnalyticsData = [];
         let configRegras = { media: 5000, alta: 15000, maxima: 23000, altissima: 30000 }; 
-        let obrasAnalyticsData = [];
-        
-        let equipeBaseGlobal = [];
-        let equipeAtivaGlobal = [];
-        let funcoesCountGlobal = {};
-        let filtroFuncaoAtivo = null;
+        let equipeBaseGlobal = []; let equipeAtivaGlobal = []; let funcoesCountGlobal = {}; let filtroFuncaoAtivo = null;
 
-        // 🌟 SISTEMA BLINDADO: Se algo falhar, o resto continua carregando! 🌟
+        // 🌟 SISTEMA BLINDADO CONTRA ERROS 🌟
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
             const cargo = localStorage.getItem('usuario_cargo');
             if(!nick || cargo !== 'Administrador') return window.location.href = 'index.html';
-            
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
             
             try { await carregarRegrasSupabase(); } catch(e) { console.error("Erro Metas:", e); }
@@ -403,7 +161,6 @@
             if(document.getElementById('painel-adv')) document.getElementById('painel-adv').classList.add('hidden');
             if(document.getElementById('painel-recrut')) document.getElementById('painel-recrut').classList.add('hidden');
             if(document.getElementById('painel-analytics')) document.getElementById('painel-analytics').classList.add('hidden');
-            
             document.getElementById(idAlvo).classList.remove('hidden');
 
             if(idAlvo === 'painel-rh') carregarRH();
@@ -419,11 +176,7 @@
             document.getElementById('main-content').classList.remove('hidden');
         }
 
-        function copiarTexto(idTag) {
-            const ta = document.getElementById(idTag);
-            ta.select(); ta.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(ta.value).then(() => alert("Copiado!")).catch(() => alert("Erro ao copiar."));
-        }
+        function copiarTexto(idTag) { const ta = document.getElementById(idTag); ta.select(); ta.setSelectionRange(0, 99999); navigator.clipboard.writeText(ta.value).then(() => alert("Copiado!")).catch(() => alert("Erro ao copiar.")); }
 
         async function carregarDashboardAntigo(meuNick) {
             const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
@@ -431,95 +184,79 @@
             const { data: obras } = await _supabase.from('obras').select('*').order('nome');
             const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado');
             
-            todasTarefasGlobais = tarefas || [];
-            obrasDisponiveisGlobal = obras || [];
+            todasTarefasGlobais = tarefas || []; obrasDisponiveisGlobal = obras || [];
             const obrasStaff = [], obrasResp = [];
 
             if (obras) {
-                processarAlertasBI(obras);
+                try { processarAlertasBI(obras); } catch(err) { console.error("Erro no BI", err); }
 
                 obras.forEach(o => {
                     const souResp = o.responsavel_nick && o.responsavel_nick.includes(meuNick);
                     let staffArr = [];
-                    if (typeof o.staff_ids === 'string') {
-                        try { staffArr = JSON.parse(o.staff_ids); } catch(e) { staffArr = o.staff_ids.split(','); }
-                    } else if (Array.isArray(o.staff_ids)) {
-                        staffArr = o.staff_ids;
-                    }
+                    if (typeof o.staff_ids === 'string') { try { staffArr = JSON.parse(o.staff_ids); } catch(e) { staffArr = o.staff_ids.split(','); } } else if (Array.isArray(o.staff_ids)) { staffArr = o.staff_ids; }
                     const souStaff = meuId && staffArr.map(String).includes(meuId);
-
-                    if (souResp) obrasResp.push(o);
-                    if (souStaff) obrasStaff.push(o);
+                    if (souResp) obrasResp.push(o); if (souStaff) obrasStaff.push(o);
                 });
             }
-
-            renderizarObras(obrasStaff, 'lista-obras-staff', false);
-            renderizarObras(obrasResp, 'lista-obras-resp', true);
+            renderizarObras(obrasStaff, 'lista-obras-staff', false); renderizarObras(obrasResp, 'lista-obras-resp', true);
         }
 
-        // 🌟 RENDERIZAR OBRAS COM CAPAS E BOTÕES CORRIGIDOS 🌟
         function renderizarObras(lista, idCont, isResp) {
             const cont = document.getElementById(idCont); if(!cont) return; cont.innerHTML = '';
-            if (!lista || lista.length === 0) { cont.innerHTML = `<p class="text-sm text-gray-400 italic text-center p-4">Nenhuma obra na sua lista.</p>`; return; }
+            
+            if (!lista || lista.length === 0) { 
+                cont.innerHTML = `<p class="text-sm text-gray-400 italic text-center p-4">Nenhuma obra na sua lista.</p>`; 
+                return; 
+            }
 
             lista.forEach(o => {
-                const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
-                const viewsApp = parseInt(o.views_totais) || 0;
-                let corStatus = o.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
-                
-                const imgCapa = o.capa_url 
-                    ? `<img src="${o.capa_url}" class="w-10 h-14 object-cover rounded shadow-sm border border-gray-200 flex-shrink-0" alt="Capa">` 
-                    : `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400 text-center leading-tight">Sem<br>Capa</span></div>`;
+                try {
+                    const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
+                    const viewsApp = parseInt(o.views_totais) || 0;
+                    let corStatus = o.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
+                    
+                    const imgCapa = o.capa_url ? `<img src="${o.capa_url}" class="w-10 h-14 object-cover rounded shadow-sm border border-gray-200 flex-shrink-0" alt="Capa">` : `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400 text-center leading-tight">Sem<br>Capa</span></div>`;
+                    const btnEdit = isResp ? `<button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'; event.stopPropagation();" class="text-xs bg-gray-100 border border-gray-200 hover:bg-gray-200 px-2 py-1 rounded cursor-pointer transition" title="Editar Obra">✏️</button>` : '';
 
-                const btnEdit = isResp ? `<button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'; event.stopPropagation();" class="text-xs bg-gray-100 border border-gray-200 hover:bg-gray-200 px-2 py-1 rounded cursor-pointer transition" title="Editar Obra">✏️</button>` : '';
+                    const safeNome = (o.nome || 'Sem Nome').replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
-                let mostrarSininho = false;
-                if(isResp) mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === o.nome && t.status === 'Concluído');
-                else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === o.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
-                const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2">🔔</span>` : '';
+                    let mostrarSininho = false;
+                    if(isResp) mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === o.nome && t.status === 'Concluído');
+                    else mostrarSininho = todasTarefasGlobais.some(t => t.obra_nome === o.nome && t.status === 'Pendente' && t.responsavel_nick === localStorage.getItem('usuario_nick'));
+                    const sininho = mostrarSininho ? `<span class="animate-bounce text-sm ml-2">🔔</span>` : '';
 
-                cont.innerHTML += `
-                <div onclick="abrirTarefasObra('${o.nome.replace(/'/g, "\\'")}', '${isResp ? 'responsavel' : 'staff'}')" class="p-3 bg-white border border-gray-200 rounded-lg flex justify-between cursor-pointer hover:border-red-400 mb-2 transition shadow-sm group">
-                    <div class="flex items-center gap-3">
-                        ${imgCapa}
-                        <div>
-                            <h3 class="font-bold text-sm text-gray-800 group-hover:text-red-900 leading-tight mb-1 flex items-center">${o.nome} ${sininho}</h3>
-                            <p class="text-[10px] text-gray-500">Dono: ${o.responsavel_nick||'N/A'}</p>
+                    cont.innerHTML += `
+                    <div onclick="abrirTarefasObra('${safeNome}', '${isResp ? 'responsavel' : 'staff'}')" class="p-3 bg-white border border-gray-200 rounded-lg flex justify-between cursor-pointer hover:border-red-400 mb-2 transition shadow-sm group">
+                        <div class="flex items-center gap-3">
+                            ${imgCapa}
+                            <div>
+                                <h3 class="font-bold text-sm text-gray-800 group-hover:text-red-900 leading-tight mb-1 flex items-center">${o.nome || 'Sem Nome'} ${sininho}</h3>
+                                <p class="text-[10px] text-gray-500">Dono: ${o.responsavel_nick||'N/A'}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex flex-col items-end gap-1 justify-center">
-                        <div class="flex items-center gap-1">
-                            <span class="text-[10px] font-bold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full text-gray-600" title="Views Totais">👁️ ${viewsApp.toLocaleString('pt-BR')}</span>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${o.status}</span>
+                        <div class="flex flex-col items-end gap-1 justify-center">
+                            <div class="flex items-center gap-1">
+                                <span class="text-[10px] font-bold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full text-gray-600" title="Views Totais">👁️ ${viewsApp.toLocaleString('pt-BR')}</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${corStatus}">${o.status || 'Ativa'}</span>
+                            </div>
+                            <div class="flex gap-1 mt-1">
+                                <button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation();" class="text-xs bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 py-1 rounded cursor-pointer transition" title="Ver Views">📊</button>
+                                ${btnEdit}
+                            </div>
                         </div>
-                        <div class="flex gap-1 mt-1">
-                            <button onclick="abrirModalViews('${jsonObj}'); event.stopPropagation();" class="text-xs bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 py-1 rounded cursor-pointer transition" title="Ver Views">📊</button>
-                            ${btnEdit}
-                        </div>
-                    </div>
-                </div>`;
+                    </div>`;
+                } catch(err) { console.error("Erro ao desenhar obra:", o.nome, err); }
             });
+            if (cont.innerHTML === '') cont.innerHTML = `<p class="text-sm text-gray-400 italic text-center p-4">Nenhuma obra.</p>`;
         }
 
         function abrirTarefasObra(obraNome, modo) {
-            const painel = document.getElementById('painel-tarefas');
-            const titulo = document.getElementById('titulo-painel-tarefas');
-            const meuNick = localStorage.getItem('usuario_nick');
-            
+            const painel = document.getElementById('painel-tarefas'); const titulo = document.getElementById('titulo-painel-tarefas'); const meuNick = localStorage.getItem('usuario_nick');
             let tarefasFiltradas = []; let isMinhas = false;
-            if (modo === 'staff') { 
-                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick); 
-                titulo.innerHTML = `📝 Minhas Tarefas <span class="text-gray-400 mx-2">👉</span> <span class="text-blue-700">${obraNome}</span>`; 
-                isMinhas = true; 
-            } else { 
-                tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome); 
-                titulo.innerHTML = `👑 Entregas da Equipe <span class="text-gray-400 mx-2">👉</span> <span class="text-amber-700">${obraNome}</span>`; 
-            }
-
-            renderizarPainel(tarefasFiltradas, isMinhas);
-            painel.classList.remove('hidden'); painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (modo === 'staff') { tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome && t.responsavel_nick === meuNick); titulo.innerHTML = `📝 Minhas Tarefas <span class="text-gray-400 mx-2">👉</span> <span class="text-blue-700">${obraNome}</span>`; isMinhas = true; } 
+            else { tarefasFiltradas = todasTarefasGlobais.filter(t => t.obra_nome === obraNome); titulo.innerHTML = `👑 Entregas da Equipe <span class="text-gray-400 mx-2">👉</span> <span class="text-amber-700">${obraNome}</span>`; }
+            renderizarPainel(tarefasFiltradas, isMinhas); painel.classList.remove('hidden'); painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-
         function fecharPainelTarefas() { document.getElementById('painel-tarefas').classList.add('hidden'); }
 
         function renderizarPainel(lista, isMinhas) {
@@ -529,10 +266,7 @@
 
             const agora = new Date(); const hojeStr = agora.toDateString();
             lista.forEach(t => {
-                let isConcluida = t.status === 'Concluído';
-                let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
-                if(isConcluida) corStatus = 'bg-green-100 text-green-700';
-                
+                let isConcluida = t.status === 'Concluído'; let corStatus = t.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'; if(isConcluida) corStatus = 'bg-green-100 text-green-700';
                 let botaoAcao = '';
                 if(isMinhas) {
                     if(t.status === 'Pendente') botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Em Andamento')" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">▶️ Iniciar</button>`;
@@ -540,20 +274,11 @@
                     else if(isConcluida) botaoAcao = `<button disabled class="text-[10px] bg-gray-200 text-gray-400 font-bold px-2 py-1.5 rounded w-full mt-2">⏳ Em Revisão</button>`;
                 } else {
                     if(!isConcluida) { botaoAcao = `<button onclick="mudarStatusTarefa('${t.id}', 'Concluído')" class="text-[10px] bg-gray-200 hover:bg-green-600 hover:text-white text-gray-600 font-bold px-2 py-1.5 rounded w-full mt-2 cursor-pointer">✅ Forçar Conclusão</button>`; } 
-                    else {
-                        const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`;
-                        botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">📦 OK</button></div>`;
-                    }
+                    else { const urlRedirecionamento = `andamento.html?obra=${encodeURIComponent(t.obra_nome)}&capitulo=${encodeURIComponent(t.capitulo)}&altura=${encodeURIComponent(t.altura || '')}`; botaoAcao = `<div class="flex gap-1 mt-2"><button onclick="window.location.href='${urlRedirecionamento}'" class="flex-1 text-[10px] bg-blue-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">✂️ Dividir</button><button onclick="mudarStatusTarefa('${t.id}', 'Arquivado')" class="text-[10px] bg-green-600 text-white font-bold px-2 py-1.5 rounded cursor-pointer">📦 OK</button></div>`; }
                 }
-
-                let prazoFormatado = '';
-                if (t.prazo) { const d = new Date(t.prazo); prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`; }
-
+                let prazoFormatado = ''; if (t.prazo) { const d = new Date(t.prazo); prazoFormatado = `Prazo: ${d.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit'})}`; }
                 const cardHTML = `<div class="bg-white border border-gray-100 p-3 rounded shadow-sm hover:shadow-md transition"><div class="flex justify-between items-start mb-2"><span class="font-bold text-red-700 text-sm">C.${t.capitulo}</span><div class="flex flex-col items-end gap-1"><span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">PG: ${t.paginas || 'Todas'}</span>${t.altura ? `<span class="text-[10px] font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">↕ Alt: ${t.altura}</span>` : ''}</div></div><div class="flex justify-between items-center mb-1"><span class="text-[10px] uppercase font-black text-gray-500">${t.etapa}</span><span class="px-1 py-0.5 rounded text-[9px] font-bold ${corStatus}">${t.status}</span></div>${!isMinhas ? `<p class="text-[10px] font-bold text-blue-700 mb-1 mt-2">👤 ${t.responsavel_nick}</p>` : ''}${t.prazo ? `<p class="text-[10px] font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded inline-block mt-1">${prazoFormatado}</p>` : ''}${botaoAcao}</div>`;
-
-                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; }
-                else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; }
-                else { const dp = new Date(t.prazo); if (dp < agora) { containerAtraso.innerHTML += cardHTML; } else if (dp.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; } else { containerAtivas.innerHTML += cardHTML; } }
+                if (isConcluida) { containerConcluidas.innerHTML += cardHTML; } else if (!t.prazo) { containerAtivas.innerHTML += cardHTML; } else { const dp = new Date(t.prazo); if (dp < agora) { containerAtraso.innerHTML += cardHTML; } else if (dp.toDateString() === hojeStr) { containerHoje.innerHTML += cardHTML; } else { containerAtivas.innerHTML += cardHTML; } }
             });
         }
 
@@ -561,564 +286,222 @@
 
         function abrirModalViews(enc) { 
             const o = JSON.parse(decodeURIComponent(enc)); 
-            
-            const viewsTot = parseInt(o.views_totais) || 0; 
-            const viewsOnt = parseInt(o.views_ontem) || 0;
-            const cresc = viewsTot - viewsOnt;
-            let caps = parseInt(String(o.capitulo_fleur).match(/\d+/)) || 1;
-            const media = Math.round(viewsTot / caps);
+            const viewsTot = parseInt(o.views_totais) || 0; const viewsOnt = parseInt(o.views_ontem) || 0; const cresc = viewsTot - viewsOnt;
+            let caps = parseInt(String(o.capitulo_fleur).match(/\d+/)) || 1; const media = Math.round(viewsTot / caps);
             let taxa = viewsOnt > 0 ? ((cresc / viewsOnt) * 100).toFixed(1) : 0;
-
-            document.getElementById('view-obra-nome').textContent = o.nome; 
-            document.getElementById('view-obra-priori').textContent = `Prioridade Atual: ${o.prioridade || 'Média'}`;
-            document.getElementById('view-total').textContent = viewsTot.toLocaleString('pt-BR'); 
-            document.getElementById('view-media').textContent = media.toLocaleString('pt-BR');
-
-            const crescEl = document.getElementById('view-cresc');
-            if (cresc > 0) { crescEl.textContent = `+${cresc.toLocaleString('pt-BR')}`; crescEl.className = "text-xl font-black text-emerald-600"; }
-            else { crescEl.textContent = cresc.toLocaleString('pt-BR'); crescEl.className = "text-xl font-black text-red-500"; }
-
-            const taxaEl = document.getElementById('view-taxa');
-            if (taxa > 0) { taxaEl.textContent = `+${taxa}%`; taxaEl.className = "text-xl font-black text-emerald-600"; }
-            else { taxaEl.textContent = `${taxa}%`; taxaEl.className = "text-xl font-black text-red-500"; }
-
+            document.getElementById('view-obra-nome').textContent = o.nome; document.getElementById('view-obra-priori').textContent = `Prioridade Atual: ${o.prioridade || 'Média'}`;
+            document.getElementById('view-total').textContent = viewsTot.toLocaleString('pt-BR'); document.getElementById('view-media').textContent = media.toLocaleString('pt-BR');
+            const crescEl = document.getElementById('view-cresc'); if (cresc > 0) { crescEl.textContent = `+${cresc.toLocaleString('pt-BR')}`; crescEl.className = "text-xl font-black text-emerald-600"; } else { crescEl.textContent = cresc.toLocaleString('pt-BR'); crescEl.className = "text-xl font-black text-red-500"; }
+            const taxaEl = document.getElementById('view-taxa'); if (taxa > 0) { taxaEl.textContent = `+${taxa}%`; taxaEl.className = "text-xl font-black text-emerald-600"; } else { taxaEl.textContent = `${taxa}%`; taxaEl.className = "text-xl font-black text-red-500"; }
             let sugestaoMsg = "A obra está caminhando bem na sua categoria.";
-            if (media >= configRegras.altissima && !(o.prioridade || '').includes('Altíssima')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade ALTÍSSIMA.";
-            else if (media >= configRegras.maxima && !(o.prioridade || '').includes('Máxima')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade MÁXIMA.";
-            else if (media >= configRegras.alta && !(o.prioridade || '').includes('Alta')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade ALTA.";
-            document.getElementById('view-sugestao').textContent = sugestaoMsg;
-
-            document.getElementById('modal-detalhes-views').classList.remove('hidden'); 
+            if (media >= configRegras.altissima && !(o.prioridade || '').includes('Altíssima')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade ALTÍSSIMA."; else if (media >= configRegras.maxima && !(o.prioridade || '').includes('Máxima')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade MÁXIMA."; else if (media >= configRegras.alta && !(o.prioridade || '').includes('Alta')) sugestaoMsg = "💡 Sugestão: Mudar para Prioridade ALTA.";
+            document.getElementById('view-sugestao').textContent = sugestaoMsg; document.getElementById('modal-detalhes-views').classList.remove('hidden'); 
         }
 
         async function abrirModalVinculoADM() {
             document.getElementById('modal-vincular-adm').classList.remove('hidden');
-            const cont = document.getElementById('lista-vinculo-mods');
-            cont.innerHTML = '<p class="text-center text-xs text-gray-400 py-4">Carregando...</p>';
-
-            const { data: equipe } = await _supabase.from('equipe').select('*').order('nick');
-            if(!equipe) return;
-            listaEquipeGlobal = equipe;
-
-            const adms = equipe.filter(m => m.cargo_sistema === 'Administrador');
-            const mods = equipe.filter(m => m.cargo_sistema !== 'Administrador');
-
+            const cont = document.getElementById('lista-vinculo-mods'); cont.innerHTML = '<p class="text-center text-xs text-gray-400 py-4">Carregando...</p>';
+            const { data: equipe } = await _supabase.from('equipe').select('*').order('nick'); if(!equipe) return; listaEquipeGlobal = equipe;
+            const adms = equipe.filter(m => m.cargo_sistema === 'Administrador'); const mods = equipe.filter(m => m.cargo_sistema !== 'Administrador');
             let html = '';
             mods.forEach(mod => {
                 let options = `<option value="">-- Nenhuma Mãe --</option>`;
-                adms.forEach(adm => {
-                    const sel = (mod.adm_responsavel === adm.nick) ? 'selected' : '';
-                    options += `<option value="${adm.nick}" ${sel}>${adm.nick}</option>`;
-                });
-                html += `
-                    <div class="bg-gray-50 border border-gray-200 p-3 rounded-lg flex justify-between items-center shadow-sm">
-                        <span class="font-bold text-sm text-gray-800 flex items-center gap-2">👤 ${mod.nick}</span>
-                        <select id="sel-adm-${mod.id}" class="border border-purple-200 rounded p-1.5 text-xs font-bold text-purple-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">
-                            ${options}
-                        </select>
-                    </div>`;
+                adms.forEach(adm => { const sel = (mod.adm_responsavel === adm.nick) ? 'selected' : ''; options += `<option value="${adm.nick}" ${sel}>${adm.nick}</option>`; });
+                html += `<div class="bg-gray-50 border border-gray-200 p-3 rounded-lg flex justify-between items-center shadow-sm"><span class="font-bold text-sm text-gray-800 flex items-center gap-2">👤 ${mod.nick}</span><select id="sel-adm-${mod.id}" class="border border-purple-200 rounded p-1.5 text-xs font-bold text-purple-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">${options}</select></div>`;
             });
             cont.innerHTML = html;
         }
 
         async function salvarVinculosADM() {
-            const btn = document.querySelector('#modal-vincular-adm button.bg-purple-600');
-            btn.innerText = '⏳ Salvando...';
-            
+            const btn = document.querySelector('#modal-vincular-adm button.bg-purple-600'); btn.innerText = '⏳ Salvando...';
             const mods = listaEquipeGlobal.filter(m => m.cargo_sistema !== 'Administrador');
-            for (const mod of mods) {
-                const selectVal = document.getElementById(`sel-adm-${mod.id}`).value;
-                if (selectVal !== (mod.adm_responsavel || '')) {
-                    await _supabase.from('equipe').update({ adm_responsavel: selectVal || null }).eq('id', mod.id);
-                }
-            }
-            
-            btn.innerText = '💾 Salvar Vínculos';
-            document.getElementById('modal-vincular-adm').classList.add('hidden');
-            carregarObrasPorModerador();
+            for (const mod of mods) { const selectVal = document.getElementById(`sel-adm-${mod.id}`).value; if (selectVal !== (mod.adm_responsavel || '')) { await _supabase.from('equipe').update({ adm_responsavel: selectVal || null }).eq('id', mod.id); } }
+            btn.innerText = '💾 Salvar Vínculos'; document.getElementById('modal-vincular-adm').classList.add('hidden'); carregarObrasPorModerador();
         }
 
         async function carregarObrasPorModerador() {
             const { data: obras } = await _supabase.from('obras').select('*').order('responsavel_nick');
-            const { data: equipe } = await _supabase.from('equipe').select('nick, adm_responsavel');
-            
-            const container = document.getElementById('lista-todas-obras'); 
-            if(!container || !obras || !equipe) return; 
-            container.innerHTML = '';
-            
-            const mapaAdms = {};
-            equipe.forEach(m => { mapaAdms[m.nick] = m.adm_responsavel || 'Sem ADM Responsável'; });
-
+            const { data: equipe } = await _supabase.from('equipe').select('*'); // FIXED! Não quebra se a coluna não existir!
+            const container = document.getElementById('lista-todas-obras'); if(!container || !obras || !equipe) return; container.innerHTML = '';
+            const mapaAdms = {}; equipe.forEach(m => { mapaAdms[m.nick] = m.adm_responsavel || 'Sem ADM Responsável'; });
             const hierarquia = {};
-            
-            obras.forEach(obra => { 
-                const respStrs = (obra.responsavel_nick || 'Sem Moderador').split(',').map(s=>s.trim());
-                respStrs.forEach(mod => { 
-                    const adm = mapaAdms[mod] || 'Sem ADM Responsável';
-                    if(!hierarquia[adm]) hierarquia[adm] = {};
-                    if(!hierarquia[adm][mod]) hierarquia[adm][mod] = [];
-                    hierarquia[adm][mod].push(obra); 
-                }); 
-            });
-
-            const meuNick = localStorage.getItem('usuario_nick');
-            let htmlFinal = '';
-            
-            const admsOrdenados = Object.keys(hierarquia).sort((a, b) => {
-                if (a === meuNick) return -1;
-                if (b === meuNick) return 1;
-                return a.localeCompare(b);
-            });
-
+            obras.forEach(obra => { const respStrs = (obra.responsavel_nick || 'Sem Moderador').split(',').map(s=>s.trim()); respStrs.forEach(mod => { const adm = mapaAdms[mod] || 'Sem ADM Responsável'; if(!hierarquia[adm]) hierarquia[adm] = {}; if(!hierarquia[adm][mod]) hierarquia[adm][mod] = []; hierarquia[adm][mod].push(obra); }); });
+            const meuNick = localStorage.getItem('usuario_nick'); let htmlFinal = '';
+            const admsOrdenados = Object.keys(hierarquia).sort((a, b) => { if (a === meuNick) return -1; if (b === meuNick) return 1; return a.localeCompare(b); });
             admsOrdenados.forEach(adm => {
-                const isMinhaEquipe = (adm === meuNick);
-                const corBorda = isMinhaEquipe ? 'border-purple-400 bg-purple-50' : 'border-gray-200 bg-gray-50';
-                const corTitulo = isMinhaEquipe ? 'text-purple-900 font-black' : 'text-gray-600 font-bold';
-                const titulo = isMinhaEquipe ? '👑 MINHA EQUIPE (Meus Afilhados)' : `Equipe da ADM: ${adm}`;
-
-                let htmlAdm = `<div class="${corBorda} border-2 rounded-xl p-5 mb-6 shadow-sm">
-                    <h3 class="${corTitulo} text-lg mb-4 border-b border-gray-200 pb-2 flex justify-between items-center">
-                        <span>${titulo}</span>
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                `;
-
+                const isMinhaEquipe = (adm === meuNick); const corBorda = isMinhaEquipe ? 'border-purple-400 bg-purple-50' : 'border-gray-200 bg-gray-50'; const corTitulo = isMinhaEquipe ? 'text-purple-900 font-black' : 'text-gray-600 font-bold'; const titulo = isMinhaEquipe ? '👑 MINHA EQUIPE (Meus Afilhados)' : `Equipe da ADM: ${adm}`;
+                let htmlAdm = `<div class="${corBorda} border-2 rounded-xl p-5 mb-6 shadow-sm"><h3 class="${corTitulo} text-lg mb-4 border-b border-gray-200 pb-2 flex justify-between items-center"><span>${titulo}</span></h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
                 for (const mod in hierarquia[adm]) {
-                    htmlAdm += `<div class="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
-                        <h4 class="font-black text-red-800 mb-2 border-b border-gray-100 pb-1">👤 Mod: ${mod}</h4>
-                        <ul class="space-y-2">`;
-                    
+                    htmlAdm += `<div class="bg-white border border-gray-200 rounded-lg p-3 shadow-sm"><h4 class="font-black text-red-800 mb-2 border-b border-gray-100 pb-1">👤 Mod: ${mod}</h4><ul class="space-y-2">`;
                     hierarquia[adm][mod].forEach(obra => {
                         const cO = obra.capitulo_plataforma || '0'; const cF = obra.capitulo_fleur || '0'; let sL = '';
-                        if (obra.status === 'Pausada' || obra.status === 'Finalizada') { 
-                            sL = `<span class="text-[9px] text-gray-500 bg-gray-200 px-1.5 py-0.5 rounded font-bold">${obra.status.toUpperCase()}</span>`; 
-                        } else {
-                            const matchO = String(cO).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cO];
-                            const matchF = String(cF).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cF];
-                            const numO = parseInt(matchO[2]); const numF = parseInt(matchF[2]);
-                            
-                            if (!isNaN(numO) && !isNaN(numF)) { 
-                                const at = numO - numF; 
-                                if (at > 0) {
-                                    let txtNome = matchO[1].trim().toLowerCase();
-                                    let sufixo = txtNome.includes('side') ? 'sides' : (txtNome.includes('ep') ? 'epílogos' : 'caps');
-                                    sL = `<span class="text-[9px] text-red-700 bg-red-100 px-1.5 py-0.5 rounded font-bold">⚠️ ${at} ${sufixo.toUpperCase()} ATRASADO(S)</span>`; 
-                                } else { sL = `<span class="text-[9px] text-green-700 bg-green-100 px-1.5 py-0.5 rounded font-bold">✅ EM DIA</span>`; }
-                            } else { sL = `<span class="text-[9px] text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded font-bold">⚠️ VERIFICAR</span>`; }
+                        if (obra.status === 'Pausada' || obra.status === 'Finalizada') { sL = `<span class="text-[9px] text-gray-500 bg-gray-200 px-1.5 py-0.5 rounded font-bold">${obra.status.toUpperCase()}</span>`; } 
+                        else {
+                            const matchO = String(cO).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cO]; const matchF = String(cF).trim().match(/^([^\d]*)(\d+)$/i) || [null, 'Cap', cF]; const numO = parseInt(matchO[2]); const numF = parseInt(matchF[2]);
+                            if (!isNaN(numO) && !isNaN(numF)) { const at = numO - numF; if (at > 0) { let txtNome = matchO[1].trim().toLowerCase(); let sufixo = txtNome.includes('side') ? 'sides' : (txtNome.includes('ep') ? 'epílogos' : 'caps'); sL = `<span class="text-[9px] text-red-700 bg-red-100 px-1.5 py-0.5 rounded font-bold">⚠️ ${at} ${sufixo.toUpperCase()} ATRASADO(S)</span>`; } else { sL = `<span class="text-[9px] text-green-700 bg-green-100 px-1.5 py-0.5 rounded font-bold">✅ EM DIA</span>`; } } else { sL = `<span class="text-[9px] text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded font-bold">⚠️ VERIFICAR</span>`; }
                         }
-                        htmlAdm += `<li class="text-xs flex flex-col justify-between bg-gray-50 p-1.5 border rounded">
-                            <div class="flex justify-between items-center"><span class="font-bold truncate" title="${obra.nome}">• ${obra.nome}</span> ${sL}</div>
-                            <span class="text-[9px] text-gray-500 mt-1">Oficial: ${cO} | Fleur: ${cF}</span>
-                        </li>`;
+                        htmlAdm += `<li class="text-xs flex flex-col justify-between bg-gray-50 p-1.5 border rounded"><div class="flex justify-between items-center"><span class="font-bold truncate" title="${obra.nome}">• ${obra.nome}</span> ${sL}</div><span class="text-[9px] text-gray-500 mt-1">Oficial: ${cO} | Fleur: ${cF}</span></li>`;
                     });
                     htmlAdm += `</ul></div>`;
                 }
-                htmlAdm += `</div></div>`;
-                htmlFinal += htmlAdm;
+                htmlAdm += `</div></div>`; htmlFinal += htmlAdm;
             });
-
             container.innerHTML = htmlFinal;
         }
 
         async function carregarAnalytics() {
             const tb = document.getElementById('tabela-analytics'); tb.innerHTML = '<tr><td colspan="7" class="text-center text-xs py-6">Carregando...</td></tr>';
-            const { data } = await _supabase.from('obras').select('*').order('nome');
-            if(!data) return; tb.innerHTML = '';
-            
+            const { data } = await _supabase.from('obras').select('*').order('nome'); if(!data) return; tb.innerHTML = '';
             data.forEach(obra => {
-                const viewsTot = parseInt(obra.views_totais) || 0; const viewsSiteRaw = parseInt(obra.views_site_raw) || 0;
-                const viewsOntem = parseInt(obra.views_ontem) || 0; const cresc = viewsTot - viewsOntem;
-                let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1;
-                const mediaViews = Math.round(viewsTot / caps);
-                
+                const viewsTot = parseInt(obra.views_totais) || 0; const viewsSiteRaw = parseInt(obra.views_site_raw) || 0; const viewsOntem = parseInt(obra.views_ontem) || 0; const cresc = viewsTot - viewsOntem;
+                let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1; const mediaViews = Math.round(viewsTot / caps);
                 let badgeCresc = cresc >= 0 ? `<span class="text-emerald-600 font-bold">+${cresc.toLocaleString()}</span>` : `<span class="text-red-500 font-bold">${cresc.toLocaleString()}</span>`;
                 let sug = "Baixa"; let corSug = "text-gray-500 font-bold";
-                if (mediaViews >= configRegras.altissima) { sug = "Altíssima"; corSug = "text-purple-700 font-black"; }
-                else if (mediaViews >= configRegras.maxima) { sug = "Máxima"; corSug = "text-red-700 font-black"; }
-                else if (mediaViews >= configRegras.media) { sug = "Média"; corSug = "text-blue-600 font-bold"; }
-
+                if (mediaViews >= configRegras.altissima) { sug = "Altíssima"; corSug = "text-purple-700 font-black"; } else if (mediaViews >= configRegras.maxima) { sug = "Máxima"; corSug = "text-red-700 font-black"; } else if (mediaViews >= configRegras.media) { sug = "Média"; corSug = "text-blue-600 font-bold"; }
                 const priAtual = obra.prioridade || 'Baixa';
                 let btnAceitar = sug === priAtual ? `<span class="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">✅ Ideal</span>` : `<button onclick="aceitarSugestao('${obra.id}', '${sug}')" class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded w-full cursor-pointer hover:bg-emerald-200">Aceitar: ${sug}</button>`;
-
                 tb.innerHTML += `<tr class="border-b"><td class="px-3 py-3 font-bold text-gray-800">${obra.nome}</td><td class="px-3 py-3 text-center font-bold text-blue-900">${viewsTot.toLocaleString()}</td><td class="px-3 py-3 text-center text-xs text-gray-400 border-l">${viewsSiteRaw.toLocaleString()}</td><td class="px-3 py-3 text-center font-mono text-xs font-bold">${mediaViews.toLocaleString()}</td><td class="px-3 py-3 text-center">${badgeCresc}</td><td class="px-3 py-3 text-center text-xs ${corSug}">${sug}</td><td class="px-3 py-3 text-right">${btnAceitar}</td></tr>`;
             });
         }
         async function aceitarSugestao(id, nova) { await _supabase.from('obras').update({ prioridade: nova }).eq('id', id); carregarAnalytics(); }
 
+        // ==========================================
+        // 🎯 GESTÃO DE EQUIPE GERAL (RH)
+        // ==========================================
         function autoPreencherDadosBasicos() {
-            const nickDigitado = document.getElementById('rh-nick').value;
-            const membroBase = equipeBaseGlobal.find(m => m.nick === nickDigitado);
-            if (membroBase && membroBase.data_nascimento && !document.getElementById('rh-nasc').value) {
-                document.getElementById('rh-nasc').value = membroBase.data_nascimento; calcularIdade();
-            }
+            const nickDigitado = document.getElementById('rh-nick').value; const membroBase = equipeBaseGlobal.find(m => m.nick === nickDigitado);
+            if (membroBase && membroBase.data_nascimento && !document.getElementById('rh-nasc').value) { document.getElementById('rh-nasc').value = membroBase.data_nascimento; calcularIdade(); }
         }
-
         function calcularIdade() {
-            const dataNasc = document.getElementById('rh-nasc').value;
-            if (!dataNasc) { document.getElementById('rh-idade').value = ''; return; }
-            const hoje = new Date(); const nasc = new Date(dataNasc);
-            let idade = hoje.getFullYear() - nasc.getFullYear();
-            const mes = hoje.getMonth() - nasc.getMonth();
-            if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) { idade--; }
-            document.getElementById('rh-idade').value = idade;
+            const dataNasc = document.getElementById('rh-nasc').value; if (!dataNasc) { document.getElementById('rh-idade').value = ''; return; }
+            const hoje = new Date(); const nasc = new Date(dataNasc); let idade = hoje.getFullYear() - nasc.getFullYear(); const mes = hoje.getMonth() - nasc.getMonth();
+            if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) { idade--; } document.getElementById('rh-idade').value = idade;
         }
-
         function verificarStatusRH() {
-            const s = document.getElementById('rh-status').value;
-            document.getElementById('box-hiatus').classList.add('hidden');
-            document.getElementById('box-saida').classList.add('hidden');
-            if(s === 'Hiatus') document.getElementById('box-hiatus').classList.remove('hidden');
-            if(s === 'Saiu') document.getElementById('box-saida').classList.remove('hidden');
+            const s = document.getElementById('rh-status').value; document.getElementById('box-hiatus').classList.add('hidden'); document.getElementById('box-saida').classList.add('hidden');
+            if(s === 'Hiatus') document.getElementById('box-hiatus').classList.remove('hidden'); if(s === 'Saiu') document.getElementById('box-saida').classList.remove('hidden');
         }
-
-        function limparFormRH() {
-            document.getElementById('form-rh').reset(); document.getElementById('rh-id').value = '';
-            document.querySelectorAll('input[name="rh-funcao"]').forEach(cb => cb.checked = false); verificarStatusRH();
-        }
+        function limparFormRH() { document.getElementById('form-rh').reset(); document.getElementById('rh-id').value = ''; document.querySelectorAll('input[name="rh-funcao"]').forEach(cb => cb.checked = false); verificarStatusRH(); }
 
         async function carregarRH() {
-            const { data: equipeBase } = await _supabase.from('equipe').select('*');
-            equipeBaseGlobal = equipeBase || [];
-            
-            const datalistNicks = document.getElementById('nicks-equipe'); datalistNicks.innerHTML = '';
-            equipeBaseGlobal.forEach(m => { datalistNicks.innerHTML += `<option value="${m.nick}">`; });
-
+            const { data: equipeBase } = await _supabase.from('equipe').select('*'); equipeBaseGlobal = equipeBase || [];
+            const datalistNicks = document.getElementById('nicks-equipe'); datalistNicks.innerHTML = ''; equipeBaseGlobal.forEach(m => { datalistNicks.innerHTML += `<option value="${m.nick}">`; });
             const { data } = await _supabase.from('equipe_geral').select('*').order('nick');
-            
-            const tbHiatus = document.getElementById('tb-hiatus'); tbHiatus.innerHTML = '';
-            const tbSaiu = document.getElementById('tb-saiu'); tbSaiu.innerHTML = '';
-
+            const tbHiatus = document.getElementById('tb-hiatus'); tbHiatus.innerHTML = ''; const tbSaiu = document.getElementById('tb-saiu'); tbSaiu.innerHTML = '';
             equipeAtivaGlobal = []; funcoesCountGlobal = {};
-
             if(!data) return;
             data.forEach(m => {
                 const jsonObj = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
-
-                if(m.status_membro === 'Hiatus') {
-                    tbHiatus.innerHTML += `
-                        <tr class="hover:bg-yellow-50 border-b border-yellow-100">
-                            <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
-                            <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
-                            <td class="px-3 py-2 text-right">
-                                <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button>
-                                <button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer">📲 Aviso</button>
-                            </td>
-                        </tr>
-                    `;
-                } else if(m.status_membro === 'Saiu') {
-                    tbSaiu.innerHTML += `
-                        <tr class="hover:bg-red-50 border-b border-red-100">
-                            <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
-                            <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td>
-                            <td class="px-3 py-2 text-right">
-                                <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button>
-                                <button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer">📲 Aviso</button>
-                            </td>
-                        </tr>
-                    `;
-                } else {
-                    equipeAtivaGlobal.push(m);
-                    if(m.funcoes) {
-                        const fList = m.funcoes.split(',').map(f => f.trim());
-                        fList.forEach(f => { if(f) funcoesCountGlobal[f] = (funcoesCountGlobal[f] || 0) + 1; });
-                    }
-                }
+                if(m.status_membro === 'Hiatus') { tbHiatus.innerHTML += `<tr class="hover:bg-yellow-50 border-b border-yellow-100"><td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td><td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td><td class="px-3 py-2 text-right"><button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button><button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer">📲 Aviso</button></td></tr>`; } 
+                else if(m.status_membro === 'Saiu') { tbSaiu.innerHTML += `<tr class="hover:bg-red-50 border-b border-red-100"><td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td><td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]">${m.funcoes || '-'}</td><td class="px-3 py-2 text-right"><button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold mr-1 cursor-pointer">✏️ Editar</button><button onclick="gerarAvisoRH('${jsonObj}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded font-bold cursor-pointer">📲 Aviso</button></td></tr>`; } 
+                else { equipeAtivaGlobal.push(m); if(m.funcoes) { const fList = m.funcoes.split(',').map(f => f.trim()); fList.forEach(f => { if(f) funcoesCountGlobal[f] = (funcoesCountGlobal[f] || 0) + 1; }); } }
             });
-
             if(tbHiatus.innerHTML === '') tbHiatus.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro em hiatus.</td></tr>';
             if(tbSaiu.innerHTML === '') tbSaiu.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum registro de saída.</td></tr>';
-
             renderizarEstatisticasRH(); renderizarTabelaAtivosRH();
         }
 
-        function filtrarPorFuncao(funcao) {
-            if(filtroFuncaoAtivo === funcao) filtroFuncaoAtivo = null; else filtroFuncaoAtivo = funcao;
-            renderizarEstatisticasRH(); renderizarTabelaAtivosRH();
-        }
-
+        function filtrarPorFuncao(funcao) { if(filtroFuncaoAtivo === funcao) filtroFuncaoAtivo = null; else filtroFuncaoAtivo = funcao; renderizarEstatisticasRH(); renderizarTabelaAtivosRH(); }
         function renderizarEstatisticasRH() {
-            const estContainer = document.getElementById('rh-estatisticas');
-            estContainer.innerHTML = '';
-            const funcoesArray = Object.keys(funcoesCountGlobal).sort((a,b) => funcoesCountGlobal[b] - funcoesCountGlobal[a]);
-            
+            const estContainer = document.getElementById('rh-estatisticas'); estContainer.innerHTML = ''; const funcoesArray = Object.keys(funcoesCountGlobal).sort((a,b) => funcoesCountGlobal[b] - funcoesCountGlobal[a]);
             if(funcoesArray.length === 0) { estContainer.innerHTML = '<span class="text-gray-500 italic">Nenhuma função preenchida para calcular.</span>'; return; }
-
             funcoesArray.forEach(f => {
-                const isActive = (filtroFuncaoAtivo === f);
-                const baseClasses = isActive ? "bg-purple-600 text-white border-purple-700" : "bg-white text-purple-800 border-purple-200 hover:bg-purple-100";
-                const badgeClasses = isActive ? "bg-white text-purple-700" : "bg-purple-600 text-white";
-                
-                estContainer.innerHTML += `
-                    <button type="button" onclick="filtrarPorFuncao('${f}')" class="transition cursor-pointer border px-2 py-1 rounded-lg font-bold shadow-sm flex items-center gap-2 ${baseClasses}">
-                        ${f} <span class="px-1.5 rounded text-[10px] ${badgeClasses}">${funcoesCountGlobal[f]}</span>
-                    </button>
-                `;
+                const isActive = (filtroFuncaoAtivo === f); const baseClasses = isActive ? "bg-purple-600 text-white border-purple-700" : "bg-white text-purple-800 border-purple-200 hover:bg-purple-100"; const badgeClasses = isActive ? "bg-white text-purple-700" : "bg-purple-600 text-white";
+                estContainer.innerHTML += `<button type="button" onclick="filtrarPorFuncao('${f}')" class="transition cursor-pointer border px-2 py-1 rounded-lg font-bold shadow-sm flex items-center gap-2 ${baseClasses}">${f} <span class="px-1.5 rounded text-[10px] ${badgeClasses}">${funcoesCountGlobal[f]}</span></button>`;
             });
-
             if(filtroFuncaoAtivo) { estContainer.innerHTML += `<button type="button" onclick="filtrarPorFuncao('${filtroFuncaoAtivo}')" class="text-xs text-red-600 hover:text-red-800 font-black ml-2 underline cursor-pointer mt-1">Limpar Filtro ✖</button>`; }
         }
 
         function renderizarTabelaAtivosRH() {
-            const tbAtivos = document.getElementById('tb-ativos');
-            tbAtivos.innerHTML = ''; let count = 0;
-
+            const tbAtivos = document.getElementById('tb-ativos'); tbAtivos.innerHTML = ''; let count = 0;
             equipeAtivaGlobal.forEach(m => {
                 if(filtroFuncaoAtivo) { if(!m.funcoes || !m.funcoes.includes(filtroFuncaoAtivo)) return; }
                 const jsonObj = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
-                tbAtivos.innerHTML += `
-                    <tr class="hover:bg-green-50 border-b border-green-100 transition">
-                        <td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td>
-                        <td class="px-3 py-2 text-xs text-gray-600">${m.funcoes || '-'}</td>
-                        <td class="px-3 py-2 text-right">
-                            <button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold cursor-pointer shadow-sm">✏️ Editar</button>
-                        </td>
-                    </tr>
-                `;
+                tbAtivos.innerHTML += `<tr class="hover:bg-green-50 border-b border-green-100 transition"><td class="px-3 py-2"><span class="font-bold text-gray-800">${m.nick}</span> <span class="text-[10px] text-gray-400">(${m.nome_real || '-'})</span></td><td class="px-3 py-2 text-xs text-gray-600">${m.funcoes || '-'}</td><td class="px-3 py-2 text-right"><button onclick="editarRH('${jsonObj}')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded font-bold cursor-pointer shadow-sm">✏️ Editar</button></td></tr>`;
                 count++;
             });
-
             if(count === 0) tbAtivos.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-gray-400 py-3">Nenhum membro encontrado neste filtro.</td></tr>';
         }
 
         function editarRH(encodedObj) {
             const m = JSON.parse(decodeURIComponent(encodedObj));
-            document.getElementById('rh-id').value = m.id; document.getElementById('rh-nick').value = m.nick || '';
-            document.getElementById('rh-nome').value = m.nome_real || ''; document.getElementById('rh-idade').value = m.idade || '';
-            document.getElementById('rh-nasc').value = m.data_nascimento || ''; document.getElementById('rh-entrada').value = m.data_entrada || '';
-            document.getElementById('rh-status').value = m.status_membro || 'Ativo';
-            document.getElementById('rh-hia-inicio').value = m.hiatus_inicio || ''; document.getElementById('rh-hia-fim').value = m.hiatus_fim || '';
-            document.getElementById('rh-hia-motivo').value = m.hiatus_motivo || ''; document.getElementById('rh-sai-data').value = m.saida_data || '';
-            document.getElementById('rh-sai-motivo').value = m.saida_motivo || '';
-            
+            document.getElementById('rh-id').value = m.id; document.getElementById('rh-nick').value = m.nick || ''; document.getElementById('rh-nome').value = m.nome_real || ''; document.getElementById('rh-idade').value = m.idade || ''; document.getElementById('rh-nasc').value = m.data_nascimento || ''; document.getElementById('rh-entrada').value = m.data_entrada || ''; document.getElementById('rh-status').value = m.status_membro || 'Ativo'; document.getElementById('rh-hia-inicio').value = m.hiatus_inicio || ''; document.getElementById('rh-hia-fim').value = m.hiatus_fim || ''; document.getElementById('rh-hia-motivo').value = m.hiatus_motivo || ''; document.getElementById('rh-sai-data').value = m.saida_data || ''; document.getElementById('rh-sai-motivo').value = m.saida_motivo || '';
             document.querySelectorAll('input[name="rh-funcao"]').forEach(cb => cb.checked = false);
-            if(m.funcoes) {
-                const fList = m.funcoes.split(',').map(f => f.trim());
-                fList.forEach(f => { const cb = document.querySelector(`input[name="rh-funcao"][value="${f}"]`); if(cb) cb.checked = true; });
-            }
-
+            if(m.funcoes) { const fList = m.funcoes.split(',').map(f => f.trim()); fList.forEach(f => { const cb = document.querySelector(`input[name="rh-funcao"][value="${f}"]`); if(cb) cb.checked = true; }); }
             verificarStatusRH(); document.getElementById('painel-rh').scrollIntoView({ behavior: 'smooth' });
         }
 
         async function salvarMembroRH(e) {
-            e.preventDefault();
-            const id = document.getElementById('rh-id').value;
-            const checkboxesF = document.querySelectorAll('input[name="rh-funcao"]:checked');
-            const funcoesSelecionadas = Array.from(checkboxesF).map(cb => cb.value).join(', ');
-
-            const obj = {
-                nick: document.getElementById('rh-nick').value, nome_real: document.getElementById('rh-nome').value,
-                idade: document.getElementById('rh-idade').value, data_nascimento: document.getElementById('rh-nasc').value,
-                data_entrada: document.getElementById('rh-entrada').value, funcoes: funcoesSelecionadas, 
-                status_membro: document.getElementById('rh-status').value,
-                hiatus_inicio: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-inicio').value : null,
-                hiatus_fim: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-fim').value : null,
-                hiatus_motivo: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-motivo').value : null,
-                saida_data: document.getElementById('rh-status').value === 'Saiu' ? document.getElementById('rh-sai-data').value : null,
-                saida_motivo: document.getElementById('rh-status').value === 'Saiu' ? document.getElementById('rh-sai-motivo').value : null,
-            };
-
+            e.preventDefault(); const id = document.getElementById('rh-id').value; const checkboxesF = document.querySelectorAll('input[name="rh-funcao"]:checked'); const funcoesSelecionadas = Array.from(checkboxesF).map(cb => cb.value).join(', ');
+            const obj = { nick: document.getElementById('rh-nick').value, nome_real: document.getElementById('rh-nome').value, idade: document.getElementById('rh-idade').value, data_nascimento: document.getElementById('rh-nasc').value, data_entrada: document.getElementById('rh-entrada').value, funcoes: funcoesSelecionadas, status_membro: document.getElementById('rh-status').value, hiatus_inicio: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-inicio').value : null, hiatus_fim: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-fim').value : null, hiatus_motivo: document.getElementById('rh-status').value === 'Hiatus' ? document.getElementById('rh-hia-motivo').value : null, saida_data: document.getElementById('rh-status').value === 'Saiu' ? document.getElementById('rh-sai-data').value : null, saida_motivo: document.getElementById('rh-status').value === 'Saiu' ? document.getElementById('rh-sai-motivo').value : null, };
             if(id) { await _supabase.from('equipe_geral').update(obj).eq('id', id); } else { await _supabase.from('equipe_geral').insert([obj]); }
             limparFormRH(); carregarRH(); alert("Ficha salva no RH!");
         }
 
         function gerarAvisoRH(encodedObj) {
-            const m = JSON.parse(decodeURIComponent(encodedObj));
-            let txt = '';
-            if(m.status_membro === 'Hiatus') { txt = `⚠️ *AVISO DE HIATUS* ⚠️\n\nEquipe, informamos que @${m.nick} entrou em Hiatus.\n\n📅 Início: ${m.hiatus_inicio ? m.hiatus_inicio.split('-').reverse().join('/') : 'N/A'}\n📅 Retorno Previsto: ${m.hiatus_fim ? m.hiatus_fim.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.hiatus_motivo || 'Assuntos pessoais'}\n\nAguardamos seu retorno em breve! 💖`; } 
-            else if(m.status_membro === 'Saiu') { txt = `🚨 *COMUNICADO OFICIAL DA STAFF* 🚨\n\nInformamos que @${m.nick} não faz mais parte da nossa equipe.\n\n📅 Data da Saída: ${m.saida_data ? m.saida_data.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.saida_motivo || 'Decisão administrativa/pessoal'}\n\nAgradecemos pelo tempo dedicado à scan.`; }
+            const m = JSON.parse(decodeURIComponent(encodedObj)); let txt = '';
+            if(m.status_membro === 'Hiatus') { txt = `⚠️ *AVISO DE HIATUS* ⚠️\n\nEquipe, informamos que @${m.nick} entrou em Hiatus.\n\n📅 Início: ${m.hiatus_inicio ? m.hiatus_inicio.split('-').reverse().join('/') : 'N/A'}\n📅 Retorno Previsto: ${m.hiatus_fim ? m.hiatus_fim.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.hiatus_motivo || 'Assuntos pessoais'}\n\nAguardamos seu retorno em breve! 💖`; } else if(m.status_membro === 'Saiu') { txt = `🚨 *COMUNICADO OFICIAL DA STAFF* 🚨\n\nInformamos que @${m.nick} não faz mais parte da nossa equipe.\n\n📅 Data da Saída: ${m.saida_data ? m.saida_data.split('-').reverse().join('/') : 'N/A'}\n💬 Motivo: ${m.saida_motivo || 'Decisão administrativa/pessoal'}\n\nAgradecemos pelo tempo dedicado à scan.`; }
             document.getElementById('texto-wpp-rh').value = txt; document.getElementById('area-wpp-rh').classList.remove('hidden');
         }
 
-        function limparFormAdv() {
-            document.getElementById('form-adv').reset(); document.getElementById('adv-id').value = '';
-            document.getElementById('btn-salvar-adv').innerHTML = '💾 Registrar Advertência'; document.getElementById('btn-cancelar-adv').classList.add('hidden');
-        }
-
-        async function carregarMembrosParaAdv() {
-            const { data } = await _supabase.from('equipe_geral').select('nick').order('nick');
-            const sel = document.getElementById('adv-nick');
-            if(sel && data) {
-                sel.innerHTML = '<option value="">Selecione...</option>';
-                data.forEach(m => sel.innerHTML += `<option value="${m.nick}">${m.nick}</option>`);
-            }
-        }
-
+        // ==========================================
+        // 🎯 ADVERTÊNCIAS GERAIS
+        // ==========================================
+        function limparFormAdv() { document.getElementById('form-adv').reset(); document.getElementById('adv-id').value = ''; document.getElementById('btn-salvar-adv').innerHTML = '💾 Registrar Advertência'; document.getElementById('btn-cancelar-adv').classList.add('hidden'); }
+        async function carregarMembrosParaAdv() { const { data } = await _supabase.from('equipe_geral').select('nick').order('nick'); const sel = document.getElementById('adv-nick'); if(sel && data) { sel.innerHTML = '<option value="">Selecione...</option>'; data.forEach(m => sel.innerHTML += `<option value="${m.nick}">${m.nick}</option>`); } }
         function editarAdv(encodedObj) {
-            const a = JSON.parse(decodeURIComponent(encodedObj));
-            const meuNick = localStorage.getItem('usuario_nick');
-            
+            const a = JSON.parse(decodeURIComponent(encodedObj)); const meuNick = localStorage.getItem('usuario_nick');
             if (a.membro_nick === meuNick) { alert("🚨 Ação bloqueada: Você não pode alterar sua própria advertência!"); return; }
-
-            document.getElementById('adv-id').value = a.id; document.getElementById('adv-nick').value = a.membro_nick;
-            document.getElementById('adv-nivel').value = a.nivel || '1ª'; document.getElementById('adv-data').value = a.data_adv || '';
-            document.getElementById('adv-motivo').value = a.motivo || '';
-            
-            document.getElementById('btn-salvar-adv').innerHTML = '💾 Atualizar Advertência';
-            document.getElementById('btn-cancelar-adv').classList.remove('hidden'); document.getElementById('painel-adv').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('adv-id').value = a.id; document.getElementById('adv-nick').value = a.membro_nick; document.getElementById('adv-nivel').value = a.nivel || '1ª'; document.getElementById('adv-data').value = a.data_adv || ''; document.getElementById('adv-motivo').value = a.motivo || '';
+            document.getElementById('btn-salvar-adv').innerHTML = '💾 Atualizar Advertência'; document.getElementById('btn-cancelar-adv').classList.remove('hidden'); document.getElementById('painel-adv').scrollIntoView({ behavior: 'smooth' });
         }
-
-        async function excluirAdv(id, nickInfrator) {
-            const meuNick = localStorage.getItem('usuario_nick');
-            if (nickInfrator === meuNick) { alert("🚨 Ação bloqueada: Você não tem permissão para excluir sua própria advertência!"); return; }
-            if(confirm('🚨 Tem certeza que deseja APAGAR esta advertência do sistema?')) {
-                const { error } = await _supabase.from('advertencias').delete().eq('id', id);
-                if(error) { alert("Erro ao excluir: " + error.message); return; } carregarAdvertenciasGerais();
-            }
-        }
-
+        async function excluirAdv(id, nickInfrator) { const meuNick = localStorage.getItem('usuario_nick'); if (nickInfrator === meuNick) { alert("🚨 Ação bloqueada: Você não tem permissão para excluir sua própria advertência!"); return; } if(confirm('🚨 Tem certeza que deseja APAGAR esta advertência do sistema?')) { const { error } = await _supabase.from('advertencias').delete().eq('id', id); if(error) { alert("Erro ao excluir: " + error.message); return; } carregarAdvertenciasGerais(); } }
         async function carregarAdvertenciasGerais() {
-            const { data } = await _supabase.from('advertencias').select('*').order('created_at', {ascending: false});
-            const lst = document.getElementById('lista-advertencias'); lst.innerHTML = '';
+            const { data } = await _supabase.from('advertencias').select('*').order('created_at', {ascending: false}); const lst = document.getElementById('lista-advertencias'); lst.innerHTML = '';
             if(!data || data.length===0) { lst.innerHTML = '<p class="text-xs text-gray-400">Nenhuma advertência registrada.</p>'; return; }
-
             const meuNick = localStorage.getItem('usuario_nick');
-
             data.forEach(a => {
-                const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data';
-                const jsonObj = encodeURIComponent(JSON.stringify(a)).replace(/'/g, "%27");
-                
-                let botoesAcao = '';
-                if (a.membro_nick !== meuNick) {
-                    botoesAcao = `
-                        <button onclick="editarAdv('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button>
-                        <button onclick="excluirAdv('${a.id}', '${a.membro_nick}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button>
-                    `;
-                } else {
-                    botoesAcao = `<span class="text-[9px] text-red-400 italic">🔒 Você não pode alterar sua própria advertência</span>`;
-                }
-
-                lst.innerHTML += `
-                    <div class="bg-gray-50 border border-gray-200 p-3 rounded shadow-sm">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-black text-orange-900">👤 @${a.membro_nick} <span class="text-red-600 ml-1 text-xs">(${a.nivel || '1ª'})</span></span>
-                            <span class="text-[10px] bg-white border border-gray-300 px-2 py-0.5 rounded font-bold">${dataFormat}</span>
-                        </div>
-                        <p class="text-xs text-gray-700 italic mb-2">" ${a.motivo} "</p>
-                        <div class="flex justify-end gap-3 mt-2 pt-2 border-t border-gray-200">${botoesAcao}</div>
-                    </div>
-                `;
+                const dataFormat = a.data_adv ? a.data_adv.split('-').reverse().join('/') : 'Sem data'; const jsonObj = encodeURIComponent(JSON.stringify(a)).replace(/'/g, "%27");
+                let botoesAcao = ''; if (a.membro_nick !== meuNick) { botoesAcao = `<button onclick="editarAdv('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button><button onclick="excluirAdv('${a.id}', '${a.membro_nick}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button>`; } else { botoesAcao = `<span class="text-[9px] text-red-400 italic">🔒 Você não pode alterar sua própria advertência</span>`; }
+                lst.innerHTML += `<div class="bg-gray-50 border border-gray-200 p-3 rounded shadow-sm"><div class="flex justify-between items-center mb-1"><span class="font-black text-orange-900">👤 @${a.membro_nick} <span class="text-red-600 ml-1 text-xs">(${a.nivel || '1ª'})</span></span><span class="text-[10px] bg-white border border-gray-300 px-2 py-0.5 rounded font-bold">${dataFormat}</span></div><p class="text-xs text-gray-700 italic mb-2">" ${a.motivo} "</p><div class="flex justify-end gap-3 mt-2 pt-2 border-t border-gray-200">${botoesAcao}</div></div>`;
             });
         }
-
         async function salvarAdvertencia(e) {
-            e.preventDefault();
-            const id = document.getElementById('adv-id').value; const nick = document.getElementById('adv-nick').value; 
-            const nivel = document.getElementById('adv-nivel').value; const dataAdv = document.getElementById('adv-data').value; 
-            const motivo = document.getElementById('adv-motivo').value;
-
+            e.preventDefault(); const id = document.getElementById('adv-id').value; const nick = document.getElementById('adv-nick').value; const nivel = document.getElementById('adv-nivel').value; const dataAdv = document.getElementById('adv-data').value; const motivo = document.getElementById('adv-motivo').value;
             const obj = {membro_nick: nick, nivel: nivel, data_adv: dataAdv, motivo: motivo};
-
-            if (id) {
-                const { error } = await _supabase.from('advertencias').update(obj).eq('id', id);
-                if(error) { alert("🚨 ERRO AO ATUALIZAR: " + error.message); return; } alert("✅ Advertência atualizada!");
-            } else {
-                const { error } = await _supabase.from('advertencias').insert([obj]);
-                if(error) { alert("🚨 ERRO AO INSERIR: " + error.message); return; }
-            }
-
-            const dFormat = dataAdv.split('-').reverse().join('/');
-            const msg = `⚠️ *ADVERTÊNCIA OFICIAL* ⚠️\n\nMembro: @${nick}\nData da Ocorrência: ${dFormat}\nGrau: ${nivel} Advertência\n\nMotivo:\n"${motivo}"\n\nPedimos que as regras da equipe sejam respeitadas para mantermos um ambiente saudável. Qualquer dúvida, chame a administração.`;
-            document.getElementById('texto-wpp-adv').value = msg; document.getElementById('area-wpp-adv').classList.remove('hidden');
-            limparFormAdv(); carregarAdvertenciasGerais();
+            if (id) { const { error } = await _supabase.from('advertencias').update(obj).eq('id', id); if(error) { alert("🚨 ERRO AO ATUALIZAR: " + error.message); return; } alert("✅ Advertência atualizada!"); } else { const { error } = await _supabase.from('advertencias').insert([obj]); if(error) { alert("🚨 ERRO AO INSERIR: " + error.message); return; } }
+            const dFormat = dataAdv.split('-').reverse().join('/'); const msg = `⚠️ *ADVERTÊNCIA OFICIAL* ⚠️\n\nMembro: @${nick}\nData da Ocorrência: ${dFormat}\nGrau: ${nivel} Advertência\n\nMotivo:\n"${motivo}"\n\nPedimos que as regras da equipe sejam respeitadas para mantermos um ambiente saudável. Qualquer dúvida, chame a administração.`;
+            document.getElementById('texto-wpp-adv').value = msg; document.getElementById('area-wpp-adv').classList.remove('hidden'); limparFormAdv(); carregarAdvertenciasGerais();
         }
 
-        function limparFormRec() {
-            document.getElementById('rec-id').value = ''; document.getElementById('rec-nome').value = '';
-            document.getElementById('rec-funcao').value = ''; document.getElementById('rec-fase').value = 'Em Teste';
-            document.getElementById('btn-salvar-rec').innerHTML = '➕ Adicionar'; document.getElementById('btn-cancelar-rec').classList.add('hidden');
-        }
-
-        function editarRec(encodedObj) {
-            const c = JSON.parse(decodeURIComponent(encodedObj));
-            document.getElementById('rec-id').value = c.id; document.getElementById('rec-nome').value = c.nome;
-            document.getElementById('rec-funcao').value = c.funcao || c.cargo_pretendido || ''; document.getElementById('rec-fase').value = c.fase || 'Em Teste';
-            document.getElementById('btn-salvar-rec').innerHTML = '💾 Atualizar Cadastro'; document.getElementById('btn-cancelar-rec').classList.remove('hidden');
-            document.getElementById('painel-recrut').scrollIntoView({ behavior: 'smooth' });
-        }
-
+        // ==========================================
+        // 🎯 RECRUTAMENTO
+        // ==========================================
+        function limparFormRec() { document.getElementById('rec-id').value = ''; document.getElementById('rec-nome').value = ''; document.getElementById('rec-funcao').value = ''; document.getElementById('rec-fase').value = 'Em Teste'; document.getElementById('btn-salvar-rec').innerHTML = '➕ Adicionar'; document.getElementById('btn-cancelar-rec').classList.add('hidden'); }
+        function editarRec(encodedObj) { const c = JSON.parse(decodeURIComponent(encodedObj)); document.getElementById('rec-id').value = c.id; document.getElementById('rec-nome').value = c.nome; document.getElementById('rec-funcao').value = c.funcao || c.cargo_pretendido || ''; document.getElementById('rec-fase').value = c.fase || 'Em Teste'; document.getElementById('btn-salvar-rec').innerHTML = '💾 Atualizar Cadastro'; document.getElementById('btn-cancelar-rec').classList.remove('hidden'); document.getElementById('painel-recrut').scrollIntoView({ behavior: 'smooth' }); }
         async function carregarRecrutamento() {
-            const { data, error } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false});
-            if(error) { alert("🚨 ERRO AO CARREGAR RECRUTAMENTO: " + error.message); return; }
-
-            for(let i=1; i<=8; i++) document.getElementById(`rec-col-${i}`).innerHTML = '';
-
-            if(!data) return;
+            const { data, error } = await _supabase.from('recrutamento').select('*').order('created_at', {ascending: false}); if(error) { alert("🚨 ERRO AO CARREGAR RECRUTAMENTO: " + error.message); return; }
+            for(let i=1; i<=8; i++) document.getElementById(`rec-col-${i}`).innerHTML = ''; if(!data) return;
             data.forEach(c => {
                 const jsonObj = encodeURIComponent(JSON.stringify(c)).replace(/'/g, "%27");
-                
-                const card = `
-                    <div class="bg-white border border-gray-200 p-3 rounded shadow-sm relative mb-2 group hover:border-teal-400 transition">
-                        <div class="mb-3">
-                            <p class="font-black text-gray-800 text-sm leading-tight">${c.nome}</p>
-                            <p class="text-[10px] font-bold text-gray-500 uppercase mt-0.5">${c.funcao || c.cargo_pretendido || ''}</p>
-                        </div>
-                        <label class="text-[9px] font-bold text-gray-500">Mudar Fase:</label>
-                        <select onchange="mudarFaseRec('${c.id}', this.value)" class="text-[10px] w-full p-1 border border-gray-300 rounded bg-gray-50 font-bold text-gray-700 cursor-pointer focus:outline-none mb-2">
-                            <option value="Em Teste" ${c.fase === 'Em Teste' ? 'selected' : ''}>⏳ Em Teste</option>
-                            <option value="1ª Fase" ${c.fase === '1ª Fase' ? 'selected' : ''}>📄 1ª Fase</option>
-                            <option value="Aprovados (1ª Fase)" ${c.fase === 'Aprovados (1ª Fase)' ? 'selected' : ''}>✅ Aprovados (1ª Fase)</option>
-                            <option value="2ª Fase" ${c.fase === '2ª Fase' ? 'selected' : ''}>📄 2ª Fase</option>
-                            <option value="Aprovados (2ª Fase)" ${c.fase === 'Aprovados (2ª Fase)' ? 'selected' : ''}>✅ Aprovados (2ª Fase)</option>
-                            <option value="3ª Fase" ${c.fase === '3ª Fase' ? 'selected' : ''}>📄 3ª Fase</option>
-                            <option value="Aprovados" ${c.fase === 'Aprovados' ? 'selected' : ''}>🏆 Aprovados (Final)</option>
-                            <option value="Reprovados" ${c.fase === 'Reprovados' ? 'selected' : ''}>❌ Reprovados</option>
-                        </select>
-                        <div class="flex justify-between gap-3 pt-2 border-t border-gray-200 mt-2">
-                            <button onclick="editarRec('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button>
-                            <button onclick="excluirRec('${c.id}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button>
-                        </div>
-                    </div>
-                `;
-
-                if(c.fase === 'Em Teste') document.getElementById('rec-col-1').innerHTML += card;
-                else if(c.fase === '1ª Fase') document.getElementById('rec-col-2').innerHTML += card;
-                else if(c.fase === 'Aprovados (1ª Fase)') document.getElementById('rec-col-3').innerHTML += card;
-                else if(c.fase === '2ª Fase') document.getElementById('rec-col-4').innerHTML += card;
-                else if(c.fase === 'Aprovados (2ª Fase)') document.getElementById('rec-col-5').innerHTML += card;
-                else if(c.fase === '3ª Fase') document.getElementById('rec-col-6').innerHTML += card;
-                else if(c.fase === 'Aprovados') document.getElementById('rec-col-7').innerHTML += card;
-                else if(c.fase === 'Reprovados') document.getElementById('rec-col-8').innerHTML += card;
-                else document.getElementById('rec-col-1').innerHTML += card; 
+                const card = `<div class="bg-white border border-gray-200 p-3 rounded shadow-sm relative mb-2 group hover:border-teal-400 transition"><div class="mb-3"><p class="font-black text-gray-800 text-sm leading-tight">${c.nome}</p><p class="text-[10px] font-bold text-gray-500 uppercase mt-0.5">${c.funcao || c.cargo_pretendido || ''}</p></div><label class="text-[9px] font-bold text-gray-500">Mudar Fase:</label><select onchange="mudarFaseRec('${c.id}', this.value)" class="text-[10px] w-full p-1 border border-gray-300 rounded bg-gray-50 font-bold text-gray-700 cursor-pointer focus:outline-none mb-2"><option value="Em Teste" ${c.fase === 'Em Teste' ? 'selected' : ''}>⏳ Em Teste</option><option value="1ª Fase" ${c.fase === '1ª Fase' ? 'selected' : ''}>📄 1ª Fase</option><option value="Aprovados (1ª Fase)" ${c.fase === 'Aprovados (1ª Fase)' ? 'selected' : ''}>✅ Aprovados (1ª Fase)</option><option value="2ª Fase" ${c.fase === '2ª Fase' ? 'selected' : ''}>📄 2ª Fase</option><option value="Aprovados (2ª Fase)" ${c.fase === 'Aprovados (2ª Fase)' ? 'selected' : ''}>✅ Aprovados (2ª Fase)</option><option value="3ª Fase" ${c.fase === '3ª Fase' ? 'selected' : ''}>📄 3ª Fase</option><option value="Aprovados" ${c.fase === 'Aprovados' ? 'selected' : ''}>🏆 Aprovados (Final)</option><option value="Reprovados" ${c.fase === 'Reprovados' ? 'selected' : ''}>❌ Reprovados</option></select><div class="flex justify-between gap-3 pt-2 border-t border-gray-200 mt-2"><button onclick="editarRec('${jsonObj}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">✏️ Editar</button><button onclick="excluirRec('${c.id}')" class="text-[10px] text-red-500 hover:text-red-700 font-bold cursor-pointer">🗑️ Excluir</button></div></div>`;
+                if(c.fase === 'Em Teste') document.getElementById('rec-col-1').innerHTML += card; else if(c.fase === '1ª Fase') document.getElementById('rec-col-2').innerHTML += card; else if(c.fase === 'Aprovados (1ª Fase)') document.getElementById('rec-col-3').innerHTML += card; else if(c.fase === '2ª Fase') document.getElementById('rec-col-4').innerHTML += card; else if(c.fase === 'Aprovados (2ª Fase)') document.getElementById('rec-col-5').innerHTML += card; else if(c.fase === '3ª Fase') document.getElementById('rec-col-6').innerHTML += card; else if(c.fase === 'Aprovados') document.getElementById('rec-col-7').innerHTML += card; else if(c.fase === 'Reprovados') document.getElementById('rec-col-8').innerHTML += card; else document.getElementById('rec-col-1').innerHTML += card; 
             });
         }
-
-        async function salvarRecrutamento(e) {
-            e.preventDefault();
-            const id = document.getElementById('rec-id').value;
-            const obj = { nome: document.getElementById('rec-nome').value, funcao: document.getElementById('rec-funcao').value, fase: document.getElementById('rec-fase').value };
-            
-            if (id) { const { error } = await _supabase.from('recrutamento').update(obj).eq('id', id); if (error) { alert("🚨 ERRO AO ATUALIZAR: " + error.message); return; } } 
-            else { const { error } = await _supabase.from('recrutamento').insert([obj]); if (error) { alert("🚨 ERRO AO INSERIR: " + error.message); return; } }
-            
-            limparFormRec(); carregarRecrutamento(); alert("✅ Candidato salvo com sucesso!");
-        }
-
+        async function salvarRecrutamento(e) { e.preventDefault(); const id = document.getElementById('rec-id').value; const obj = { nome: document.getElementById('rec-nome').value, funcao: document.getElementById('rec-funcao').value, fase: document.getElementById('rec-fase').value }; if (id) { const { error } = await _supabase.from('recrutamento').update(obj).eq('id', id); if (error) { alert("🚨 ERRO AO ATUALIZAR: " + error.message); return; } } else { const { error } = await _supabase.from('recrutamento').insert([obj]); if (error) { alert("🚨 ERRO AO INSERIR: " + error.message); return; } } limparFormRec(); carregarRecrutamento(); alert("✅ Candidato salvo com sucesso!"); }
         async function mudarFaseRec(id, novaFase) { const { error } = await _supabase.from('recrutamento').update({fase: novaFase}).eq('id', id); if (error) { alert("🚨 ERRO AO MOVER FASE: " + error.message); return; } carregarRecrutamento(); }
         async function excluirRec(id) { if(confirm("Deseja apagar este candidato?")) { const { error } = await _supabase.from('recrutamento').delete().eq('id', id); if (error) { alert("🚨 ERRO: " + error.message); return; } carregarRecrutamento(); } }
-
         function fecharModalDownload() { document.getElementById('modal-download').classList.add('hidden'); }
-        function abrirModalDownload() {
-            const select = document.getElementById('raw-obra'); select.innerHTML = '<option value="">Selecione a obra...</option>';
-            const nomesUnicos = [...new Set(obrasDisponiveisGlobal.map(o => o.nome))].sort();
-            nomesUnicos.forEach(nome => { select.innerHTML += `<option value="${nome}">${nome}</option>`; });
-            document.getElementById('modal-download').classList.remove('hidden');
-        }
-        async function salvarDownloadRaw(e) {
-            e.preventDefault(); const nick = localStorage.getItem('usuario_nick');
-            const obj = { obra_nome: document.getElementById('raw-obra').value, capitulo: document.getElementById('raw-capitulo').value, etapa: 'Organizer / Raw', paginas: document.getElementById('raw-paginas').value, altura: document.getElementById('raw-altura').value, responsavel_nick: nick, prazo: null, status: 'Concluído' };
-            await _supabase.from('tarefas').insert([obj]); fecharModalDownload(); carregarDashboardAntigo(nick); alert("Download informado!");
-        }
+        function abrirModalDownload() { const select = document.getElementById('raw-obra'); select.innerHTML = '<option value="">Selecione a obra...</option>'; const nomesUnicos = [...new Set(obrasDisponiveisGlobal.map(o => o.nome))].sort(); nomesUnicos.forEach(nome => { select.innerHTML += `<option value="${nome}">${nome}</option>`; }); document.getElementById('modal-download').classList.remove('hidden'); }
+        async function salvarDownloadRaw(e) { e.preventDefault(); const nick = localStorage.getItem('usuario_nick'); const obj = { obra_nome: document.getElementById('raw-obra').value, capitulo: document.getElementById('raw-capitulo').value, etapa: 'Organizer / Raw', paginas: document.getElementById('raw-paginas').value, altura: document.getElementById('raw-altura').value, responsavel_nick: nick, prazo: null, status: 'Concluído' }; await _supabase.from('tarefas').insert([obj]); fecharModalDownload(); carregarDashboardAntigo(nick); alert("Download informado!"); }
 
-        // 🌟 ANIVERSARIANTES COM TRATAMENTO DE ERROS 🌟
+        // ==========================================
+        // 🎯 ANIVERSARIANTES
+        // ==========================================
         async function carregarAniversariantes() {
             const { data } = await _supabase.from('equipe_geral').select('nick, data_nascimento');
             const lista = document.getElementById('lista-aniversariantes');
-            
-            if(!data || data.length === 0) {
-                lista.innerHTML = '<p class="text-sm text-gray-500 italic px-2">Nenhum dado encontrado.</p>';
-                return;
-            }
-            
+            if(!data || data.length === 0) { lista.innerHTML = '<p class="text-sm text-gray-500 italic px-2">Nenhum dado encontrado.</p>'; return; }
             const hoje = new Date(); const mesAtual = hoje.getMonth() + 1; const diaAtual = hoje.getDate();
             let html = ''; let aniversariantesHoje = [];
             data.forEach(m => {
@@ -1147,8 +530,7 @@
             const { data } = await _supabase.from('advertencias').select('*').eq('membro_nick', meuNick).order('created_at', {ascending: false});
             const lista = document.getElementById('lista-minhas-adv');
             if(!data || data.length === 0) return lista.innerHTML = '<p class="text-center text-sm">Ficha limpa! 🎉</p>';
-            lista.innerHTML = '';
-            data.forEach(a => lista.innerHTML += `<div class="bg-red-50 border p-3 rounded shadow-sm text-xs text-red-900">${a.nivel || '1ª'} Adv: "${a.motivo}"</div>`);
+            lista.innerHTML = ''; data.forEach(a => lista.innerHTML += `<div class="bg-red-50 border p-3 rounded shadow-sm text-xs text-red-900">${a.nivel || '1ª'} Adv: "${a.motivo}"</div>`);
         }
     </script>
 </body>
