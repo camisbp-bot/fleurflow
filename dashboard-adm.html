@@ -44,7 +44,7 @@
         <!-- 🎉 ANIVERSARIANTES DO MÊS -->
         <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm mt-6">
             <div class="flex justify-between items-center mb-4 border-b pb-2"><h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2><button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow cursor-pointer">📲 Mensagem de Hoje</button></div>
-            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]"></div>
+            <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]"><p class="text-sm text-gray-500 italic px-2">Buscando aniversariantes...</p></div>
             <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t"><textarea id="texto-niver" rows="4" class="w-full bg-white border rounded-lg p-3 text-sm focus:outline-none" readonly></textarea></div>
         </section>
 
@@ -63,13 +63,10 @@
             </div>
         </section>
         
-        <!-- OBRAS POR EQUIPE COM BOTÃO DE VÍNCULO -->
         <section class="bg-white rounded-xl shadow-sm border p-6 flex flex-col mt-8">
             <div class="flex flex-col sm:flex-row justify-between items-center mb-4 border-b border-gray-100 pb-2 gap-4">
                 <h2 class="text-lg font-black text-gray-800 flex items-center gap-2">👥 Obras por Equipe (Visão ADM)</h2>
-                <button onclick="abrirModalVinculoADM()" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold px-3 py-2 rounded cursor-pointer transition flex items-center gap-1 shadow-sm">
-                    👑 Vincular Moderadores
-                </button>
+                <button onclick="abrirModalVinculoADM()" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold px-3 py-2 rounded cursor-pointer transition flex items-center gap-1 shadow-sm">👑 Vincular Moderadores</button>
             </div>
             <div class="overflow-y-auto max-h-[600px] pr-2" id="lista-todas-obras"></div>
         </section>
@@ -335,7 +332,7 @@
 
     <div id="modal-notificacoes" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div class="bg-red-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">🔔 Notificações</h3><button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold hover:scale-110 cursor-pointer">✖</button></div>
+            <div class="bg-red-800 p-4 flex justify-between items-center text-white"><h3 class="font-black">🔔 Notificações</h3><button onclick="document.getElementById('modal-notificacoes').classList.add('hidden')" class="font-bold cursor-pointer">✖</button></div>
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4"><p class="text-xs text-gray-500">Avisos do sistema.</p><button onclick="limparNotificacoes()" class="text-xs bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-600 font-bold px-3 py-1 rounded cursor-pointer transition">🧹 Limpar Avisos</button></div>
                 <div id="lista-alertas-bi" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
@@ -374,7 +371,7 @@
         let todasTarefasGlobais = [];
         let obrasDisponiveisGlobal = [];
         let listaEquipeGlobal = [];
-        let configRegras = { media: 5000, maxima: 15000, altissima: 23000 }; 
+        let configRegras = { media: 5000, alta: 15000, maxima: 23000, altissima: 30000 }; 
         let obrasAnalyticsData = [];
         
         let equipeBaseGlobal = [];
@@ -382,6 +379,7 @@
         let funcoesCountGlobal = {};
         let filtroFuncaoAtivo = null;
 
+        // 🌟 SISTEMA BLINDADO: Se algo falhar, o resto continua carregando! 🌟
         window.onload = async () => {
             const nick = localStorage.getItem('usuario_nick');
             const cargo = localStorage.getItem('usuario_cargo');
@@ -389,12 +387,12 @@
             
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
             
-            await carregarRegrasSupabase();
-            carregarDashboardAntigo(nick);
-            carregarObrasPorModerador();
-            carregarMinhasAdv(nick);
-            carregarAniversariantes();
-            carregarRecrutamento();
+            try { await carregarRegrasSupabase(); } catch(e) { console.error("Erro Metas:", e); }
+            try { await carregarDashboardAntigo(nick); } catch(e) { console.error("Erro Dashboard:", e); }
+            try { await carregarObrasPorModerador(); } catch(e) { console.error("Erro Visao ADM:", e); }
+            try { await carregarAniversariantes(); } catch(e) { console.error("Erro Aniversários:", e); }
+            try { await carregarMinhasAdv(nick); } catch(e) { console.error("Erro Minhas Adv:", e); }
+            try { await carregarRecrutamento(); } catch(e) { console.error("Erro Recrutamento:", e); }
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
@@ -431,8 +429,8 @@
             const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
             const meuId = usuarioData && usuarioData[0] ? String(usuarioData[0].id) : null;
             const { data: obras } = await _supabase.from('obras').select('*').order('nome');
-            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado').order('prazo', { ascending: true });
-
+            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado');
+            
             todasTarefasGlobais = tarefas || [];
             obrasDisponiveisGlobal = obras || [];
             const obrasStaff = [], obrasResp = [];
@@ -459,10 +457,10 @@
             renderizarObras(obrasResp, 'lista-obras-resp', true);
         }
 
-        // 🌟 RENDERIZAR OBRAS (AGORA COM CAPAS E BOTÕES CORRIGIDOS) 🌟
+        // 🌟 RENDERIZAR OBRAS COM CAPAS E BOTÕES CORRIGIDOS 🌟
         function renderizarObras(lista, idCont, isResp) {
             const cont = document.getElementById(idCont); if(!cont) return; cont.innerHTML = '';
-            if (lista.length === 0) { cont.innerHTML = `<p class="text-sm text-gray-400 italic">Vazio.</p>`; return; }
+            if (!lista || lista.length === 0) { cont.innerHTML = `<p class="text-sm text-gray-400 italic text-center p-4">Nenhuma obra na sua lista.</p>`; return; }
 
             lista.forEach(o => {
                 const jsonObj = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
@@ -471,7 +469,7 @@
                 
                 const imgCapa = o.capa_url 
                     ? `<img src="${o.capa_url}" class="w-10 h-14 object-cover rounded shadow-sm border border-gray-200 flex-shrink-0" alt="Capa">` 
-                    : `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400">Sem Capa</span></div>`;
+                    : `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400 text-center leading-tight">Sem<br>Capa</span></div>`;
 
                 const btnEdit = isResp ? `<button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'; event.stopPropagation();" class="text-xs bg-gray-100 border border-gray-200 hover:bg-gray-200 px-2 py-1 rounded cursor-pointer transition" title="Editar Obra">✏️</button>` : '';
 
@@ -503,7 +501,6 @@
             });
         }
 
-        // 🌟 LÓGICA DE ABRIR TAREFAS 🌟
         function abrirTarefasObra(obraNome, modo) {
             const painel = document.getElementById('painel-tarefas');
             const titulo = document.getElementById('titulo-painel-tarefas');
@@ -562,7 +559,6 @@
 
         async function mudarStatusTarefa(id, novoStatus) { await _supabase.from('tarefas').update({ status: novoStatus }).eq('id', id); carregarDashboardAntigo(localStorage.getItem('usuario_nick')); }
 
-        // 🌟 LÓGICA DO MODAL DE VIEWS (CORRIGIDA) 🌟
         function abrirModalViews(enc) { 
             const o = JSON.parse(decodeURIComponent(enc)); 
             
@@ -749,9 +745,6 @@
         }
         async function aceitarSugestao(id, nova) { await _supabase.from('obras').update({ prioridade: nova }).eq('id', id); carregarAnalytics(); }
 
-        // ==========================================
-        // 🎯 GESTÃO DE EQUIPE GERAL (RH)
-        // ==========================================
         function autoPreencherDadosBasicos() {
             const nickDigitado = document.getElementById('rh-nick').value;
             const membroBase = equipeBaseGlobal.find(m => m.nick === nickDigitado);
@@ -1116,13 +1109,16 @@
             await _supabase.from('tarefas').insert([obj]); fecharModalDownload(); carregarDashboardAntigo(nick); alert("Download informado!");
         }
 
+        // 🌟 ANIVERSARIANTES COM TRATAMENTO DE ERROS 🌟
         async function carregarAniversariantes() {
             const { data } = await _supabase.from('equipe_geral').select('nick, data_nascimento');
             const lista = document.getElementById('lista-aniversariantes');
+            
             if(!data || data.length === 0) {
-                lista.innerHTML = '<p class="text-sm text-gray-500 italic">Nenhum aniversariante encontrado.</p>';
+                lista.innerHTML = '<p class="text-sm text-gray-500 italic px-2">Nenhum dado encontrado.</p>';
                 return;
             }
+            
             const hoje = new Date(); const mesAtual = hoje.getMonth() + 1; const diaAtual = hoje.getDate();
             let html = ''; let aniversariantesHoje = [];
             data.forEach(m => {
@@ -1137,7 +1133,7 @@
                     }
                 }
             });
-            lista.innerHTML = html === '' ? '<p class="text-sm text-gray-500 italic">Nenhum aniversariante neste mês.</p>' : html;
+            lista.innerHTML = html === '' ? '<p class="text-sm text-gray-500 italic px-2">Nenhum aniversariante neste mês.</p>' : html;
             if(aniversariantesHoje.length > 0) { document.getElementById('btn-gerar-niver').classList.remove('hidden'); window.anivHoje = aniversariantesHoje; }
         }
 
