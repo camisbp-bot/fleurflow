@@ -47,11 +47,16 @@
 
         <!-- 🎉 ANIVERSARIANTES DO MÊS -->
         <section class="bg-pink-50 border border-pink-200 p-6 rounded-xl shadow-sm mt-6">
-            <div class="flex justify-between items-center mb-4 border-b pb-2"><h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2><button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow cursor-pointer">📲 Mensagem de Hoje</button></div>
+            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                <h2 class="text-lg font-black text-pink-900 flex items-center gap-2">🎉 Aniversariantes do Mês</h2>
+                <button id="btn-gerar-niver" onclick="gerarMensagemNiver()" class="hidden text-xs bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-3 rounded shadow cursor-pointer">📲 Mensagem de Hoje</button>
+            </div>
             <div id="lista-aniversariantes" class="flex gap-4 overflow-x-auto pb-2 items-center min-h-[80px]">
                 <p class="text-sm text-gray-500 italic px-2">Buscando aniversariantes da equipe...</p>
             </div>
-            <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t"><textarea id="texto-niver" rows="4" class="w-full bg-white border rounded-lg p-3 text-sm focus:outline-none" readonly></textarea></div>
+            <div id="area-mensagem-niver" class="hidden mt-4 pt-4 border-t">
+                <textarea id="texto-niver" rows="4" class="w-full bg-white border rounded-lg p-3 text-sm focus:outline-none" readonly></textarea>
+            </div>
         </section>
 
         <!-- OBRAS DA DASHBOARD -->
@@ -72,7 +77,10 @@
 
         <!-- PAINEL TAREFAS -->
         <section id="painel-tarefas" class="hidden bg-white p-6 rounded-xl shadow-md border mt-6">
-            <div class="flex justify-between items-center mb-6 border-b pb-3"><h2 id="titulo-painel-tarefas" class="text-xl font-black flex items-center gap-2">📋 Tarefas da Obra</h2><button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:text-red-700 px-3 py-1 rounded cursor-pointer">✖ Fechar</button></div>
+            <div class="flex justify-between items-center mb-6 border-b pb-3">
+                <h2 id="titulo-painel-tarefas" class="text-xl font-black flex items-center gap-2">📋 Tarefas da Obra</h2>
+                <button onclick="fecharPainelTarefas()" class="text-xs font-bold bg-gray-100 hover:text-red-700 px-3 py-1 rounded cursor-pointer">✖ Fechar</button>
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white rounded-xl border flex flex-col h-80"><div class="bg-green-50 p-3 border-b"><h3 class="font-black text-green-800 text-sm">✅ Concluídas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-concluidas"></div></div>
                 <div class="bg-white rounded-xl border flex flex-col h-80"><div class="bg-red-50 p-3 border-b"><h3 class="font-black text-red-800 text-sm">🚨 Atrasadas</h3></div><div class="overflow-y-auto flex-1 p-3 space-y-3" id="detalhe-atraso"></div></div>
@@ -105,6 +113,7 @@
                 <form onsubmit="salvarRegras(event)" class="space-y-4">
                     <div><label class="text-xs font-bold text-purple-700">👑 Prioridade Altíssima</label><input type="number" id="config-altissima" required class="w-full border rounded p-2 text-sm font-bold"></div>
                     <div><label class="text-xs font-bold text-red-600">🔥 Prioridade Máxima</label><input type="number" id="config-maxima" required class="w-full border rounded p-2 text-sm font-bold"></div>
+                    <div><label class="text-xs font-bold text-orange-600">⭐ Prioridade Alta</label><input type="number" id="config-alta" required class="w-full border rounded p-2 text-sm font-bold"></div>
                     <div><label class="text-xs font-bold text-blue-600">📄 Prioridade Média</label><input type="number" id="config-media" required class="w-full border rounded p-2 text-sm font-bold"></div>
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded cursor-pointer transition">💾 Salvar Metas</button>
                 </form>
@@ -159,10 +168,24 @@
                             <label class="flex items-center gap-1.5 text-[10px] text-gray-700 cursor-pointer hover:bg-gray-100 p-1 rounded"><input type="checkbox" name="rh-funcao" value="REVISOR DE TESTES" class="text-purple-600 rounded"> REVISOR DE TESTES</label>
                         </div>
                     </div>
-                    <div class="border-t border-gray-200 pt-4 mt-4"><label class="text-xs font-bold text-gray-600">Status do Membro</label><select id="rh-status" onchange="verificarStatusRH()" class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-50 font-bold"><option value="Ativo">🟢 Ativo</option><option value="Hiatus">🟡 Em Hiatus</option><option value="Saiu">🔴 Saiu da SCAN</option></select></div>
-                    <div id="box-hiatus" class="hidden space-y-2 bg-yellow-50 p-3 rounded border border-yellow-200"><div class="grid grid-cols-2 gap-2"><div><label class="text-xs font-bold">Início</label><input type="date" id="rh-hia-inicio" class="w-full border rounded p-1 text-xs"></div><div><label class="text-xs font-bold">Fim Previsto</label><input type="date" id="rh-hia-fim" class="w-full border rounded p-1 text-xs"></div></div><div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-hia-motivo" class="w-full border rounded p-1 text-xs"></div></div>
-                    <div id="box-saida" class="hidden space-y-2 bg-red-50 p-3 rounded border border-red-200"><div><label class="text-xs font-bold">Data de Saída</label><input type="date" id="rh-sai-data" class="w-full border rounded p-1 text-xs"></div><div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-sai-motivo" class="w-full border rounded p-1 text-xs"></div></div>
-                    <div class="flex gap-2 pt-2"><button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold cursor-pointer transition">Limpar</button><button type="submit" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 rounded shadow cursor-pointer transition">💾 Salvar Ficha</button></div>
+                    <div class="border-t pt-4 mt-4">
+                        <label class="text-xs font-bold text-gray-600">Status do Membro</label>
+                        <select id="rh-status" onchange="verificarStatusRH()" class="w-full border rounded p-2 text-sm bg-gray-50 font-bold">
+                            <option value="Ativo">🟢 Ativo</option><option value="Hiatus">🟡 Em Hiatus</option><option value="Saiu">🔴 Saiu da SCAN</option>
+                        </select>
+                    </div>
+                    <div id="box-hiatus" class="hidden space-y-2 bg-yellow-50 p-3 rounded border border-yellow-200">
+                        <div class="grid grid-cols-2 gap-2"><div><label class="text-xs font-bold">Início</label><input type="date" id="rh-hia-inicio" class="w-full border rounded p-1 text-xs"></div><div><label class="text-xs font-bold">Fim Previsto</label><input type="date" id="rh-hia-fim" class="w-full border rounded p-1 text-xs"></div></div>
+                        <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-hia-motivo" class="w-full border rounded p-1 text-xs"></div>
+                    </div>
+                    <div id="box-saida" class="hidden space-y-2 bg-red-50 p-3 rounded border border-red-200">
+                        <div><label class="text-xs font-bold">Data de Saída</label><input type="date" id="rh-sai-data" class="w-full border rounded p-1 text-xs"></div>
+                        <div><label class="text-xs font-bold">Motivo</label><input type="text" id="rh-sai-motivo" class="w-full border rounded p-1 text-xs"></div>
+                    </div>
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="limparFormRH()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded text-sm font-bold cursor-pointer transition">Limpar</button>
+                        <button type="submit" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 rounded shadow cursor-pointer transition">💾 Salvar Ficha</button>
+                    </div>
                 </form>
             </div>
             <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-200">
@@ -235,9 +258,13 @@
         </div>
     </div>
 
+    <!-- 🌟 MODAL DE VIEWS 🌟 -->
     <div id="modal-detalhes-views" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border-2 border-emerald-500">
-            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white"><h3 class="font-black flex items-center gap-2">📊 Analytics da Obra</h3><button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold text-emerald-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button></div>
+            <div class="bg-emerald-800 p-4 flex justify-between items-center text-white">
+                <h3 class="font-black flex items-center gap-2">📊 Analytics da Obra</h3>
+                <button onclick="document.getElementById('modal-detalhes-views').classList.add('hidden')" class="font-bold text-emerald-200 hover:text-white cursor-pointer hover:scale-110 transition">✖</button>
+            </div>
             <div class="p-6 text-center">
                 <h4 id="view-obra-nome" class="text-xl font-black text-gray-800 mb-1">Nome da Obra</h4>
                 <p id="view-obra-priori" class="text-xs font-bold text-gray-500 mb-6 uppercase bg-gray-100 inline-block px-3 py-1 rounded-full">Prioridade: Média</p>
@@ -262,20 +289,19 @@
         let configRegras = { media: 5000, alta: 15000, maxima: 23000, altissima: 30000 }; 
         let equipeBaseGlobal = []; let equipeAtivaGlobal = []; let funcoesCountGlobal = {}; let filtroFuncaoAtivo = null;
 
-        window.onload = async () => {
+        // 🛡️ INICIALIZAÇÃO SEGURA (Se um falhar, o resto continua!)
+        window.onload = () => {
             const nick = localStorage.getItem('usuario_nick');
             const cargo = localStorage.getItem('usuario_cargo');
-            if(!nick || cargo !== 'Administrador') return window.location.href = 'index.html';
+            if(!nick || cargo !== 'Administrador') { window.location.href = 'index.html'; return; }
             document.getElementById('nome-usuario').textContent = `Olá, ${nick} 👑`;
             
-            // CARREGAMENTO INDEPENDENTE PARA EVITAR TELA BRANCA
-            Promise.allSettled([
-                carregarRegrasSupabase().then(() => carregarDashboardAntigo(nick)),
-                carregarObrasPorModerador(),
-                carregarAniversariantes(),
-                carregarMinhasAdv(nick),
-                carregarRecrutamento()
-            ]).then(() => console.log("Dashboard carregado."));
+            // Cada módulo carrega de forma independente!
+            carregarRegrasSupabase().then(() => carregarDashboardAntigo(nick)).catch(e => { console.error("Erro Dashboard", e); document.getElementById('lista-obras-staff').innerHTML = `<p class="text-sm text-red-500 text-center py-4">Erro: ${e.message}</p>`; document.getElementById('lista-obras-resp').innerHTML = `<p class="text-sm text-red-500 text-center py-4">Erro: ${e.message}</p>`; });
+            carregarObrasPorModerador().catch(e => console.error("Erro Obras/Equipe", e));
+            carregarAniversariantes().catch(e => console.error("Erro Aniversarios", e));
+            carregarMinhasAdv(nick).catch(e => console.error("Erro Minhas Adv", e));
+            carregarRecrutamento().catch(e => console.error("Erro Recrutamento", e));
         };
 
         function sair() { localStorage.clear(); window.location.href = 'index.html'; }
@@ -303,34 +329,65 @@
 
         function copiarTexto(idTag) { const ta = document.getElementById(idTag); ta.select(); ta.setSelectionRange(0, 99999); navigator.clipboard.writeText(ta.value).then(() => alert("Copiado!")).catch(() => alert("Erro ao copiar.")); }
 
-        async function carregarDashboardAntigo(meuNick) {
-            try {
-                const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
-                const meuId = usuarioData && usuarioData[0] ? String(usuarioData[0].id) : null;
-                const { data: obras } = await _supabase.from('obras').select('*').order('nome');
-                const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado');
-                
-                todasTarefasGlobais = tarefas || []; obrasDisponiveisGlobal = obras || [];
-                const obrasStaff = [], obrasResp = [];
-
-                if (obras) {
-                    try { processarAlertasBI(obras); } catch(err) { console.error("Erro no BI", err); }
-                    obras.forEach(o => {
-                        const souResp = o.responsavel_nick && o.responsavel_nick.includes(meuNick);
-                        let staffArr = [];
-                        if (typeof o.staff_ids === 'string') { try { staffArr = JSON.parse(o.staff_ids); } catch(e) { staffArr = o.staff_ids.split(','); } } else if (Array.isArray(o.staff_ids)) { staffArr = o.staff_ids; }
-                        const souStaff = meuId && staffArr.map(String).includes(meuId);
-                        if (souResp) obrasResp.push(o); if (souStaff) obrasStaff.push(o);
-                    });
-                }
-                renderizarObras(obrasStaff, 'lista-obras-staff', false); renderizarObras(obrasResp, 'lista-obras-resp', true);
-            } catch (e) {
-                console.error("ERRO FATAL CARREGANDO OBRAS", e);
-                document.getElementById('lista-obras-staff').innerHTML = `<p class="text-red-500 text-sm">Erro ao carregar obras: ${e.message}</p>`;
-                document.getElementById('lista-obras-resp').innerHTML = `<p class="text-red-500 text-sm">Erro ao carregar obras: ${e.message}</p>`;
-            }
+        async function carregarRegrasSupabase() {
+            const { data } = await _supabase.from('configuracoes').select('*').limit(1).single();
+            if (data) { configRegras.media = data.regra_media||5000; configRegras.alta = data.regra_alta||15000; configRegras.maxima = data.regra_maxima||23000; configRegras.altissima = data.regra_altissima||30000; }
+            if(document.getElementById('config-media')) document.getElementById('config-media').value = configRegras.media;
+            if(document.getElementById('config-alta')) document.getElementById('config-alta').value = configRegras.alta;
+            if(document.getElementById('config-maxima')) document.getElementById('config-maxima').value = configRegras.maxima;
+            if(document.getElementById('config-altissima')) document.getElementById('config-altissima').value = configRegras.altissima;
         }
 
+        async function salvarRegras(e) {
+            e.preventDefault();
+            const rMedia = parseInt(document.getElementById('config-media').value); const rAlta = parseInt(document.getElementById('config-alta').value); const rMax = parseInt(document.getElementById('config-maxima').value); const rAltissima = parseInt(document.getElementById('config-altissima').value);
+            let { error } = await _supabase.from('configuracoes').update({ regra_media: rMedia, regra_alta: rAlta, regra_maxima: rMax, regra_altissima: rAltissima }).eq('id', 1);
+            if(error) await _supabase.from('configuracoes').insert([{id: 1, regra_media: rMedia, regra_alta: rAlta, regra_maxima: rMax, regra_altissima: rAltissima}]);
+            alert("✅ Metas salvas!"); carregarRegrasSupabase(); carregarDashboardAntigo(localStorage.getItem('usuario_nick')); 
+        }
+
+        function abrirNotificacoes() { document.getElementById('modal-notificacoes').classList.remove('hidden'); }
+        function limparNotificacoes() { document.getElementById('lista-alertas-bi').innerHTML = '<p class="text-sm text-gray-400 text-center py-4">Tudo limpo! ✅</p>'; document.getElementById('badge-notificacoes').classList.add('hidden'); localStorage.setItem('notifs_limpas_hoje', new Date().toDateString()); }
+
+        function processarAlertasBI(obras) {
+            if(localStorage.getItem('notifs_limpas_hoje') === new Date().toDateString()) return;
+            const container = document.getElementById('lista-alertas-bi'); const badge = document.getElementById('badge-notificacoes');
+            container.innerHTML = ''; let alertasAtivos = 0;
+            obras.forEach(obra => {
+                const views = parseInt(obra.views_totais) || 0; let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1; if(caps === 0) caps = 1; const media = Math.round(views / caps);
+                let sugestao = null; let cor = "";
+                if (media >= configRegras.altissima) { sugestao = "Altíssima"; cor = "text-purple-700"; } else if (media >= configRegras.maxima) { sugestao = "Máxima"; cor = "text-red-700"; } else if (media >= configRegras.alta) { sugestao = "Alta"; cor = "text-orange-600"; } else if (media >= configRegras.media) { sugestao = "Média"; cor = "text-blue-600"; }
+                const priAtual = obra.prioridade || 'Média';
+                if (sugestao && !sugestao.includes(priAtual)) {
+                    alertasAtivos++;
+                    container.innerHTML += `<div class="bg-gray-50 border border-gray-200 p-3 rounded-lg flex justify-between items-center shadow-sm"><div><p class="font-bold text-gray-800 text-sm">${obra.nome}</p><p class="text-[10px] text-gray-500">Média atual: <b class="${cor}">${media.toLocaleString('pt-BR')} v/cap</b></p></div><div class="text-right"><p class="text-[9px] text-gray-400">Sugestão do Sistema:</p><span class="bg-white border border-gray-300 px-2 py-0.5 rounded font-black text-xs ${cor}">Mudar p/ ${sugestao}</span></div></div>`;
+                }
+            });
+            if (alertasAtivos > 0) { badge.classList.remove('hidden'); badge.innerText = alertasAtivos; } else { badge.classList.add('hidden'); container.innerHTML = '<p class="text-sm text-gray-400 text-center py-4">Tudo tranquilo! Nenhuma obra atingiu os limites hoje.</p>'; }
+        }
+
+        async function carregarDashboardAntigo(meuNick) {
+            const { data: usuarioData } = await _supabase.from('equipe').select('*').eq('nick', meuNick).limit(1);
+            const meuId = usuarioData && usuarioData[0] ? String(usuarioData[0].id) : null;
+            const { data: obras } = await _supabase.from('obras').select('*').order('nome');
+            const { data: tarefas } = await _supabase.from('tarefas').select('*').neq('status', 'Arquivado');
+            todasTarefasGlobais = tarefas || []; obrasDisponiveisGlobal = obras || [];
+            const obrasStaff = [], obrasResp = [];
+
+            if (obras) {
+                try { processarAlertasBI(obras); } catch(err) { console.error("Erro no BI", err); }
+                obras.forEach(o => {
+                    const souResp = o.responsavel_nick && o.responsavel_nick.includes(meuNick);
+                    let staffArr = [];
+                    if (typeof o.staff_ids === 'string') { try { staffArr = JSON.parse(o.staff_ids); } catch(e) { staffArr = o.staff_ids.split(','); } } else if (Array.isArray(o.staff_ids)) { staffArr = o.staff_ids; }
+                    const souStaff = meuId && staffArr.map(String).includes(meuId);
+                    if (souResp) obrasResp.push(o); if (souStaff) obrasStaff.push(o);
+                });
+            }
+            renderizarObras(obrasStaff, 'lista-obras-staff', false); renderizarObras(obrasResp, 'lista-obras-resp', true);
+        }
+
+        // 🌟 RENDERIZAR OBRAS (COM PROTEÇÃO) 🌟
         function renderizarObras(lista, idCont, isResp) {
             const cont = document.getElementById(idCont); if(!cont) return; cont.innerHTML = '';
             if (!lista || lista.length === 0) { cont.innerHTML = `<p class="text-sm text-gray-400 italic text-center p-4">Nenhuma obra na sua lista.</p>`; return; }
@@ -342,13 +399,7 @@
                     const viewsApp = parseInt(o.views_totais) || 0;
                     let corStatus = o.status === 'Ativa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
                     
-                    let imgCapa = '';
-                    if (o.capa_url && o.capa_url.trim() !== '') {
-                        imgCapa = `<img src="${o.capa_url}" class="w-10 h-14 object-cover rounded shadow-sm border border-gray-200 flex-shrink-0" alt="Capa" onerror="this.outerHTML='<div class=\\'w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center\\'><span class=\\'text-[8px] text-gray-400 text-center leading-tight\\'>Erro</span></div>'">`;
-                    } else {
-                        imgCapa = `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400 text-center leading-tight">Sem<br>Capa</span></div>`;
-                    }
-
+                    const imgCapa = o.capa_url ? `<img src="${o.capa_url}" class="w-10 h-14 object-cover rounded shadow-sm border border-gray-200 flex-shrink-0" alt="Capa">` : `<div class="w-10 h-14 bg-gray-100 rounded shadow-sm border border-gray-200 flex-shrink-0 flex items-center justify-center"><span class="text-[8px] text-gray-400 text-center leading-tight">Sem<br>Capa</span></div>`;
                     const btnEdit = isResp ? `<button onclick="window.location.href='cadastro-obra.html?edit=${o.id}'; event.stopPropagation();" class="text-xs bg-gray-100 border border-gray-200 hover:bg-gray-200 px-2 py-1 rounded cursor-pointer transition" title="Editar Obra">✏️</button>` : '';
 
                     const safeNome = (o.nome || 'Sem Nome').replace(/'/g, "\\'").replace(/"/g, "&quot;");
@@ -378,7 +429,7 @@
                             </div>
                         </div>
                     </div>`;
-                } catch(err) { console.error("Erro ao desenhar obra:", o, err); }
+                } catch(err) { console.error("Erro ao desenhar obra:", o.nome, err); }
             });
             cont.innerHTML = html;
         }
@@ -492,7 +543,7 @@
                 let caps = parseInt(String(obra.capitulo_fleur).match(/\d+/)) || 1; const mediaViews = Math.round(viewsTot / caps);
                 let badgeCresc = cresc >= 0 ? `<span class="text-emerald-600 font-bold">+${cresc.toLocaleString()}</span>` : `<span class="text-red-500 font-bold">${cresc.toLocaleString()}</span>`;
                 let sug = "Baixa"; let corSug = "text-gray-500 font-bold";
-                if (mediaViews >= configRegras.altissima) { sug = "Altíssima"; corSug = "text-purple-700 font-black"; } else if (mediaViews >= configRegras.maxima) { sug = "Máxima"; corSug = "text-red-700 font-black"; } else if (mediaViews >= configRegras.media) { sug = "Média"; corSug = "text-blue-600 font-bold"; }
+                if (mediaViews >= configRegras.altissima) { sug = "Altíssima"; corSug = "text-purple-700 font-black"; } else if (mediaViews >= configRegras.maxima) { sug = "Máxima"; corSug = "text-red-700 font-black"; } else if (mediaViews >= configRegras.alta) { sug = "Alta"; corSug = "text-orange-600 font-black"; } else if (mediaViews >= configRegras.media) { sug = "Média"; corSug = "text-blue-600 font-bold"; }
                 const priAtual = obra.prioridade || 'Baixa';
                 let btnAceitar = sug === priAtual ? `<span class="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">✅ Ideal</span>` : `<button onclick="aceitarSugestao('${obra.id}', '${sug}')" class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded w-full cursor-pointer hover:bg-emerald-200">Aceitar: ${sug}</button>`;
                 tb.innerHTML += `<tr class="border-b"><td class="px-3 py-3 font-bold text-gray-800">${obra.nome}</td><td class="px-3 py-3 text-center font-bold text-blue-900">${viewsTot.toLocaleString()}</td><td class="px-3 py-3 text-center text-xs text-gray-400 border-l">${viewsSiteRaw.toLocaleString()}</td><td class="px-3 py-3 text-center font-mono text-xs font-bold">${mediaViews.toLocaleString()}</td><td class="px-3 py-3 text-center">${badgeCresc}</td><td class="px-3 py-3 text-center text-xs ${corSug}">${sug}</td><td class="px-3 py-3 text-right">${btnAceitar}</td></tr>`;
